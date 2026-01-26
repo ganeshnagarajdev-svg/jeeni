@@ -16,7 +16,8 @@ ng serve
 cd backend
 uv init
 uv add -r requirements.txt
+uv sync
 
 ## Run
 
-uvicorn app.main:app --reload
+uv run uvicorn app.main:app --reload
