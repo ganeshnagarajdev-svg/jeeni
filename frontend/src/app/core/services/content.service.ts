@@ -1,0 +1,47 @@
+import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import { environment } from '../../../environments/environment';
+
+export interface Blog {
+  id: number;
+  title: string;
+  slug: string;
+  content: string;
+  image_url: string;
+  created_at: string;
+  author_id: number;
+}
+
+export interface Media {
+  id: number;
+  title: string;
+  media_type: string;
+  url: string;
+  description: string;
+}
+
+@Injectable({
+  providedIn: 'root'
+})
+export class ContentService {
+  private apiUrl = `${environment.apiUrl}/content`;
+
+  constructor(private http: HttpClient) {}
+
+  getBlogs(skip: number = 0, limit: number = 100): Observable<Blog[]> {
+    return this.http.get<Blog[]>(`${this.apiUrl}/blogs?skip=${skip}&limit=${limit}`);
+  }
+
+  getBlog(slug: string): Observable<Blog> {
+    return this.http.get<Blog>(`${this.apiUrl}/blogs/${slug}`);
+  }
+
+  getMedia(skip: number = 0, limit: number = 100): Observable<Media[]> {
+    return this.http.get<Media[]>(`${this.apiUrl}/media?skip=${skip}&limit=${limit}`);
+  }
+
+  deleteBlog(id: number): Observable<Blog> {
+    return this.http.delete<Blog>(`${this.apiUrl}/blogs/${id}`);
+  }
+}

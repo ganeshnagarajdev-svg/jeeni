@@ -1,0 +1,92 @@
+<header class="bg-white/90 backdrop-blur-md border-b border-secondary-200 sticky top-0 z-50 shadow-sm transition-all duration-300">
+  <div class="container mx-auto px-4">
+    <div class="flex justify-between items-center h-20">
+      
+      <!-- Logo -->
+      <a routerLink="/" class="flex items-center gap-3 group">
+        <div class="w-10 h-10 bg-primary-600 rounded-full flex items-center justify-center text-white font-bold text-xl shadow-md ring-2 ring-primary-100 group-hover:bg-primary-900 transition-colors">
+            <span class="transform -translate-y-0.5">J</span>
+        </div>
+        <div class="flex flex-col">
+            <span class="text-2xl font-display font-bold text-primary-900 tracking-tight leading-none group-hover:text-primary-700 transition-colors">Jeeni</span>
+            <span class="text-[0.65rem] font-medium text-secondary-500 uppercase tracking-widest leading-none">Millet Mix</span>
+        </div>
+      </a>
+
+      <!-- Desktop Nav -->
+      <nav class="hidden md:flex items-center gap-1">
+        <a routerLink="/" routerLinkActive="text-primary-700 bg-primary-50" [routerLinkActiveOptions]="{exact: true}" class="px-4 py-2 rounded-full text-secondary-600 font-medium hover:text-primary-700 hover:bg-surface-100 transition-all">Home</a>
+        <a routerLink="/shop" routerLinkActive="text-primary-700 bg-primary-50" class="px-4 py-2 rounded-full text-secondary-600 font-medium hover:text-primary-700 hover:bg-surface-100 transition-all">Shop</a>
+        <a routerLink="/wishlist" routerLinkActive="text-primary-700 bg-primary-50" class="px-4 py-2 rounded-full text-secondary-600 font-medium hover:text-primary-700 hover:bg-surface-100 transition-all">Wishlist</a>
+        <a routerLink="/content/blogs" routerLinkActive="text-primary-700 bg-primary-50" class="px-4 py-2 rounded-full text-secondary-600 font-medium hover:text-primary-700 hover:bg-surface-100 transition-all">Blog</a>
+        <a routerLink="/general/careers" routerLinkActive="text-primary-700 bg-primary-50" class="px-4 py-2 rounded-full text-secondary-600 font-medium hover:text-primary-700 hover:bg-surface-100 transition-all">Careers</a>
+      </nav>
+
+      <!-- Actions -->
+      <div class="hidden md:flex items-center gap-3">
+        <button class="w-10 h-10 rounded-full hover:bg-surface-100 flex items-center justify-center text-secondary-600 transition-colors">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
+        </button>
+        
+        <ng-container *ngIf="authService.currentUser$ | async as user; else loginBtn">
+           <div class="relative group">
+               <button class="w-10 h-10 rounded-full hover:bg-surface-100 flex items-center justify-center text-secondary-600 transition-colors">
+                   <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" /></svg>
+               </button>
+               <!-- Dropdown placeholder could go here -->
+               <div class="absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-xl py-2 hidden group-hover:block border border-secondary-100 animate-fade-in">
+                   <a routerLink="/admin/dashboard" *ngIf="user.role === 'admin'" class="block px-4 py-2 text-sm text-secondary-700 hover:bg-surface-50">Admin Dashboard</a>
+                   <button (click)="logout()" class="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50">Logout</button>
+               </div>
+           </div>
+        </ng-container>
+        <ng-template #loginBtn>
+          <a routerLink="/auth/login" class="text-sm font-bold text-secondary-700 hover:text-primary-700 px-3 py-2 transition-colors">Log in</a>
+          <a routerLink="/auth/signup" class="btn-primary px-5 py-2 text-sm shadow-md hover:shadow-lg transform active:scale-95 transition-all">Sign up</a>
+        </ng-template>
+        
+        <button class="w-10 h-10 rounded-full hover:bg-surface-100 flex items-center justify-center text-secondary-600 transition-colors relative">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" /></svg>
+            <span class="absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full"></span>
+        </button>
+      </div>
+
+      <!-- Mobile Menu Button -->
+      <button (click)="toggleMenu()" class="md:hidden p-2 text-secondary-600 hover:bg-surface-100 rounded-lg transition-colors">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path *ngIf="!isMenuOpen" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+          <path *ngIf="isMenuOpen" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- Mobile Nav -->
+  <div *ngIf="isMenuOpen" class="md:hidden bg-white border-t border-secondary-200 shadow-xl absolute w-full z-40 animate-slide-down">
+    <div class="container mx-auto px-4 py-6 flex flex-col gap-2">
+      <a routerLink="/" class="px-4 py-3 rounded-xl text-secondary-700 hover:bg-surface-50 hover:text-primary-700 font-medium transition-colors">Home</a>
+      <a routerLink="/shop" class="px-4 py-3 rounded-xl text-secondary-700 hover:bg-surface-50 hover:text-primary-700 font-medium transition-colors">Shop</a>
+      <a routerLink="/wishlist" class="px-4 py-3 rounded-xl text-secondary-700 hover:bg-surface-50 hover:text-primary-700 font-medium transition-colors">Wishlist</a>
+      <a routerLink="/content/blogs" class="px-4 py-3 rounded-xl text-secondary-700 hover:bg-surface-50 hover:text-primary-700 font-medium transition-colors">Blog</a>
+      <a routerLink="/general/careers" class="px-4 py-3 rounded-xl text-secondary-700 hover:bg-surface-50 hover:text-primary-700 font-medium transition-colors">Careers</a>
+      
+      <div class="border-t border-secondary-100 mt-2 pt-4 flex flex-col gap-3 px-4">
+         <ng-container *ngIf="authService.currentUser$ | async as user; else mobileLogin">
+            <div class="flex items-center gap-3 mb-2">
+                <div class="w-10 h-10 bg-primary-100 rounded-full flex items-center justify-center text-primary-700 font-bold">{{user.email.charAt(0).toUpperCase()}}</div>
+                <div class="flex flex-col">
+                    <span class="font-bold text-secondary-900">{{user.email}}</span>
+                    <span class="text-xs text-secondary-500">Logged in</span>
+                </div>
+            </div>
+            <a routerLink="/admin/dashboard" *ngIf="user.role === 'admin'" class="w-full text-center py-2 bg-secondary-100 rounded-lg text-secondary-700 font-medium">Admin Dashboard</a>
+            <button (click)="logout()" class="w-full text-center py-2 bg-red-50 text-red-600 rounded-lg font-medium">Logout</button>
+         </ng-container>
+         <ng-template #mobileLogin>
+            <a routerLink="/auth/login" class="w-full text-center py-3 border border-secondary-200 rounded-xl font-bold text-secondary-700">Log in</a>
+            <a routerLink="/auth/signup" class="w-full text-center py-3 bg-primary-600 text-white rounded-xl font-bold shadow-lg">Sign up</a>
+         </ng-template>
+      </div>
+    </div>
+  </div>
+</header>
