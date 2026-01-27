@@ -23,5 +23,5 @@ export interface Product {
   is_active: boolean;
   category_id: number;
   category?: Category;
-  images: ProductImage[];
+  images?: ProductImage[];
 }

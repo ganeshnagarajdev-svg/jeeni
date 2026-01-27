@@ -26,7 +26,7 @@
             <td class="px-6 py-4">
               <div class="flex items-center gap-4">
                 <div class="w-12 h-12 rounded-xl bg-gray-100 overflow-hidden border border-gray-100 shadow-sm">
-                  <img [src]="product.images[0]?.image_url || '/assets/placeholder-product.jpg'" class="w-full h-full object-cover">
+                  <img [src]="product.images?.[0]?.image_url || '/assets/placeholder-product.jpg'" class="w-full h-full object-cover">
                 </div>
                 <div>
                   <div class="text-sm font-bold text-gray-900">{{ product.name }}</div>

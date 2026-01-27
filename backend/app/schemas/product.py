@@ -1,5 +1,5 @@
 from typing import List, Optional
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 # Category Schemas
 class CategoryBase(BaseModel):
@@ -64,7 +64,7 @@ class Product(ProductBase):
     id: int
     slug: str
     category: Optional[Category] = None
-    images: List[ProductImage] = []
+    images: List[ProductImage] = Field(default_factory=list)
     
     class Config:
         from_attributes = True

@@ -79,7 +79,7 @@
         <div *ngIf="!isLoading && products.length > 0" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           <div *ngFor="let product of products" class="card group overflow-hidden flex flex-col">
             <div class="relative overflow-hidden aspect-w-4 aspect-h-3">
-               <img [src]="product.images[0]?.image_url || 'assets/placeholder.jpg'" 
+               <img [src]="product.images?.[0]?.image_url || 'assets/placeholder.jpg'" 
                     [alt]="product.name" 
                     class="object-cover w-full h-full transform group-hover:scale-110 transition-transform duration-500">
                

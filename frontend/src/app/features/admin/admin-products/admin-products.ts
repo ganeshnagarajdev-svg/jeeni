@@ -50,6 +50,7 @@ export class AdminProductsComponent implements OnInit {
     this.loading = true;
     this.productService.getProducts().subscribe({
       next: (data) => {
+        console.log('Admin Products loaded:', data);
         this.products = data;
         this.loading = false;
       },
@@ -90,7 +91,7 @@ export class AdminProductsComponent implements OnInit {
     });
     
     this.images.clear();
-    product.images.forEach(img => {
+    product.images?.forEach(img => {
       this.images.push(this.fb.group({
         image_url: [img.image_url, Validators.required],
         is_main: [img.is_main]

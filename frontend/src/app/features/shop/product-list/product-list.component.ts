@@ -35,8 +35,12 @@ export class ProductListComponent implements OnInit {
   }
 
   loadCategories() {
-    this.productService.getCategories().subscribe(cats => {
-      this.categories = cats;
+    this.productService.getCategories().subscribe({
+      next: (cats) => {
+        console.log('Categories loaded:', cats);
+        this.categories = cats;
+      },
+      error: (err) => console.error('Failed to load categories:', err)
     });
   }
 
@@ -46,9 +50,16 @@ export class ProductListComponent implements OnInit {
     const min = this.minPrice ? this.minPrice : undefined;
     const max = this.maxPrice ? this.maxPrice : undefined;
 
-    this.productService.getProducts(0, 100, categoryId, min, max, this.sortBy).subscribe(products => {
-      this.products = products;
-      this.isLoading = false;
+    this.productService.getProducts(0, 100, categoryId, min, max, this.sortBy).subscribe({
+      next: (products) => {
+        console.log('Products loaded:', products);
+        this.products = products;
+        this.isLoading = false;
+      },
+      error: (err) => {
+        console.error('Failed to load products:', err);
+        this.isLoading = false;
+      }
     });
   }
 
