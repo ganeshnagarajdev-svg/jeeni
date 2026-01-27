@@ -7,7 +7,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.core import security
 from app.core.config import settings
 from app.db.session import get_db
-from app.models.user import User
+from app.models.user import User, UserRole
 from app.services.user_service import user_service
 from app.schemas.user import UserBase
 
@@ -42,10 +42,10 @@ async def get_current_active_user(
     return current_user
 
 def get_current_active_superuser(
-    current_user: User = Depends(get_current_user),
+    current_user: User = Depends(get_current_active_user),
 ) -> User:
-    if not current_user.is_superuser:
+    if not (current_user.is_superuser or current_user.role == UserRole.ADMIN):
         raise HTTPException(
-            status_code=400, detail="The user doesn't have enough privileges"
+            status_code=status.HTTP_403_FORBIDDEN, detail="The user doesn't have enough privileges"
         )
     return current_user

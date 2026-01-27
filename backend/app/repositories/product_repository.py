@@ -4,6 +4,7 @@ from sqlalchemy.future import select
 from sqlalchemy.orm import selectinload
 from app.models.product import Product, Category, ProductImage
 from app.schemas.product import ProductCreate, ProductUpdate, CategoryCreate, CategoryUpdate
+from fastapi.encoders import jsonable_encoder
 
 class ProductRepository:
     # Category Operations
@@ -99,6 +100,22 @@ class ProductRepository:
         query = select(Product).options(selectinload(Product.images), selectinload(Product.category)).filter(Product.slug == slug)
         result = await db.execute(query)
         return result.scalars().first()
+
+    async def update_product(self, db: AsyncSession, *, db_obj: Product, obj_in: Union[ProductUpdate, Dict[str, Any]]) -> Product:
+        obj_data = jsonable_encoder(db_obj)
+        if isinstance(obj_in, dict):
+            update_data = obj_in
+        else:
+            update_data = obj_in.model_dump(exclude_unset=True)
+        for field in obj_data:
+            if field in update_data:
+                setattr(db_obj, field, update_data[field])
+        if "name" in update_data:
+             db_obj.slug = update_data["name"].lower().replace(" ", "-")
+        db.add(db_obj)
+        await db.commit()
+        await db.refresh(db_obj)
+        return db_obj
 
     async def delete_product(self, db: AsyncSession, product_id: int) -> Optional[Product]:
         product = await self.get_product(db, product_id)

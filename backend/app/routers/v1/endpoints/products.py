@@ -1,10 +1,10 @@
 from typing import Any, List, Optional
-from fastapi import APIRouter, Depends, HTTPException, status, Query
+from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
 from app.routers import deps
 from app.services.product_service import product_service
 
-from app.schemas.product import Product, ProductCreate, Category, CategoryCreate
+from app.schemas.product import Product, ProductCreate, ProductUpdate, Category, CategoryCreate
 from app.models.user import User
 
 router = APIRouter()
@@ -45,6 +45,22 @@ async def create_product(
     Create new product (Admin only).
     """
     return await product_service.create_product(db=db, obj_in=product_in)
+
+@router.put("/products/{id}", response_model=Product)
+async def update_product(
+    *,
+    db: AsyncSession = Depends(deps.get_db),
+    id: int,
+    product_in: ProductUpdate,
+    current_user: User = Depends(deps.get_current_active_superuser),
+) -> Any:
+    """
+    Update a product (Admin only).
+    """
+    product = await product_service.update_product(db=db, product_id=id, obj_in=product_in)
+    if not product:
+        raise HTTPException(status_code=404, detail="Product not found")
+    return product
 
 @router.get("/products", response_model=List[Product])
 async def read_products(

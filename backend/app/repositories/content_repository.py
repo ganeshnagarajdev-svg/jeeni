@@ -1,10 +1,9 @@
-from typing import List, Optional
+from typing import List, Optional, Union, Dict, Any
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 from app.models.content import Blog, Media
-from app.schemas.content import BlogCreate, MediaCreate
+from app.schemas.content import BlogCreate, BlogUpdate, MediaCreate
 from fastapi.encoders import jsonable_encoder
-from typing import Union, Dict, Any
 
 class CRUDBlog:
     async def create(self, db: AsyncSession, *, obj_in: BlogCreate, author_id: int) -> Blog:
@@ -22,7 +21,7 @@ class CRUDBlog:
         return db_obj
 
     async def get_multi(self, db: AsyncSession, skip: int = 0, limit: int = 100) -> List[Blog]:
-        query = select(Blog).filter(Blog.is_published == True).offset(skip).limit(limit)
+        query = select(Blog).offset(skip).limit(limit)
         result = await db.execute(query)
         return result.scalars().all()
 
@@ -31,10 +30,29 @@ class CRUDBlog:
         result = await db.execute(query)
         return result.scalars().first()
 
-    async def remove(self, db: AsyncSession, *, id: int) -> Optional[Blog]:
+    async def get(self, db: AsyncSession, id: int) -> Optional[Blog]:
         query = select(Blog).filter(Blog.id == id)
         result = await db.execute(query)
-        obj = result.scalars().first()
+        return result.scalars().first()
+
+    async def update(self, db: AsyncSession, *, db_obj: Blog, obj_in: Union[BlogUpdate, Dict[str, Any]]) -> Blog:
+        obj_data = jsonable_encoder(db_obj)
+        if isinstance(obj_in, dict):
+            update_data = obj_in
+        else:
+            update_data = obj_in.model_dump(exclude_unset=True)
+        for field in obj_data:
+            if field in update_data:
+                setattr(db_obj, field, update_data[field])
+        if "title" in update_data:
+             db_obj.slug = update_data["title"].lower().replace(" ", "-")
+        db.add(db_obj)
+        await db.commit()
+        await db.refresh(db_obj)
+        return db_obj
+
+    async def remove(self, db: AsyncSession, *, id: int) -> Optional[Blog]:
+        obj = await self.get(db, id=id)
         if obj:
             await db.delete(obj)
             await db.commit()
@@ -58,17 +76,17 @@ class CRUDMedia:
         result = await db.execute(query)
         return result.scalars().all()
 
-    async def remove(self, db: AsyncSession, *, id: int) -> Optional[Media]:
+    async def get(self, db: AsyncSession, id: int) -> Optional[Media]:
         query = select(Media).filter(Media.id == id)
         result = await db.execute(query)
-        obj = result.scalars().first()
+        return result.scalars().first()
+
+    async def remove(self, db: AsyncSession, *, id: int) -> Optional[Media]:
+        obj = await self.get(db, id=id)
         if obj:
             await db.delete(obj)
             await db.commit()
         return obj
 
-
-
 blog = CRUDBlog()
 media = CRUDMedia()
-

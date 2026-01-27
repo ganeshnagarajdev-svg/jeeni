@@ -20,6 +20,7 @@ export interface Product {
   discounted_price?: number;
   stock: number;
   is_featured: boolean;
+  is_active: boolean;
   category_id: number;
   category?: Category;
   images: ProductImage[];

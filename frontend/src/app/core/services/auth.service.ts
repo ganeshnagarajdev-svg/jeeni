@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { BehaviorSubject, Observable, tap } from 'rxjs';
+import { BehaviorSubject, Observable, tap, switchMap, map, of } from 'rxjs';
 import { Router } from '@angular/router';
 
 @Injectable({
@@ -30,9 +30,9 @@ export class AuthService {
       tap((response) => {
         if (response.access_token) {
           localStorage.setItem('token', response.access_token);
-          this.fetchCurrentUser();
         }
       }),
+      switchMap(() => this.fetchCurrentUser())
     );
   }
 
@@ -40,15 +40,20 @@ export class AuthService {
     return this.http.post<any>(`${this.apiUrl}/signup`, userData);
   }
 
-  fetchCurrentUser() {
-    this.http
+  fetchCurrentUser(): Observable<any> {
+    const token = localStorage.getItem('token');
+    if (!token) return of(null);
+    
+    return this.http
       .get<any>(`${this.apiUrl}/me`, {
-        headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
+        headers: { Authorization: `Bearer ${token}` },
       })
-      .subscribe((user) => {
-        localStorage.setItem('currentUser', JSON.stringify(user));
-        this.currentUserSubject.next(user);
-      });
+      .pipe(
+        tap((user) => {
+          localStorage.setItem('currentUser', JSON.stringify(user));
+          this.currentUserSubject.next(user);
+        })
+      );
   }
 
   logout() {

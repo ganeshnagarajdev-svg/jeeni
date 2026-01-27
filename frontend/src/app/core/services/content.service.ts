@@ -9,6 +9,7 @@ export interface Blog {
   slug: string;
   content: string;
   image_url: string;
+  is_published: boolean;
   created_at: string;
   author_id: number;
 }
@@ -39,6 +40,14 @@ export class ContentService {
 
   getMedia(skip: number = 0, limit: number = 100): Observable<Media[]> {
     return this.http.get<Media[]>(`${this.apiUrl}/media?skip=${skip}&limit=${limit}`);
+  }
+
+  createBlog(blog: any): Observable<Blog> {
+    return this.http.post<Blog>(`${this.apiUrl}/blogs`, blog);
+  }
+
+  updateBlog(id: number, blog: any): Observable<Blog> {
+    return this.http.put<Blog>(`${this.apiUrl}/blogs/${id}`, blog);
   }
 
   deleteBlog(id: number): Observable<Blog> {

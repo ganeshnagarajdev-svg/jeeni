@@ -50,9 +50,14 @@ class ProductBase(BaseModel):
 class ProductCreate(ProductBase):
     images: List[ProductImageCreate] = []
 
-class ProductUpdate(ProductBase):
+class ProductUpdate(BaseModel):
     name: Optional[str] = None
+    description: Optional[str] = None
     price: Optional[float] = None
+    discounted_price: Optional[float] = None
+    stock: Optional[int] = None
+    is_active: Optional[bool] = None
+    is_featured: Optional[bool] = None
     category_id: Optional[int] = None
 
 class Product(ProductBase):

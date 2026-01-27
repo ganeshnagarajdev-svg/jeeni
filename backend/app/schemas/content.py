@@ -12,8 +12,11 @@ class BlogBase(BaseModel):
 class BlogCreate(BlogBase):
     pass
 
-class BlogUpdate(BlogBase):
-    pass
+class BlogUpdate(BaseModel):
+    title: Optional[str] = None
+    content: Optional[str] = None
+    is_published: Optional[bool] = None
+    image_url: Optional[str] = None
 
 class Blog(BlogBase):
     id: int

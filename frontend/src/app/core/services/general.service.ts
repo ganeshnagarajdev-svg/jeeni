@@ -10,6 +10,8 @@ export interface Career {
   location: string;
   description: string;
   requirements: string;
+  type: string;
+  is_active: boolean;
   created_at: string;
 }
 
@@ -38,6 +40,14 @@ export class GeneralService {
 
   getPage(slug: string): Observable<Page> {
     return this.http.get<Page>(`${this.apiUrl}/pages/${slug}`);
+  }
+
+  createCareer(career: any): Observable<Career> {
+    return this.http.post<Career>(`${this.apiUrl}/careers`, career);
+  }
+
+  updateCareer(id: number, career: any): Observable<Career> {
+    return this.http.put<Career>(`${this.apiUrl}/careers/${id}`, career);
   }
 
   deleteCareer(id: number): Observable<Career> {

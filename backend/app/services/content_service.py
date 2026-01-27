@@ -1,9 +1,7 @@
-
-
-from typing import List, Optional
+from typing import List, Optional, Union, Dict, Any
 from sqlalchemy.ext.asyncio import AsyncSession
 from app.repositories.content_repository import blog as blog_repo, media as media_repo
-from app.schemas.content import BlogCreate, MediaCreate
+from app.schemas.content import BlogCreate, BlogUpdate, MediaCreate
 from app.models.content import Blog, Media
 
 class BlogService:
@@ -15,6 +13,12 @@ class BlogService:
 
     async def create(self, db: AsyncSession, obj_in: BlogCreate, author_id: int) -> Blog:
         return await blog_repo.create(db, obj_in=obj_in, author_id=author_id)
+
+    async def update(self, db: AsyncSession, id: int, obj_in: Union[BlogUpdate, Dict[str, Any]]) -> Optional[Blog]:
+        db_obj = await blog_repo.get(db, id=id)
+        if db_obj:
+            return await blog_repo.update(db, db_obj=db_obj, obj_in=obj_in)
+        return None
         
     async def remove(self, db: AsyncSession, id: int) -> Optional[Blog]:
         return await blog_repo.remove(db, id=id)
@@ -28,7 +32,6 @@ class MediaService:
         
     async def remove(self, db: AsyncSession, id: int) -> Optional[Media]:
         return await media_repo.remove(db, id=id)
-
 
 blog_service = BlogService()
 media_service = MediaService()

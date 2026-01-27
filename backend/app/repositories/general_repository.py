@@ -1,8 +1,9 @@
-from typing import List, Optional
+from typing import List, Optional, Union, Dict, Any
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 from app.models.general import Career, Page
-from app.schemas.general import CareerCreate, PageCreate
+from app.schemas.general import CareerCreate, CareerUpdate, PageCreate, PageUpdate
+from fastapi.encoders import jsonable_encoder
 
 class CareerRepository:
     async def create(self, db: AsyncSession, *, obj_in: CareerCreate) -> Career:
@@ -20,7 +21,7 @@ class CareerRepository:
         return db_obj
 
     async def get_multi(self, db: AsyncSession, skip: int = 0, limit: int = 100) -> List[Career]:
-        query = select(Career).filter(Career.is_active == True).offset(skip).limit(limit)
+        query = select(Career).offset(skip).limit(limit)
         result = await db.execute(query)
         return result.scalars().all()
     
@@ -28,6 +29,20 @@ class CareerRepository:
         query = select(Career).filter(Career.id == id)
         result = await db.execute(query)
         return result.scalars().first()
+
+    async def update(self, db: AsyncSession, *, db_obj: Career, obj_in: Union[CareerUpdate, Dict[str, Any]]) -> Career:
+        obj_data = jsonable_encoder(db_obj)
+        if isinstance(obj_in, dict):
+            update_data = obj_in
+        else:
+            update_data = obj_in.model_dump(exclude_unset=True)
+        for field in obj_data:
+            if field in update_data:
+                setattr(db_obj, field, update_data[field])
+        db.add(db_obj)
+        await db.commit()
+        await db.refresh(db_obj)
+        return db_obj
 
     async def remove(self, db: AsyncSession, *, id: int) -> Optional[Career]:
         obj = await self.get(db, id=id)
@@ -58,6 +73,20 @@ class PageRepository:
         query = select(Page).filter(Page.id == id)
         result = await db.execute(query)
         return result.scalars().first()
+
+    async def update(self, db: AsyncSession, *, db_obj: Page, obj_in: Union[PageUpdate, Dict[str, Any]]) -> Page:
+        obj_data = jsonable_encoder(db_obj)
+        if isinstance(obj_in, dict):
+            update_data = obj_in
+        else:
+            update_data = obj_in.model_dump(exclude_unset=True)
+        for field in obj_data:
+            if field in update_data:
+                setattr(db_obj, field, update_data[field])
+        db.add(db_obj)
+        await db.commit()
+        await db.refresh(db_obj)
+        return db_obj
 
     async def remove(self, db: AsyncSession, *, id: int) -> Optional[Page]:
         obj = await self.get(db, id=id)

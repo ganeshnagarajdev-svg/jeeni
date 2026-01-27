@@ -5,12 +5,20 @@ import { AdminProductsComponent } from './admin-products/admin-products';
 import { AdminBlogsComponent } from './admin-blogs/admin-blogs';
 import { AdminCareersComponent } from './admin-careers/admin-careers';
 
+import { AdminLayoutComponent } from './admin-layout';
+
 const routes: Routes = [
-  { path: '', component: DashboardComponent },
-  { path: 'dashboard', component: DashboardComponent },
-  { path: 'products', component: AdminProductsComponent },
-  { path: 'blogs', component: AdminBlogsComponent },
-  { path: 'careers', component: AdminCareersComponent },
+  {
+    path: '',
+    component: AdminLayoutComponent,
+    children: [
+      { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
+      { path: 'dashboard', component: DashboardComponent },
+      { path: 'products', component: AdminProductsComponent },
+      { path: 'blogs', component: AdminBlogsComponent },
+      { path: 'careers', component: AdminCareersComponent },
+    ]
+  }
 ];
 
 @NgModule({

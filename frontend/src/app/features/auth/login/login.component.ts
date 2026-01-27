@@ -31,9 +31,13 @@ export class LoginComponent {
     if (this.loginForm.valid) {
       this.isLoading = true;
       this.authService.login(this.loginForm.value).subscribe({
-        next: () => {
+        next: (user) => {
           this.isLoading = false;
-          this.router.navigate(['/']);
+          if (user && user.role === 'admin') {
+            this.router.navigate(['/admin']);
+          } else {
+            this.router.navigate(['/']);
+          }
         },
         error: (err) => {
           this.isLoading = false;

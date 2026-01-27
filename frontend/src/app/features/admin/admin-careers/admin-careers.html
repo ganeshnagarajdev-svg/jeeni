@@ -1,38 +1,120 @@
-<div class="container mx-auto px-4 py-8">
-  <div class="flex justify-between items-center mb-6">
-    <h1 class="text-3xl font-bold text-gray-800">Manage Careers</h1>
-    <button class="bg-primary text-white px-4 py-2 rounded hover:bg-green-700">Add New Job</button>
+<div class="space-y-6">
+  <div class="flex items-center justify-between">
+    <div>
+      <h1 class="text-2xl font-bold text-gray-900 m-0">Careers</h1>
+      <p class="text-sm text-gray-500 mt-1">Manage job openings and opportunities.</p>
+    </div>
+    <button (click)="openAddModal()" class="flex items-center gap-2 px-4 py-2 bg-[#1B3C35] text-white rounded-xl text-sm font-semibold hover:bg-[#2c5d53] transition-all shadow-sm">
+      <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" x2="19" y1="8" y2="14"/><line x1="22" x2="16" y1="11" y2="11"/></svg>
+      Post New Job
+    </button>
   </div>
 
-  <div class="bg-white shadow-md rounded-lg overflow-hidden">
-    <table class="min-w-full divide-y divide-gray-200">
-      <thead class="bg-gray-50">
-        <tr>
-          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Title</th>
-          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Department</th>
-           <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Location</th>
-          <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
-        </tr>
-      </thead>
-      <tbody class="bg-white divide-y divide-gray-200">
-        <tr *ngFor="let job of careers">
-          <td class="px-6 py-4 whitespace-nowrap">
-            <div class="text-sm font-medium text-gray-900">{{ job.title }}</div>
-          </td>
-          <td class="px-6 py-4 whitespace-nowrap">
-            <div class="text-sm text-gray-500">{{ job.department }}</div>
-          </td>
-          <td class="px-6 py-4 whitespace-nowrap">
-            <div class="text-sm text-gray-500">{{ job.location }}</div>
-          </td>
-          <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-            <button (click)="deleteCareer(job.id)" class="text-red-600 hover:text-red-900 ml-4">Delete</button>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-    <div *ngIf="careers.length === 0 && !loading" class="p-4 text-center text-gray-500">
-        No job postings found.
+  <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+    <div class="overflow-x-auto">
+      <table class="min-w-full divide-y divide-gray-100">
+        <thead>
+          <tr class="bg-gray-50/50">
+            <th class="px-6 py-4 text-left text-[11px] font-bold text-gray-400 uppercase tracking-widest">Job Title</th>
+            <th class="px-6 py-4 text-left text-[11px] font-bold text-gray-400 uppercase tracking-widest">Department</th>
+            <th class="px-6 py-4 text-left text-[11px] font-bold text-gray-400 uppercase tracking-widest">Location</th>
+            <th class="px-6 py-4 text-right text-[11px] font-bold text-gray-400 uppercase tracking-widest">Actions</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-gray-50">
+          <tr *ngFor="let job of careers" class="hover:bg-gray-50/50 transition-colors group">
+            <td class="px-6 py-4">
+              <div class="text-sm font-bold text-gray-900">{{ job.title }}</div>
+              <div class="text-[10px] text-blue-600 font-bold uppercase tracking-wider mt-0.5">POSITION</div>
+            </td>
+            <td class="px-6 py-4">
+              <div class="text-sm text-gray-700 font-medium">{{ job.department }}</div>
+            </td>
+            <td class="px-6 py-4">
+              <div class="flex items-center gap-1.5 text-sm text-gray-500">
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
+                {{ job.location }}
+              </div>
+            </td>
+            <td class="px-6 py-4 text-right">
+              <div class="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                <button (click)="openEditModal(job)" class="p-2 text-gray-400 hover:text-[#F2994A] hover:bg-orange-50 rounded-lg transition-all" title="Edit">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/><path d="m15 5 4 4"/></svg>
+                </button>
+                <button (click)="deleteCareer(job.id)" class="p-2 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-all" title="Delete">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/><line x1="10" x2="10" y1="11" y2="17"/><line x1="14" x2="14" y1="11" y2="17"/></svg>
+                </button>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div *ngIf="loading" class="p-12 text-center">
+      <div class="inline-block animate-spin w-8 h-8 border-4 border-gray-200 border-t-[#F2994A] rounded-full mb-4"></div>
+      <p class="text-sm text-gray-500 font-medium">Loading opportunities...</p>
+    </div>
+
+    <div *ngIf="careers.length === 0 && !loading" class="p-20 text-center">
+      <div class="w-16 h-16 bg-gray-50 rounded-2xl flex items-center justify-center mx-auto mb-4 text-gray-300">
+        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M16 20V4a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/><rect width="20" height="14" x="2" y="6" rx="2"/><path d="M12 12h.01"/></svg>
+      </div>
+      <h3 class="text-lg font-bold text-gray-900 mb-1">No job openings</h3>
+      <p class="text-sm text-gray-500 mb-6">Start building your team by posting a new job.</p>
+      <button (click)="openAddModal()" class="px-4 py-2 bg-[#F2994A] text-white rounded-xl text-sm font-bold hover:bg-orange-600 transition-colors shadow-sm">
+        Post Your First Job
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Career Modal -->
+<div *ngIf="showModal" class="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm transition-opacity">
+  <div class="bg-white rounded-3xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-hidden flex flex-col animate-in fade-in zoom-in duration-300">
+    <div class="p-6 border-b border-gray-100 flex items-center justify-between bg-gray-50/50">
+      <h2 class="text-xl font-bold text-gray-900 m-0">{{ isEditing ? 'Edit Job Posting' : 'Post New Job' }}</h2>
+      <button (click)="closeModal()" class="p-2 text-gray-400 hover:text-gray-600 rounded-full hover:bg-white transition-all">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+
+    <form [formGroup]="careerForm" (ngSubmit)="onSubmit()" class="flex-grow overflow-y-auto p-8 space-y-6">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="md:col-span-2 space-y-2">
+          <label class="text-xs font-bold text-gray-500 uppercase tracking-wider">Job Title</label>
+          <input type="text" formControlName="title" class="w-full px-4 py-3 bg-gray-50 border-none rounded-xl focus:ring-2 focus:ring-[#F2994A] transition-all" placeholder="e.g. Sales Executive">
+        </div>
+
+        <div class="space-y-2">
+          <label class="text-xs font-bold text-gray-500 uppercase tracking-wider">Department</label>
+          <input type="text" formControlName="department" class="w-full px-4 py-3 bg-gray-50 border-none rounded-xl focus:ring-2 focus:ring-[#F2994A] transition-all" placeholder="e.g. Sales, Marketing">
+        </div>
+
+        <div class="space-y-2">
+          <label class="text-xs font-bold text-gray-500 uppercase tracking-wider">Location</label>
+          <input type="text" formControlName="location" class="w-full px-4 py-3 bg-gray-50 border-none rounded-xl focus:ring-2 focus:ring-[#F2994A] transition-all" placeholder="e.g. Bangalore, Remote">
+        </div>
+
+        <div class="md:col-span-2 space-y-2">
+          <label class="text-xs font-bold text-gray-500 uppercase tracking-wider">Job Description</label>
+          <textarea formControlName="description" rows="4" class="w-full px-4 py-3 bg-gray-50 border-none rounded-xl focus:ring-2 focus:ring-[#F2994A] transition-all" placeholder="Briefly describe the role..."></textarea>
+        </div>
+
+        <div class="md:col-span-2 space-y-2">
+          <label class="text-xs font-bold text-gray-500 uppercase tracking-wider">Requirements</label>
+          <textarea formControlName="requirements" rows="4" class="w-full px-4 py-3 bg-gray-50 border-none rounded-xl focus:ring-2 focus:ring-[#F2994A] transition-all" placeholder="Skills, experience needed..."></textarea>
+        </div>
+      </div>
+    </form>
+
+    <div class="p-6 border-t border-gray-100 bg-gray-50 flex items-center justify-end gap-3">
+      <button (click)="closeModal()" class="px-6 py-2.5 rounded-xl text-sm font-bold text-gray-500 hover:bg-gray-200 transition-all">
+        Cancel
+      </button>
+      <button type="submit" [disabled]="careerForm.invalid" class="px-8 py-2.5 bg-[#F2994A] text-white rounded-xl text-sm font-bold hover:bg-orange-600 transition-all shadow-lg shadow-orange-200 disabled:opacity-50 disabled:shadow-none">
+        {{ isEditing ? 'Save Changes' : 'Post Job' }}
+      </button>
     </div>
   </div>
 </div>

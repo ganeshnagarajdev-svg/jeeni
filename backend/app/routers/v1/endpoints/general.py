@@ -3,7 +3,7 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
 from app.routers import deps
 from app.services.general_service import career_service, page_service
-from app.schemas.general import Career, CareerCreate, Page, PageCreate
+from app.schemas.general import Career, CareerCreate, CareerUpdate, Page, PageCreate, PageUpdate
 from app.models.user import User
 
 router = APIRouter()
@@ -45,6 +45,38 @@ async def create_career(
     """
     return await career_service.create(db, obj_in=career_in)
 
+@router.put("/careers/{id}", response_model=Career)
+async def update_career(
+    *,
+    db: AsyncSession = Depends(deps.get_db),
+    id: int,
+    career_in: CareerUpdate,
+    current_user: User = Depends(deps.get_current_active_superuser),
+) -> Any:
+    """
+    Update job posting (Admin only).
+    """
+    job = await career_service.update(db, id=id, obj_in=career_in)
+    if not job:
+        raise HTTPException(status_code=404, detail="Job not found")
+    return job
+
+@router.delete("/careers/{id}", response_model=Career)
+async def delete_career(
+    *,
+    db: AsyncSession = Depends(deps.get_db),
+    id: int,
+    current_user: User = Depends(deps.get_current_active_superuser),
+) -> Any:
+    """
+    Delete career posting.
+    """
+    job = await career_service.remove(db, id=id)
+    if not job:
+         raise HTTPException(status_code=404, detail="Job not found")
+    
+    return job
+
 # Page Endpoints
 @router.get("/pages/{slug}", response_model=Page)
 async def read_page(
@@ -71,18 +103,18 @@ async def create_page(
     """
     return await page_service.create(db, obj_in=page_in)
 
-@router.delete("/careers/{id}", response_model=Career)
-async def delete_career(
+@router.put("/pages/{id}", response_model=Page)
+async def update_page(
     *,
     db: AsyncSession = Depends(deps.get_db),
     id: int,
+    page_in: PageUpdate,
     current_user: User = Depends(deps.get_current_active_superuser),
 ) -> Any:
     """
-    Delete career posting.
+    Update page (Admin only).
     """
-    job = await career_service.remove(db, id=id)
-    if not job:
-         raise HTTPException(status_code=404, detail="Job not found")
-    
-    return job
+    page = await page_service.update(db, id=id, obj_in=page_in)
+    if not page:
+        raise HTTPException(status_code=404, detail="Page not found")
+    return page

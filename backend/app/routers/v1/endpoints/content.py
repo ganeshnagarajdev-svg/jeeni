@@ -1,9 +1,9 @@
-from typing import Any, List
+from typing import Any, List, Union, Dict
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
 from app.routers import deps
 from app.services.content_service import blog_service, media_service
-from app.schemas.content import Blog, BlogCreate, Media, MediaCreate
+from app.schemas.content import Blog, BlogCreate, BlogUpdate, Media, MediaCreate
 from app.models.user import User
 
 router = APIRouter()
@@ -45,6 +45,38 @@ async def create_blog(
     """
     return await blog_service.create(db, obj_in=blog_in, author_id=current_user.id)
 
+@router.put("/blogs/{id}", response_model=Blog)
+async def update_blog(
+    *,
+    db: AsyncSession = Depends(deps.get_db),
+    id: int,
+    blog_in: BlogUpdate,
+    current_user: User = Depends(deps.get_current_active_superuser),
+) -> Any:
+    """
+    Update blog (Admin only).
+    """
+    blog = await blog_service.update(db, id=id, obj_in=blog_in)
+    if not blog:
+        raise HTTPException(status_code=404, detail="Blog not found")
+    return blog
+
+@router.delete("/blogs/{id}", response_model=Blog)
+async def delete_blog(
+    *,
+    db: AsyncSession = Depends(deps.get_db),
+    id: int,
+    current_user: User = Depends(deps.get_current_active_superuser),
+) -> Any:
+    """
+    Delete blog.
+    """
+    blog = await blog_service.remove(db, id=id)
+    if not blog:
+         raise HTTPException(status_code=404, detail="Blog not found")
+    
+    return blog
+
 # Media Endpoints
 @router.get("/media", response_model=List[Media])
 async def read_media(
@@ -69,23 +101,6 @@ async def create_media(
     """
     return await media_service.create(db, obj_in=media_in)
 
-@router.delete("/blogs/{id}", response_model=Blog)
-async def delete_blog(
-    *,
-    db: AsyncSession = Depends(deps.get_db),
-    id: int,
-    current_user: User = Depends(deps.get_current_active_superuser),
-) -> Any:
-    """
-    Delete blog.
-    """
-    # Quick implementation of delete
-    blog = await blog_service.remove(db, id=id)
-    if not blog:
-         raise HTTPException(status_code=404, detail="Blog not found")
-    
-    return blog
-
 @router.delete("/media/{id}", response_model=Media)
 async def delete_media(
     *,
@@ -96,7 +111,6 @@ async def delete_media(
     """
     Delete media.
     """
-    from sqlalchemy.future import select
     media = await media_service.remove(db, id=id)
     if not media:
          raise HTTPException(status_code=404, detail="Media not found")
