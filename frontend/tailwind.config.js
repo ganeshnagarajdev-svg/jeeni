@@ -7,40 +7,40 @@ module.exports = {
     extend: {
       colors: {
         primary: {
-          50: '#F5F9F8',
-          100: '#E0EFEA',
-          200: '#BFDFD4',
-          300: '#94C7B5',
-          400: '#64A992',
-          500: '#418B73',
-          600: '#31705D', // Brand Base Green
-          700: '#285A4C',
-          800: '#23483E',
-          900: '#1F3C34', // Deep Forest (Footer/Headers)
-          950: '#11231F',
+          50: '#FFF1F5',
+          100: '#FFE4EB',
+          200: '#FEC9D7',
+          300: '#FE90AB',
+          400: '#FD5780',
+          500: '#E50046', // Floral Crimson (Primary)
+          600: '#C2003B',
+          700: '#9F0031',
+          800: '#7C0026',
+          900: '#59001C',
+          950: '#360011',
         },
         secondary: {
-          50: '#F9FAFB',
-          100: '#F3F4F6',
-          200: '#E5E7EB',
-          300: '#D1D5DB',
-          400: '#9CA3AF',
-          500: '#6B7280',
-          600: '#4B5563',
-          700: '#374151',
-          800: '#1F2937',
-          900: '#111827',
-          950: '#030712',
+          50: '#F8FAF5',
+          100: '#F1F5EB',
+          200: '#E3EDD7',
+          300: '#C7DB9C', // Spring Leaf (Secondary)
+          400: '#B0CB79',
+          500: '#94B456',
+          600: '#759044',
+          700: '#566B32',
+          800: '#374620',
+          900: '#181E0E',
+          950: '#0C0F07',
         },
         accent: {
-          DEFAULT: '#F59E0B', // Harvest Gold (Amber-500 equivalent)
-          hover: '#D97706',   // Amber-600
-          light: '#FCD34D',
+          DEFAULT: '#FDAB9E', // Coral Bloom
+          hover: '#FB8D7C',
+          light: '#FFF0BD', // Morning Buttercup
         },
         surface: {
           50: '#FFFFFF',
-          100: '#FAFAFA',
-          200: '#F4F5F7',
+          100: '#FFFDF9', // Soft Sunlight
+          200: '#F7F9F5', // Dew Drop
         }
       },
       fontFamily: {
