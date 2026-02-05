@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { DashboardComponent } from './dashboard/dashboard';
 import { AdminProductsComponent } from './admin-products/admin-products';
+import { AdminProductViewComponent } from './admin-product-view/admin-product-view';
 import { AdminBlogsComponent } from './admin-blogs/admin-blogs';
 import { AdminCareersComponent } from './admin-careers/admin-careers';
 import { AdminPhotosComponent } from './admin-photos/admin-photos';
@@ -19,6 +20,7 @@ const routes: Routes = [
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
       { path: 'dashboard', component: DashboardComponent },
       { path: 'products', component: AdminProductsComponent },
+      { path: 'products/:id', component: AdminProductViewComponent },
       { path: 'blogs', component: AdminBlogsComponent },
       { path: 'careers', component: AdminCareersComponent },
       { path: 'photos', component: AdminPhotosComponent },
@@ -35,4 +37,5 @@ const routes: Routes = [
   exports: [RouterModule]
 })
 export class AdminRoutingModule { }
+
 

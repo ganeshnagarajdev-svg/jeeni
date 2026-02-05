@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators, FormArray } from '@angular/forms';
+import { RouterModule } from '@angular/router';
 import { ProductService } from '../../../core/services/product.service';
 import { ContentService } from '../../../core/services/content.service';
 import { Product, Category } from '../../../core/models/product';
@@ -8,7 +9,7 @@ import { Product, Category } from '../../../core/models/product';
 @Component({
   selector: 'app-admin-products',
   standalone: true,
-  imports: [CommonModule, FormsModule, ReactiveFormsModule],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule, RouterModule],
   templateUrl: './admin-products.html',
   styleUrl: './admin-products.css'
 })

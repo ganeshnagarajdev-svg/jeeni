@@ -1,0 +1,186 @@
+<div class="space-y-6">
+  <!-- Header with Back Button -->
+  <div class="flex items-center gap-4">
+    <button (click)="goBack()" class="p-2 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-lg transition-all">
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M19 12H5"/><path d="m12 19-7-7 7-7"/>
+      </svg>
+    </button>
+    <div>
+      <h1 class="text-2xl font-bold text-gray-900 m-0">Product Details</h1>
+      <p class="text-sm text-gray-500 mt-1">View product information and customer reviews</p>
+    </div>
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="loading" class="bg-white rounded-2xl shadow-sm border border-gray-100 p-12 text-center">
+    <div class="inline-block animate-spin w-8 h-8 border-4 border-gray-200 border-t-[#F2994A] rounded-full mb-4"></div>
+    <p class="text-sm text-gray-500 font-medium">Loading product...</p>
+  </div>
+
+  <!-- Product Not Found -->
+  <div *ngIf="!loading && !product" class="bg-white rounded-2xl shadow-sm border border-gray-100 p-12 text-center">
+    <p class="text-gray-500">Product not found</p>
+    <button (click)="goBack()" class="mt-4 px-4 py-2 bg-[#1B3C35] text-white rounded-xl text-sm font-semibold hover:bg-[#2c5d53] transition-all">
+      Back to Products
+    </button>
+  </div>
+
+  <!-- Product Details -->
+  <div *ngIf="!loading && product" class="space-y-6">
+    <!-- Product Info Card -->
+    <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+      <div class="grid grid-cols-1 lg:grid-cols-2">
+        <!-- Image Section -->
+        <div class="bg-gray-50 p-6">
+          <div class="aspect-square rounded-xl overflow-hidden bg-gray-100 mb-4">
+            <img 
+              *ngIf="product.images && product.images.length > 0"
+              [src]="getImageUrl(product.images[selectedImageIndex].image_url)" 
+              [alt]="product.name"
+              class="w-full h-full object-cover"
+            />
+            <div *ngIf="!product.images || product.images.length === 0" class="w-full h-full flex items-center justify-center text-gray-300">
+              <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                <rect width="18" height="18" x="3" y="3" rx="2" ry="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/>
+              </svg>
+            </div>
+          </div>
+          <!-- Thumbnails -->
+          <div *ngIf="product.images && product.images.length > 1" class="flex gap-2 flex-wrap">
+            <button 
+              *ngFor="let img of product.images; let i = index"
+              (click)="selectImage(i)"
+              class="w-16 h-16 rounded-lg overflow-hidden border-2 transition-all"
+              [ngClass]="{'border-[#F2994A] ring-2 ring-orange-100': i === selectedImageIndex, 'border-transparent hover:border-gray-300': i !== selectedImageIndex}"
+            >
+              <img [src]="getImageUrl(img.image_url)" class="w-full h-full object-cover"/>
+            </button>
+          </div>
+        </div>
+
+        <!-- Details Section -->
+        <div class="p-6 lg:p-8 space-y-6">
+          <div>
+            <span class="text-xs font-bold text-[#F2994A] uppercase tracking-wider bg-orange-50 px-2 py-1 rounded-full">
+              {{ product.category?.name || 'Uncategorized' }}
+            </span>
+          </div>
+
+          <div>
+            <h2 class="text-2xl font-bold text-gray-900 mb-2">{{ product.name }}</h2>
+            <p class="text-sm text-gray-500">Slug: {{ product.slug }}</p>
+          </div>
+
+          <!-- Rating Summary -->
+          <div class="flex items-center gap-3 p-4 bg-gray-50 rounded-xl">
+            <div class="flex items-center gap-0.5">
+              <ng-container *ngFor="let star of getStars(reviewStats.average_rating || 0)">
+                <svg *ngIf="star === 'full'" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-yellow-400" viewBox="0 0 20 20" fill="currentColor">
+                  <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+                </svg>
+                <svg *ngIf="star === 'empty'" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-300" viewBox="0 0 20 20" fill="currentColor">
+                  <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+                </svg>
+              </ng-container>
+            </div>
+            <span class="text-lg font-bold text-gray-900" *ngIf="reviewStats.average_rating">{{ reviewStats.average_rating }}</span>
+            <span class="text-sm text-gray-500">({{ reviewStats.review_count }} reviews)</span>
+          </div>
+
+          <!-- Price & Stock -->
+          <div class="grid grid-cols-2 gap-4">
+            <div class="p-4 bg-green-50 rounded-xl">
+              <p class="text-xs font-bold text-green-600 uppercase tracking-wider mb-1">Price</p>
+              <p class="text-2xl font-bold text-green-700">₹{{ product.price }}</p>
+              <p *ngIf="product.discounted_price" class="text-sm text-gray-500 line-through">₹{{ product.discounted_price }}</p>
+            </div>
+            <div class="p-4 rounded-xl" [ngClass]="product.stock > 0 ? 'bg-blue-50' : 'bg-red-50'">
+              <p class="text-xs font-bold uppercase tracking-wider mb-1" [ngClass]="product.stock > 0 ? 'text-blue-600' : 'text-red-600'">Stock</p>
+              <p class="text-2xl font-bold" [ngClass]="product.stock > 0 ? 'text-blue-700' : 'text-red-700'">{{ product.stock }}</p>
+              <p class="text-sm" [ngClass]="product.stock > 0 ? 'text-blue-500' : 'text-red-500'">{{ product.stock > 0 ? 'In Stock' : 'Out of Stock' }}</p>
+            </div>
+          </div>
+
+          <!-- Status Badges -->
+          <div class="flex gap-2">
+            <span class="px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider"
+              [ngClass]="product.is_active ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-500'">
+              {{ product.is_active ? 'Active' : 'Inactive' }}
+            </span>
+            <span *ngIf="product.is_featured" class="px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-purple-100 text-purple-700">
+              Featured
+            </span>
+          </div>
+
+          <!-- Description -->
+          <div *ngIf="product.description">
+            <h3 class="text-sm font-bold text-gray-500 uppercase tracking-wider mb-2">Description</h3>
+            <div class="prose prose-sm max-w-none text-gray-600" [innerHTML]="product.description"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Reviews Section -->
+    <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+      <div class="p-6 border-b border-gray-100">
+        <h2 class="text-xl font-bold text-gray-900 m-0">Customer Reviews ({{ reviewStats.review_count }})</h2>
+      </div>
+
+      <!-- Loading Reviews -->
+      <div *ngIf="loadingReviews" class="p-8 text-center">
+        <div class="inline-block animate-spin w-6 h-6 border-2 border-gray-200 border-t-[#F2994A] rounded-full"></div>
+      </div>
+
+      <!-- No Reviews -->
+      <div *ngIf="!loadingReviews && reviews.length === 0" class="p-12 text-center text-gray-500">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 mx-auto mb-3 text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+        </svg>
+        <p class="font-medium">No reviews yet</p>
+      </div>
+
+      <!-- Reviews List -->
+      <div *ngIf="!loadingReviews && reviews.length > 0" class="divide-y divide-gray-50">
+        <div *ngFor="let review of reviews" class="p-6 hover:bg-gray-50/50 transition-colors group">
+          <div class="flex items-start justify-between">
+            <div class="flex-1">
+              <div class="flex items-center gap-3 mb-2">
+                <div class="w-10 h-10 rounded-full bg-gradient-to-br from-[#1B3C35] to-[#2c5d53] flex items-center justify-center text-white font-bold">
+                  {{ review.user_name.charAt(0).toUpperCase() }}
+                </div>
+                <div>
+                  <p class="font-semibold text-gray-900">{{ review.user_name }}</p>
+                  <div class="flex items-center gap-2">
+                    <div class="flex items-center gap-0.5">
+                      <ng-container *ngFor="let star of getStars(review.rating)">
+                        <svg *ngIf="star === 'full'" xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-yellow-400" viewBox="0 0 20 20" fill="currentColor">
+                          <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+                        </svg>
+                        <svg *ngIf="star === 'empty'" xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-gray-300" viewBox="0 0 20 20" fill="currentColor">
+                          <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+                        </svg>
+                      </ng-container>
+                    </div>
+                    <span class="text-xs text-gray-500">{{ formatDate(review.created_at) }}</span>
+                  </div>
+                </div>
+              </div>
+              <p *ngIf="review.review_text" class="text-gray-600 pl-13 ml-13">{{ review.review_text }}</p>
+            </div>
+            <button 
+              (click)="deleteReview(review.id)"
+              class="p-2 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-all opacity-0 group-hover:opacity-100"
+              title="Delete Review"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/><line x1="10" x2="10" y1="11" y2="17"/><line x1="14" x2="14" y1="11" y2="17"/>
+              </svg>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

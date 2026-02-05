@@ -18,3 +18,4 @@ class User(Base):
     
     wishlist = relationship("Wishlist", back_populates="user", cascade="all, delete-orphan")
     blogs = relationship("Blog", back_populates="author")
+    reviews = relationship("ProductReview", back_populates="user", cascade="all, delete-orphan")

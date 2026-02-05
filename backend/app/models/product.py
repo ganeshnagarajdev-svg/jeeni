@@ -27,6 +27,7 @@ class Product(Base):
     
     images = relationship("ProductImage", back_populates="product", cascade="all, delete-orphan")
     wishlists = relationship("Wishlist", back_populates="product", cascade="all, delete-orphan")
+    reviews = relationship("ProductReview", back_populates="product", cascade="all, delete-orphan")
 
 class ProductImage(Base):
     id = Column(Integer, primary_key=True, index=True)

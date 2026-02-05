@@ -11,6 +11,17 @@ export interface ProductImage {
   is_main: boolean;
 }
 
+export interface ProductReview {
+  id: number;
+  product_id: number;
+  user_id: number;
+  user_name: string;
+  rating: number;
+  review_text?: string;
+  created_at: string;
+  updated_at: string;
+}
+
 export interface Product {
   id: number;
   name: string;
@@ -24,4 +35,8 @@ export interface Product {
   category_id: number;
   category?: Category;
   images?: ProductImage[];
+  average_rating?: number;
+  review_count?: number;
+  reviews?: ProductReview[];
 }
+

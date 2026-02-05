@@ -7,7 +7,7 @@ from app.db.base_class import Base
 class OrderStatus(str, enum.Enum):
     PENDING = "pending"
     PROCESSING = "processing"
-    SHIPPED = "shipped"
+    SHIPPING = "shipping"
     DELIVERED = "delivered"
     CANCELLED = "cancelled"
     RETURNED = "returned"
@@ -15,7 +15,7 @@ class OrderStatus(str, enum.Enum):
 class Order(Base):
     id = Column(Integer, primary_key=True, index=True)
     user_id = Column(Integer, ForeignKey("user.id"), nullable=False)
-    status = Column(Enum(OrderStatus), default=OrderStatus.PENDING)
+    status = Column(Enum(OrderStatus, native_enum=False, create_constraint=False, values_callable=lambda x: [e.value for e in x]), default=OrderStatus.PENDING.value)
     total_amount = Column(Float, nullable=False)
     
     # Shipping Info
