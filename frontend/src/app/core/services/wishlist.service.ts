@@ -15,19 +15,19 @@ export interface WishlistItem {
   providedIn: 'root'
 })
 export class WishlistService {
-  private apiUrl = `${environment.apiUrl}/wishlist`;
+  private apiUrl = `${environment.apiUrl}/wishlist/`;
 
   constructor(private http: HttpClient) {}
 
   getWishlist(): Observable<WishlistItem[]> {
-    return this.http.get<WishlistItem[]>(this.apiUrl + '/');
+    return this.http.get<WishlistItem[]>(this.apiUrl);
   }
 
   addToWishlist(productId: number): Observable<WishlistItem> {
-    return this.http.post<WishlistItem>(this.apiUrl + '/', { product_id: productId });
+    return this.http.post<WishlistItem>(this.apiUrl, { product_id: productId });
   }
 
   removeFromWishlist(id: number): Observable<WishlistItem> {
-    return this.http.delete<WishlistItem>(`${this.apiUrl}/${id}`);
+    return this.http.delete<WishlistItem>(`${this.apiUrl}${id}`);
   }
 }

@@ -15,6 +15,14 @@ export const routes: Routes = [
     loadChildren: () => import('./features/wishlist/wishlist-module').then(m => m.WishlistModule)
   },
   {
+    path: 'cart',
+    loadChildren: () => import('./features/cart/cart-module').then(m => m.CartModule)
+  },
+  {
+    path: 'orders',
+    loadChildren: () => import('./features/orders/orders-module').then(m => m.OrdersModule)
+  },
+  {
     path: 'content',
     loadChildren: () => import('./features/content/content-module').then(m => m.ContentModule)
   },

@@ -3,6 +3,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 from sqlalchemy.orm import selectinload
 from app.models.wishlist import Wishlist
+from app.models.product import Product
 from app.schemas.wishlist import WishlistCreate
 
 class WishlistRepository:
@@ -17,12 +18,18 @@ class WishlistRepository:
         return await self.get(db, id=db_obj.id)
 
     async def get_multi_by_user(self, db: AsyncSession, user_id: int, skip: int = 0, limit: int = 100) -> List[Wishlist]:
-        query = select(Wishlist).options(selectinload(Wishlist.product).selectinload("images")).filter(Wishlist.user_id == user_id).offset(skip).limit(limit)
+        query = select(Wishlist).options(
+            selectinload(Wishlist.product).selectinload(Product.images),
+            selectinload(Wishlist.product).selectinload(Product.category)
+        ).filter(Wishlist.user_id == user_id).offset(skip).limit(limit)
         result = await db.execute(query)
         return result.scalars().all()
 
     async def get(self, db: AsyncSession, id: int) -> Optional[Wishlist]:
-        query = select(Wishlist).options(selectinload(Wishlist.product).selectinload("images")).filter(Wishlist.id == id)
+        query = select(Wishlist).options(
+            selectinload(Wishlist.product).selectinload(Product.images),
+            selectinload(Wishlist.product).selectinload(Product.category)
+        ).filter(Wishlist.id == id)
         result = await db.execute(query)
         return result.scalars().first()
 

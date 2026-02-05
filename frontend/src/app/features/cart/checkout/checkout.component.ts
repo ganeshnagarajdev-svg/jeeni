@@ -1,0 +1,53 @@
+import { Component, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { Router, RouterModule } from '@angular/router';
+import { CartService, Cart } from '../../../core/services/cart.service';
+import { OrderService } from '../../../core/services/order.service';
+
+@Component({
+  selector: 'app-checkout',
+  standalone: true,
+  imports: [CommonModule, FormsModule, RouterModule],
+  templateUrl: './checkout.component.html',
+})
+export class CheckoutComponent implements OnInit {
+  cart: Cart | null = null;
+  shippingInfo = {
+    shipping_address: '',
+    city: '',
+    state: '',
+    zip_code: '',
+    phone_number: ''
+  };
+  isSubmitting = false;
+
+  constructor(
+    private cartService: CartService,
+    private orderService: OrderService,
+    private router: Router
+  ) {}
+
+  ngOnInit(): void {
+    this.cartService.cart$.subscribe(cart => {
+      this.cart = cart;
+      if (!cart || cart.items.length === 0) {
+        this.router.navigate(['/cart']);
+      }
+    });
+  }
+
+  onSubmit() {
+    this.isSubmitting = true;
+    this.orderService.createOrder(this.shippingInfo).subscribe({
+      next: (order) => {
+        alert('Order placed successfully!');
+        this.router.navigate(['/orders']); // Redirect to order history
+      },
+      error: (err) => {
+        alert('Failed to place order: ' + (err.error?.detail || err.message));
+        this.isSubmitting = false;
+      }
+    });
+  }
+}

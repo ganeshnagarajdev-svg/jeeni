@@ -1,0 +1,73 @@
+<div class="bg-surface-50 min-h-screen py-12">
+  <div class="container mx-auto px-4">
+    <div class="max-w-4xl mx-auto">
+      <h1 class="text-3xl font-display font-bold text-secondary-900 mb-8">Checkout</h1>
+
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+        <!-- Shipping Form -->
+        <div class="bg-white p-8 rounded-2xl shadow-card">
+          <h2 class="text-xl font-bold text-secondary-900 mb-6">Shipping Address</h2>
+          <form (ngSubmit)="onSubmit()" #checkoutForm="ngForm" class="space-y-6">
+            <div>
+              <label class="block text-sm font-medium text-secondary-700 mb-2">Full Address</label>
+              <textarea name="address" [(ngModel)]="shippingInfo.shipping_address" required class="w-full px-4 py-3 rounded-xl border border-secondary-200 focus:border-primary-500 focus:ring-2 focus:ring-primary-200 outline-none transition-all" rows="3"></textarea>
+            </div>
+            <div class="grid grid-cols-2 gap-4">
+              <div>
+                <label class="block text-sm font-medium text-secondary-700 mb-2">City</label>
+                <input type="text" name="city" [(ngModel)]="shippingInfo.city" required class="w-full px-4 py-3 rounded-xl border border-secondary-200 focus:border-primary-500 focus:ring-2 focus:ring-primary-200 outline-none transition-all">
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-secondary-700 mb-2">State</label>
+                <input type="text" name="state" [(ngModel)]="shippingInfo.state" required class="w-full px-4 py-3 rounded-xl border border-secondary-200 focus:border-primary-500 focus:ring-2 focus:ring-primary-200 outline-none transition-all">
+              </div>
+            </div>
+            <div class="grid grid-cols-2 gap-4">
+              <div>
+                <label class="block text-sm font-medium text-secondary-700 mb-2">Zip Code</label>
+                <input type="text" name="zip" [(ngModel)]="shippingInfo.zip_code" required class="w-full px-4 py-3 rounded-xl border border-secondary-200 focus:border-primary-500 focus:ring-2 focus:ring-primary-200 outline-none transition-all">
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-secondary-700 mb-2">Phone Number</label>
+                <input type="tel" name="phone" [(ngModel)]="shippingInfo.phone_number" required class="w-full px-4 py-3 rounded-xl border border-secondary-200 focus:border-primary-500 focus:ring-2 focus:ring-primary-200 outline-none transition-all">
+              </div>
+            </div>
+
+            <div class="pt-6">
+              <button type="submit" [disabled]="!checkoutForm.form.valid || isSubmitting" class="btn-primary w-full py-4 text-lg">
+                {{ isSubmitting ? 'Processing...' : 'Place Order' }}
+              </button>
+            </div>
+          </form>
+        </div>
+
+        <!-- Order Summary -->
+        <div class="space-y-6">
+          <div class="bg-white p-8 rounded-2xl shadow-card">
+            <h2 class="text-xl font-bold text-secondary-900 mb-6">Items Summary</h2>
+            <div *ngIf="cart" class="space-y-4 max-h-96 overflow-y-auto pr-2">
+              <div *ngFor="let item of cart.items" class="flex justify-between items-center py-2 border-b border-secondary-50 last:border-0">
+                <div class="flex items-center gap-4">
+                   <div class="w-12 h-12 bg-secondary-100 rounded-lg overflow-hidden flex-shrink-0">
+                     <img *ngIf="item.product.images?.length" [src]="item.product.images[0].image_url" class="w-full h-full object-cover">
+                   </div>
+                   <div>
+                     <p class="text-sm font-bold text-secondary-900 line-clamp-1">{{ item.product.name }}</p>
+                     <p class="text-xs text-secondary-500">Qty: {{ item.quantity }}</p>
+                   </div>
+                </div>
+                <span class="text-sm font-bold text-secondary-900">₹{{ item.product.price * item.quantity }}</span>
+              </div>
+            </div>
+            <div class="border-t border-secondary-100 mt-6 pt-6">
+               <div class="flex justify-between font-bold text-lg">
+                 <span>Total</span>
+                 <span class="text-primary-600">₹{{ cart?.total_price }}</span>
+               </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

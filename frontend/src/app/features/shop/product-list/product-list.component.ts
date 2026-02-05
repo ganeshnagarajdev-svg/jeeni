@@ -4,6 +4,7 @@ import { RouterModule, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { ProductService } from '../../../core/services/product.service';
 import { Product, Category } from '../../../core/models/product';
+import { CartService } from '../../../core/services/cart.service';
 
 @Component({
   selector: 'app-product-list',
@@ -26,8 +27,18 @@ export class ProductListComponent implements OnInit {
 
   constructor(
     private productService: ProductService,
+    private cartService: CartService,
     private router: Router
   ) {}
+
+  buyNow(product: Product) {
+    this.cartService.addToCart(product.id).subscribe({
+      next: () => {
+        this.router.navigate(['/cart/checkout']);
+      },
+      error: (err) => alert('Failed to proceed to buy: ' + (err.error?.detail || err.message))
+    });
+  }
 
   ngOnInit(): void {
     this.loadCategories();

@@ -7,7 +7,7 @@ from app.routers import deps
 from app.schemas.admin import DashboardStats
 from app.models.user import User
 from app.models.product import Product
-# from app.models.order import Order # Order not implemented yet
+from app.models.order import Order
 
 router = APIRouter()
 
@@ -29,13 +29,19 @@ async def get_dashboard_stats(
     product_count = await db.execute(product_query)
     total_products = product_count.scalar()
 
-    # Mock Orders and Revenue until Order module is ready
-    total_orders = 0
-    total_revenue = 0.0
+    # Count Orders
+    order_query = select(func.count(Order.id))
+    order_count = await db.execute(order_query)
+    total_orders = order_count.scalar()
+
+    # Total Revenue
+    revenue_query = select(func.sum(Order.total_amount))
+    revenue_result = await db.execute(revenue_query)
+    total_revenue = revenue_result.scalar()
 
     return {
         "total_users": total_users or 0,
         "total_products": total_products or 0,
-        "total_orders": total_orders,
-        "total_revenue": total_revenue
+        "total_orders": total_orders or 0,
+        "total_revenue": total_revenue or 0.0
     }

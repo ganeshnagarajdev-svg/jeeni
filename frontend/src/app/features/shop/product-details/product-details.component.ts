@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { ProductService } from '../../../core/services/product.service';
 import { WishlistService } from '../../../core/services/wishlist.service';
+import { CartService } from '../../../core/services/cart.service';
 import { Product } from '../../../core/models/product';
 
 @Component({
@@ -19,7 +20,9 @@ export class ProductDetailsComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private productService: ProductService,
-    private wishlistService: WishlistService
+    private wishlistService: WishlistService,
+    private cartService: CartService,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -52,6 +55,26 @@ export class ProductDetailsComponent implements OnInit {
             next: () => alert('Product added to wishlist!'),
             error: (err) => alert('Failed to add to wishlist: ' + (err.error?.detail || err.message))
         });
+    }
+  }
+
+  buyNow() {
+    if (this.product) {
+      this.cartService.addToCart(this.product.id).subscribe({
+        next: () => {
+          this.router.navigate(['/cart/checkout']);
+        },
+        error: (err) => alert('Failed to proceed to buy: ' + (err.error?.detail || err.message))
+      });
+    }
+  }
+
+  addToCart() {
+    if (this.product) {
+      this.cartService.addToCart(this.product.id).subscribe({
+        next: () => alert('Product added to cart!'),
+        error: (err) => alert('Failed to add to cart: ' + (err.error?.detail || err.message))
+      });
     }
   }
 }
