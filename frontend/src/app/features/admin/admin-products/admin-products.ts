@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators, FormArray } from '@angular/forms';
 import { ProductService } from '../../../core/services/product.service';
+import { ContentService } from '../../../core/services/content.service';
 import { Product, Category } from '../../../core/models/product';
 
 @Component({
@@ -22,6 +23,7 @@ export class AdminProductsComponent implements OnInit {
 
   constructor(
     private productService: ProductService,
+    private contentService: ContentService,
     private fb: FormBuilder
   ) {
     this.productForm = this.fb.group({
@@ -111,6 +113,24 @@ export class AdminProductsComponent implements OnInit {
 
   removeImage(index: number) {
     this.images.removeAt(index);
+  }
+
+  onFileSelected(event: any, index: number) {
+    const file = event.target.files[0];
+    if (file) {
+      this.contentService.uploadMedia(file).subscribe({
+        next: (res) => {
+          this.images.at(index).patchValue({
+             image_url: res.url
+          });
+        },
+        error: (err) => alert('Upload failed: ' + err.message)
+      });
+    }
+  }
+
+  getImageUrl(path: string | null | undefined): string {
+    return this.contentService.getImageUrl(path);
   }
 
   closeModal() {

@@ -2,7 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
+import { take } from 'rxjs';
 import { ProductService } from '../../../core/services/product.service';
+import { ContentService } from '../../../core/services/content.service';
 import { Product, Category } from '../../../core/models/product';
 import { CartService } from '../../../core/services/cart.service';
 
@@ -27,6 +29,7 @@ export class ProductListComponent implements OnInit {
 
   constructor(
     private productService: ProductService,
+    private contentService: ContentService,
     private cartService: CartService,
     private router: Router
   ) {}
@@ -36,7 +39,9 @@ export class ProductListComponent implements OnInit {
       next: () => {
         this.router.navigate(['/cart/checkout']);
       },
-      error: (err) => alert('Failed to proceed to buy: ' + (err.error?.detail || err.message))
+      error: (err) => {
+        console.error('Failed to buy:', err);
+      }
     });
   }
 
@@ -60,10 +65,12 @@ export class ProductListComponent implements OnInit {
     const min = this.minPrice ? this.minPrice : undefined;
     const max = this.maxPrice ? this.maxPrice : undefined;
 
-    this.productService.getProducts(0, 100, categoryId, min, max, this.sortBy).subscribe({
-      next: (products) => {
+    // Use take(1) to avoid potential double-triggering or leaks
+    this.productService.getProducts(0, 100, categoryId, min, max, this.sortBy).pipe(take(1)).subscribe({
+      next: (products: Product[]) => {
         this.products = products;
         this.isLoading = false;
+        // Trigger change detection manually if needed (Angular usually handles this but safety first)
       },
       error: (err) => {
         console.error('Failed to load products:', err);
@@ -92,6 +99,10 @@ export class ProductListComponent implements OnInit {
   onSortChange(event: any) {
     this.sortBy = event.target.value;
     this.loadProducts();
+  }
+
+  getImageUrl(path: string | null | undefined): string {
+    return this.contentService.getImageUrl(path);
   }
 
   viewDetails(slug: string) {

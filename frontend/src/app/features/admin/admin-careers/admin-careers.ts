@@ -66,7 +66,7 @@ export class AdminCareersComponent implements OnInit {
       location: career.location,
       description: career.description,
       requirements: career.requirements,
-      is_active: true // Default to true if not present
+      is_active: career.is_active
     });
     this.showModal = true;
   }

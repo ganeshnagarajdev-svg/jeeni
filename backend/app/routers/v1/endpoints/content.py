@@ -1,10 +1,11 @@
 from typing import Any, List, Union, Dict
-from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
 from app.routers import deps
 from app.services.content_service import blog_service, media_service
+from app.services.upload_service import upload_service
 from app.schemas.content import Blog, BlogCreate, BlogUpdate, Media, MediaCreate
 from app.models.user import User
+from fastapi import APIRouter, Depends, HTTPException, UploadFile, File
 
 router = APIRouter()
 
@@ -116,3 +117,14 @@ async def delete_media(
          raise HTTPException(status_code=404, detail="Media not found")
     
     return media
+
+@router.post("/upload")
+async def upload_file(
+    file: UploadFile = File(...),
+    current_user: User = Depends(deps.get_current_active_superuser),
+) -> Any:
+    """
+    Upload a file (Admin only).
+    """
+    file_url = await upload_service.save_file_local(file)
+    return {"url": file_url}

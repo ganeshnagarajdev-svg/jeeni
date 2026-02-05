@@ -8,6 +8,8 @@ export interface DashboardStats {
   total_products: number;
   total_orders: number;
   total_revenue: number;
+  active_jobs: number;
+  active_blogs: number;
 }
 
 @Injectable({

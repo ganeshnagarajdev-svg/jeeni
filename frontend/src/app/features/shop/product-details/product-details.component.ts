@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ProductService } from '../../../core/services/product.service';
+import { ContentService } from '../../../core/services/content.service';
 import { WishlistService } from '../../../core/services/wishlist.service';
 import { CartService } from '../../../core/services/cart.service';
 import { Product } from '../../../core/models/product';
@@ -20,6 +21,7 @@ export class ProductDetailsComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private productService: ProductService,
+    private contentService: ContentService,
     private wishlistService: WishlistService,
     private cartService: CartService,
     private router: Router
@@ -76,5 +78,9 @@ export class ProductDetailsComponent implements OnInit {
         error: (err) => alert('Failed to add to cart: ' + (err.error?.detail || err.message))
       });
     }
+  }
+
+  getImageUrl(path: string | null | undefined): string {
+    return this.contentService.getImageUrl(path);
   }
 }

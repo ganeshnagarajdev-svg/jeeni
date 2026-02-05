@@ -21,6 +21,7 @@ export class CheckoutComponent implements OnInit {
     phone_number: ''
   };
   isSubmitting = false;
+  paymentStatus: 'idle' | 'processing' | 'success' | 'failed' = 'idle';
 
   constructor(
     private cartService: CartService,
@@ -39,15 +40,21 @@ export class CheckoutComponent implements OnInit {
 
   onSubmit() {
     this.isSubmitting = true;
-    this.orderService.createOrder(this.shippingInfo).subscribe({
-      next: (order) => {
-        alert('Order placed successfully!');
-        this.router.navigate(['/orders']); // Redirect to order history
-      },
-      error: (err) => {
-        alert('Failed to place order: ' + (err.error?.detail || err.message));
-        this.isSubmitting = false;
-      }
-    });
+    this.paymentStatus = 'processing';
+
+    // Simulate Payment
+    setTimeout(() => {
+      this.paymentStatus = 'success';
+      this.orderService.createOrder(this.shippingInfo).subscribe({
+        next: (order) => {
+          this.router.navigate(['/orders']); // Redirect to order history
+        },
+        error: (err) => {
+          alert('Failed to place order: ' + (err.error?.detail || err.message));
+          this.isSubmitting = false;
+          this.paymentStatus = 'failed';
+        }
+      });
+    }, 2000);
   }
 }

@@ -5,3 +5,5 @@ class DashboardStats(BaseModel):
     total_products: int
     total_orders: int
     total_revenue: float
+    active_jobs: int
+    active_blogs: int

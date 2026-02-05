@@ -53,4 +53,16 @@ export class ContentService {
   deleteBlog(id: number): Observable<Blog> {
     return this.http.delete<Blog>(`${this.apiUrl}/blogs/${id}`);
   }
+
+  uploadMedia(file: File): Observable<{url: string}> {
+    const formData = new FormData();
+    formData.append('file', file);
+    return this.http.post<{url: string}>(`${this.apiUrl}/upload`, formData);
+  }
+
+  getImageUrl(path: string | null | undefined): string {
+    if (!path) return '/assets/placeholder-product.jpg';
+    if (path.startsWith('http')) return path;
+    return `${environment.mediaUrl}${path.startsWith('/') ? '' : '/'}${path}`;
+  }
 }

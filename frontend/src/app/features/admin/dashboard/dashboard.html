@@ -219,6 +219,72 @@
         <span>5% vs last week</span>
       </div>
     </div>
+
+    <!-- Active Jobs Card -->
+    <div
+      class="group bg-white p-6 rounded-2xl shadow-sm border border-gray-100 hover:border-[#F2994A] transition-all duration-300 hover:shadow-md"
+    >
+      <div class="flex items-start justify-between">
+        <div>
+          <p class="text-sm font-medium text-gray-500 uppercase tracking-wider mb-1">Active Jobs</p>
+          <h3 class="text-3xl font-bold text-gray-900 m-0">{{ stats.active_jobs }}</h3>
+        </div>
+        <div
+          class="p-3 bg-indigo-50 rounded-xl text-indigo-600 group-hover:scale-110 transition-transform"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <rect width="20" height="14" x="2" y="7" rx="2" ry="2" />
+            <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16" />
+          </svg>
+        </div>
+      </div>
+      <div class="mt-4 flex items-center text-xs font-medium text-gray-500">
+        <span>Hiring status: Active</span>
+      </div>
+    </div>
+
+    <!-- Published Blogs Card -->
+    <div
+      class="group bg-white p-6 rounded-2xl shadow-sm border border-gray-100 hover:border-[#F2994A] transition-all duration-300 hover:shadow-md"
+    >
+      <div class="flex items-start justify-between">
+        <div>
+          <p class="text-sm font-medium text-gray-500 uppercase tracking-wider mb-1">Published Blogs</p>
+          <h3 class="text-3xl font-bold text-gray-900 m-0">{{ stats.active_blogs }}</h3>
+        </div>
+        <div
+          class="p-3 bg-pink-50 rounded-xl text-pink-600 group-hover:scale-110 transition-transform"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+             <path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z"/>
+             <path d="M8 7h6"/><path d="M8 11h8"/><path d="M8 15h6"/>
+          </svg>
+        </div>
+      </div>
+      <div class="mt-4 flex items-center text-xs font-medium text-gray-500">
+        <span>Public articles count</span>
+      </div>
+    </div>
   </div>
 
   <!-- Quick Actions & Recent Activity Placeholder -->

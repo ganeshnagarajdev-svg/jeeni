@@ -10,6 +10,8 @@ export class AuthService {
   private apiUrl = 'http://localhost:8000/api/v1/auth';
   private currentUserSubject = new BehaviorSubject<any>(null);
   public currentUser$ = this.currentUserSubject.asObservable();
+  private isLoadingSubject = new BehaviorSubject<boolean>(false);
+  public isLoading$ = this.isLoadingSubject.asObservable();
 
   constructor(
     private http: HttpClient,
@@ -18,6 +20,11 @@ export class AuthService {
     const storedUser = localStorage.getItem('currentUser');
     if (storedUser) {
       this.currentUserSubject.next(JSON.parse(storedUser));
+    }
+    
+    // Always sync with backend if token exists to ensure role and status are current
+    if (this.isAuthenticated()) {
+      this.fetchCurrentUser().subscribe();
     }
   }
 
@@ -42,8 +49,12 @@ export class AuthService {
 
   fetchCurrentUser(): Observable<any> {
     const token = localStorage.getItem('token');
-    if (!token) return of(null);
+    if (!token) {
+      this.isLoadingSubject.next(false);
+      return of(null);
+    }
     
+    this.isLoadingSubject.next(true);
     return this.http
       .get<any>(`${this.apiUrl}/me`, {
         headers: { Authorization: `Bearer ${token}` },
@@ -52,6 +63,11 @@ export class AuthService {
         tap((user) => {
           localStorage.setItem('currentUser', JSON.stringify(user));
           this.currentUserSubject.next(user);
+          this.isLoadingSubject.next(false);
+        }),
+        map(user => {
+          this.isLoadingSubject.next(false);
+          return user;
         })
       );
   }

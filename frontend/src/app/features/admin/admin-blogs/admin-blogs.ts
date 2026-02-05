@@ -67,6 +67,20 @@ export class AdminBlogsComponent implements OnInit {
     this.showModal = true;
   }
 
+  onFileSelected(event: any) {
+    const file = event.target.files[0];
+    if (file) {
+      this.contentService.uploadMedia(file).subscribe({
+        next: (res) => {
+          this.blogForm.patchValue({
+             image_url: res.url
+          });
+        },
+        error: (err) => alert('Upload failed: ' + err.message)
+      });
+    }
+  }
+
   closeModal() {
     this.showModal = false;
   }
