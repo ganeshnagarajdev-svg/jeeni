@@ -17,7 +17,6 @@
       <nav class="hidden md:flex items-center gap-1">
         <a routerLink="/" routerLinkActive="text-primary-700 bg-primary-50" [routerLinkActiveOptions]="{exact: true}" class="px-4 py-2 rounded-full text-secondary-600 font-medium hover:text-primary-700 hover:bg-surface-100 transition-all">Home</a>
         <a routerLink="/shop" routerLinkActive="text-primary-700 bg-primary-50" class="px-4 py-2 rounded-full text-secondary-600 font-medium hover:text-primary-700 hover:bg-surface-100 transition-all">Shop</a>
-        <a routerLink="/wishlist" routerLinkActive="text-primary-700 bg-primary-50" class="px-4 py-2 rounded-full text-secondary-600 font-medium hover:text-primary-700 hover:bg-surface-100 transition-all">Wishlist</a>
         <a routerLink="/content/blogs" routerLinkActive="text-primary-700 bg-primary-50" class="px-4 py-2 rounded-full text-secondary-600 font-medium hover:text-primary-700 hover:bg-surface-100 transition-all">Blog</a>
         <a routerLink="/general/careers" routerLinkActive="text-primary-700 bg-primary-50" class="px-4 py-2 rounded-full text-secondary-600 font-medium hover:text-primary-700 hover:bg-surface-100 transition-all">Careers</a>
       </nav>
@@ -46,6 +45,12 @@
           <a routerLink="/auth/signup" class="btn-primary px-5 py-2 text-sm shadow-md hover:shadow-lg transform active:scale-95 transition-all">Sign up</a>
         </ng-template>
         
+        <a routerLink="/wishlist" class="w-10 h-10 rounded-full hover:bg-surface-100 flex items-center justify-center text-secondary-600 transition-colors">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+            </svg>
+        </a>
+        
         <a routerLink="/cart" class="w-10 h-10 rounded-full hover:bg-surface-100 flex items-center justify-center text-secondary-600 transition-colors relative">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" /></svg>
             <span class="absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full"></span>
@@ -67,7 +72,6 @@
     <div class="container mx-auto px-4 py-6 flex flex-col gap-2">
       <a routerLink="/" class="px-4 py-3 rounded-xl text-secondary-700 hover:bg-surface-50 hover:text-primary-700 font-medium transition-colors">Home</a>
       <a routerLink="/shop" class="px-4 py-3 rounded-xl text-secondary-700 hover:bg-surface-50 hover:text-primary-700 font-medium transition-colors">Shop</a>
-      <a routerLink="/wishlist" class="px-4 py-3 rounded-xl text-secondary-700 hover:bg-surface-50 hover:text-primary-700 font-medium transition-colors">Wishlist</a>
       <a routerLink="/content/blogs" class="px-4 py-3 rounded-xl text-secondary-700 hover:bg-surface-50 hover:text-primary-700 font-medium transition-colors">Blog</a>
       <a routerLink="/general/careers" class="px-4 py-3 rounded-xl text-secondary-700 hover:bg-surface-50 hover:text-primary-700 font-medium transition-colors">Careers</a>
       
