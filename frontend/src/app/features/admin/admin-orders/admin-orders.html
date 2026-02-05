@@ -1,0 +1,56 @@
+<div class="p-6">
+    <div class="flex justify-between items-center mb-6">
+      <h1 class="text-2xl font-bold text-gray-900">Orders Management</h1>
+      <button (click)="loadOrders()" class="text-primary-600 hover:text-primary-700 font-medium">
+        Refresh Orders
+      </button>
+    </div>
+  
+    <div *ngIf="isLoading" class="flex justify-center py-12">
+      <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600"></div>
+    </div>
+  
+    <div *ngIf="!isLoading && orders.length === 0" class="bg-white rounded-xl shadow-sm p-8 text-center">
+      <p class="text-gray-500 text-lg">No orders found.</p>
+    </div>
+  
+    <div *ngIf="!isLoading && orders.length > 0" class="bg-white rounded-xl shadow-sm overflow-hidden border border-gray-100">
+      <div class="overflow-x-auto">
+        <table class="w-full text-left">
+          <thead class="bg-gray-50 border-b border-gray-200">
+            <tr>
+              <th class="px-6 py-4 font-semibold text-gray-600 text-sm">Order ID</th>
+              <th class="px-6 py-4 font-semibold text-gray-600 text-sm">Customer</th>
+              <th class="px-6 py-4 font-semibold text-gray-600 text-sm">Date</th>
+              <th class="px-6 py-4 font-semibold text-gray-600 text-sm">Total</th>
+              <th class="px-6 py-4 font-semibold text-gray-600 text-sm">Status</th>
+              <th class="px-6 py-4 font-semibold text-gray-600 text-sm">Actions</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-gray-100">
+            <tr *ngFor="let order of orders" class="hover:bg-gray-50 transition-colors">
+              <td class="px-6 py-4 text-gray-900 font-medium">#{{ order.id }}</td>
+              <td class="px-6 py-4 text-gray-600">
+                <div class="font-medium text-gray-900">{{ order.shipping_address }}</div> 
+                <!-- Note: shipping_address might not be user name, checking model, User ID is available, maybe need to fetch user name or just show address city/phone -->
+                <div class="text-xs text-gray-500">{{ order.phone_number }}</div>
+              </td>
+              <td class="px-6 py-4 text-gray-600 text-sm">{{ order.created_at | date:'medium' }}</td>
+              <td class="px-6 py-4 text-gray-900 font-bold">₹{{ order.total_amount | number:'1.0-0' }}</td>
+              <td class="px-6 py-4">
+                <select 
+                  [ngModel]="order.status" 
+                  (ngModelChange)="updateStatus(order, $event)"
+                  [class]="'text-sm font-medium px-3 py-1 rounded-full border-none focus:ring-2 focus:ring-primary-500 cursor-pointer ' + getStatusClass(order.status)">
+                  <option *ngFor="let status of statusOptions" [value]="status">{{ status | titlecase }}</option>
+                </select>
+              </td>
+              <td class="px-6 py-4">
+                <button [routerLink]="['/admin/orders', order.id]" class="text-primary-600 hover:text-primary-800 font-medium text-sm">View Details</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>

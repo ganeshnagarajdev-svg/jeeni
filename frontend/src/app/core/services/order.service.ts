@@ -44,4 +44,16 @@ export class OrderService {
   createOrder(orderData: any): Observable<Order> {
     return this.http.post<Order>(this.apiUrl, orderData);
   }
+
+  getAllOrders(): Observable<Order[]> {
+    return this.http.get<Order[]>(`${this.apiUrl}admin/all`);
+  }
+
+  updateOrderStatus(id: number, status: string): Observable<Order> {
+    return this.http.patch<Order>(`${this.apiUrl}${id}/status`, { status });
+  }
+
+  cancelOrder(id: number): Observable<Order> {
+    return this.http.post<Order>(`${this.apiUrl}${id}/cancel`, {});
+  }
 }

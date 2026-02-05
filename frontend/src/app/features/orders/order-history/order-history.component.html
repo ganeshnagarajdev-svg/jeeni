@@ -21,7 +21,7 @@
     </div>
 
     <div *ngIf="!isLoading && orders.length > 0" class="space-y-6">
-       <div *ngFor="let order of orders" class="bg-white rounded-2xl shadow-card p-6 lg:p-8">
+       <div *ngFor="let order of orders" [routerLink]="['/orders', order.id]" class="bg-white rounded-2xl shadow-card p-6 lg:p-8 cursor-pointer hover:shadow-lg transition-shadow">
           <div class="flex flex-col lg:flex-row justify-between mb-8 pb-8 border-b border-secondary-100 gap-6">
              <div class="grid grid-cols-2 lg:grid-cols-4 gap-8 flex-1">
                 <div>

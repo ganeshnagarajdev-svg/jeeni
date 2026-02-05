@@ -3,7 +3,7 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
 from app.routers import deps
 from app.services.order_service import order_service
-from app.schemas.order import Order, OrderCreate
+from app.schemas.order import Order, OrderCreate, OrderUpdate
 from app.models.user import User
 
 router = APIRouter()
@@ -27,7 +27,11 @@ async def read_order(
     """
     Get specific order details.
     """
-    order = await order_service.get_order(db, order_id=order_id, user_id=current_user.id)
+    user_id = current_user.id
+    if current_user.is_superuser or current_user.role == "admin":
+        user_id = None
+        
+    order = await order_service.get_order(db, order_id=order_id, user_id=user_id)
     if not order:
         raise HTTPException(status_code=404, detail="Order not found")
     return order
@@ -46,3 +50,52 @@ async def create_order(
     if not order:
         raise HTTPException(status_code=400, detail="Cart is empty or could not create order")
     return order
+
+@router.get("/admin/all", response_model=List[Order])
+async def read_all_orders(
+    skip: int = 0,
+    limit: int = 100,
+    db: AsyncSession = Depends(deps.get_db),
+    current_user: User = Depends(deps.get_current_active_superuser),
+) -> Any:
+    """
+    Retrieve all orders (Admin only).
+    """
+    return await order_service.get_all_orders(db, skip=skip, limit=limit)
+
+@router.patch("/{order_id}/status", response_model=Order)
+async def update_order_status(
+    order_id: int,
+    status_in: OrderUpdate,
+    db: AsyncSession = Depends(deps.get_db),
+    current_user: User = Depends(deps.get_current_active_superuser),
+) -> Any:
+    """
+    Update order status (Admin only).
+    """
+    if not status_in.status:
+        raise HTTPException(status_code=400, detail="Status is required")
+        
+    order = await order_service.update_order_status(db, order_id=order_id, status=status_in.status)
+    if not order:
+        raise HTTPException(status_code=404, detail="Order not found")
+    return order
+
+@router.post("/{order_id}/cancel", response_model=Order)
+async def cancel_order(
+    order_id: int,
+    db: AsyncSession = Depends(deps.get_db),
+    current_user: User = Depends(deps.get_current_active_user),
+) -> Any:
+    """
+    Cancel an order (User only, if pending).
+    """
+    order = await order_service.get_order(db, order_id=order_id, user_id=current_user.id)
+    if not order:
+        raise HTTPException(status_code=404, detail="Order not found")
+        
+    if order.status != "pending":
+         raise HTTPException(status_code=400, detail="Cannot cancel order that is not pending")
+
+    cancelled_order = await order_service.cancel_order(db, order_id=order_id, user_id=current_user.id)
+    return cancelled_order

@@ -17,11 +17,23 @@ class OrderService:
         result = await db.execute(query)
         return result.scalars().all()
 
-    async def get_order(self, db: AsyncSession, order_id: int, user_id: int) -> Optional[Order]:
+    async def get_all_orders(self, db: AsyncSession, skip: int = 0, limit: int = 100) -> List[Order]:
         query = select(Order).options(
             selectinload(Order.items).selectinload(OrderItem.product).selectinload(Product.category),
             selectinload(Order.items).selectinload(OrderItem.product).selectinload(Product.images)
-        ).where(Order.id == order_id, Order.user_id == user_id)
+        ).order_by(Order.created_at.desc()).offset(skip).limit(limit)
+        result = await db.execute(query)
+        return result.scalars().all()
+
+    async def get_order(self, db: AsyncSession, order_id: int, user_id: Optional[int] = None) -> Optional[Order]:
+        query = select(Order).options(
+            selectinload(Order.items).selectinload(OrderItem.product).selectinload(Product.category),
+            selectinload(Order.items).selectinload(OrderItem.product).selectinload(Product.images)
+        ).where(Order.id == order_id)
+        
+        if user_id:
+            query = query.where(Order.user_id == user_id)
+            
         result = await db.execute(query)
         return result.scalar_one_or_none()
 
@@ -31,8 +43,13 @@ class OrderService:
         if not cart_items:
             return None
         
+        # Filter out items where product is None (deleted)
+        valid_items = [item for item in cart_items if item.product]
+        if not valid_items:
+            return None
+            
         # 2. Calculate Total
-        total_amount = sum(item.quantity * item.product.price for item in cart_items)
+        total_amount = sum(item.quantity * item.product.price for item in valid_items)
         
         # 3. Create Order
         db_order = Order(
@@ -50,7 +67,7 @@ class OrderService:
         await db.flush() # Get order ID
         
         # 4. Create Order Items
-        for cart_item in cart_items:
+        for cart_item in valid_items:
             order_item = OrderItem(
                 order_id=db_order.id,
                 product_id=cart_item.product_id,
@@ -79,7 +96,27 @@ class OrderService:
             db_order.status = status
             db.add(db_order)
             await db.commit()
-            await db.refresh(db_order)
+            
+            # Re-fetch with items loaded to prevent MisssingGreenlet error during serialization
+            query = select(Order).options(
+                selectinload(Order.items).selectinload(OrderItem.product).selectinload(Product.category),
+                selectinload(Order.items).selectinload(OrderItem.product).selectinload(Product.images)
+            ).where(Order.id == db_order.id)
+            result = await db.execute(query)
+            return result.scalar_one()
         return db_order
+
+    async def cancel_order(self, db: AsyncSession, order_id: int, user_id: int) -> Optional[Order]:
+        query = select(Order).where(Order.id == order_id, Order.user_id == user_id)
+        result = await db.execute(query)
+        db_order = result.scalar_one_or_none()
+        
+        if db_order and db_order.status == OrderStatus.PENDING:
+            db_order.status = OrderStatus.CANCELLED
+            db.add(db_order)
+            await db.commit()
+            await db.refresh(db_order)
+            return db_order
+        return None
 
 order_service = OrderService()

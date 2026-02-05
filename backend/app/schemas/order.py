@@ -15,7 +15,8 @@ class OrderItem(OrderItemBase):
     id: int
     order_id: int
     price_at_purchase: float
-    product: Product
+    product_id: Optional[int] = None
+    product: Optional[Product] = None
     
     class Config:
         from_attributes = True
