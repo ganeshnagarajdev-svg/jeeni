@@ -18,7 +18,8 @@
         <a routerLink="/" routerLinkActive="text-primary-700 bg-primary-50" [routerLinkActiveOptions]="{exact: true}" class="px-4 py-2 rounded-full text-secondary-600 font-medium hover:text-primary-700 hover:bg-surface-100 transition-all">Home</a>
         <a routerLink="/shop" routerLinkActive="text-primary-700 bg-primary-50" class="px-4 py-2 rounded-full text-secondary-600 font-medium hover:text-primary-700 hover:bg-surface-100 transition-all">Shop</a>
         <a routerLink="/content/blogs" routerLinkActive="text-primary-700 bg-primary-50" class="px-4 py-2 rounded-full text-secondary-600 font-medium hover:text-primary-700 hover:bg-surface-100 transition-all">Blog</a>
-        <a routerLink="/general/careers" routerLinkActive="text-primary-700 bg-primary-50" class="px-4 py-2 rounded-full text-secondary-600 font-medium hover:text-primary-700 hover:bg-surface-100 transition-all">Careers</a>
+        <a routerLink="/general/about-us" routerLinkActive="text-primary-700 bg-primary-50" class="px-4 py-2 rounded-full text-secondary-600 font-medium hover:text-primary-700 hover:bg-surface-100 transition-all">About Us</a>
+        <a routerLink="/general/contact-us" routerLinkActive="text-primary-700 bg-primary-50" class="px-4 py-2 rounded-full text-secondary-600 font-medium hover:text-primary-700 hover:bg-surface-100 transition-all">Contact Us</a>
       </nav>
 
       <!-- Actions -->
@@ -73,7 +74,8 @@
       <a routerLink="/" class="px-4 py-3 rounded-xl text-secondary-700 hover:bg-surface-50 hover:text-primary-700 font-medium transition-colors">Home</a>
       <a routerLink="/shop" class="px-4 py-3 rounded-xl text-secondary-700 hover:bg-surface-50 hover:text-primary-700 font-medium transition-colors">Shop</a>
       <a routerLink="/content/blogs" class="px-4 py-3 rounded-xl text-secondary-700 hover:bg-surface-50 hover:text-primary-700 font-medium transition-colors">Blog</a>
-      <a routerLink="/general/careers" class="px-4 py-3 rounded-xl text-secondary-700 hover:bg-surface-50 hover:text-primary-700 font-medium transition-colors">Careers</a>
+      <a routerLink="/general/about-us" class="px-4 py-3 rounded-xl text-secondary-700 hover:bg-surface-50 hover:text-primary-700 font-medium transition-colors">About Us</a>
+      <a routerLink="/general/contact-us" class="px-4 py-3 rounded-xl text-secondary-700 hover:bg-surface-50 hover:text-primary-700 font-medium transition-colors">Contact Us</a>
       
       <div class="border-t border-secondary-100 mt-2 pt-4 flex flex-col gap-3 px-4">
          <ng-container *ngIf="authService.currentUser$ | async as user; else mobileLogin">
