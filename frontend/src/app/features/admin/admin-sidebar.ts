@@ -44,6 +44,20 @@ import { RouterModule } from '@angular/router';
           <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 group-hover:scale-110 transition-transform" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 20V4a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/><rect width="20" height="14" x="2" y="6" rx="2"/><path d="M12 12h.01"/></svg>
           <span class="font-medium">Careers</span>
         </a>
+
+        <div class="pt-4 pb-2 px-4">
+          <p class="text-[10px] text-gray-400 font-semibold uppercase tracking-widest m-0">Media</p>
+        </div>
+
+        <a routerLink="/admin/photos" routerLinkActive="bg-[#2c5d53] text-[#F2994A]" class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-[#2c5d53] transition-colors group no-underline text-white">
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 group-hover:scale-110 transition-transform" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg>
+          <span class="font-medium">Photo Gallery</span>
+        </a>
+
+        <a routerLink="/admin/videos" routerLinkActive="bg-[#2c5d53] text-[#F2994A]" class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-[#2c5d53] transition-colors group no-underline text-white">
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 group-hover:scale-110 transition-transform" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m22 8-6 4 6 4V8Z"/><rect x="2" y="6" width="14" height="12" rx="2"/></svg>
+          <span class="font-medium">Video Gallery</span>
+        </a>
       </nav>
 
       <div class="p-4 border-t border-[#2c5d53]">

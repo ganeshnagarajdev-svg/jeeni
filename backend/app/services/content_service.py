@@ -27,8 +27,17 @@ class MediaService:
     async def get_multi(self, db: AsyncSession, skip: int = 0, limit: int = 100) -> List[Media]:
         return await media_repo.get_multi(db, skip=skip, limit=limit)
 
+    async def get_by_type(self, db: AsyncSession, media_type: str, skip: int = 0, limit: int = 100) -> List[Media]:
+        return await media_repo.get_by_type(db, media_type=media_type, skip=skip, limit=limit)
+
     async def create(self, db: AsyncSession, obj_in: MediaCreate) -> Media:
         return await media_repo.create(db, obj_in=obj_in)
+
+    async def update(self, db: AsyncSession, id: int, obj_in: any) -> Optional[Media]:
+        db_obj = await media_repo.get(db, id=id)
+        if db_obj:
+            return await media_repo.update(db, db_obj=db_obj, obj_in=obj_in)
+        return None
         
     async def remove(self, db: AsyncSession, id: int) -> Optional[Media]:
         return await media_repo.remove(db, id=id)

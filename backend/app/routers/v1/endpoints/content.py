@@ -128,3 +128,43 @@ async def upload_file(
     """
     file_url = await upload_service.save_file_local(file)
     return {"url": file_url}
+
+# Gallery Endpoints (Photos/Videos)
+@router.get("/gallery/photos", response_model=List[Media])
+async def read_photos(
+    db: AsyncSession = Depends(deps.get_db),
+    skip: int = 0,
+    limit: int = 100,
+) -> Any:
+    """
+    Retrieve photos from gallery.
+    """
+    return await media_service.get_by_type(db, media_type="image", skip=skip, limit=limit)
+
+@router.get("/gallery/videos", response_model=List[Media])
+async def read_videos(
+    db: AsyncSession = Depends(deps.get_db),
+    skip: int = 0,
+    limit: int = 100,
+) -> Any:
+    """
+    Retrieve videos from gallery.
+    """
+    return await media_service.get_by_type(db, media_type="video", skip=skip, limit=limit)
+
+@router.put("/media/{id}", response_model=Media)
+async def update_media(
+    *,
+    db: AsyncSession = Depends(deps.get_db),
+    id: int,
+    media_in: MediaCreate,
+    current_user: User = Depends(deps.get_current_active_superuser),
+) -> Any:
+    """
+    Update media (Admin only).
+    """
+    media = await media_service.update(db, id=id, obj_in=media_in)
+    if not media:
+        raise HTTPException(status_code=404, detail="Media not found")
+    return media
+

@@ -37,6 +37,12 @@ class MediaBase(BaseModel):
 class MediaCreate(MediaBase):
     pass
 
+class MediaUpdate(BaseModel):
+    title: Optional[str] = None
+    media_type: Optional[str] = None
+    url: Optional[str] = None
+    description: Optional[str] = None
+
 class Media(MediaBase):
     id: int
     created_at: datetime

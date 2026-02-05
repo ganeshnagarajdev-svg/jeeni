@@ -4,6 +4,8 @@ import { DashboardComponent } from './dashboard/dashboard';
 import { AdminProductsComponent } from './admin-products/admin-products';
 import { AdminBlogsComponent } from './admin-blogs/admin-blogs';
 import { AdminCareersComponent } from './admin-careers/admin-careers';
+import { AdminPhotosComponent } from './admin-photos/admin-photos';
+import { AdminVideosComponent } from './admin-videos/admin-videos';
 
 import { AdminLayoutComponent } from './admin-layout';
 
@@ -17,6 +19,8 @@ const routes: Routes = [
       { path: 'products', component: AdminProductsComponent },
       { path: 'blogs', component: AdminBlogsComponent },
       { path: 'careers', component: AdminCareersComponent },
+      { path: 'photos', component: AdminPhotosComponent },
+      { path: 'videos', component: AdminVideosComponent },
     ]
   }
 ];
@@ -26,3 +30,4 @@ const routes: Routes = [
   exports: [RouterModule]
 })
 export class AdminRoutingModule { }
+

@@ -60,6 +60,27 @@ export class ContentService {
     return this.http.post<{url: string}>(`${this.apiUrl}/upload`, formData);
   }
 
+  // Gallery Methods
+  getPhotos(skip: number = 0, limit: number = 100): Observable<Media[]> {
+    return this.http.get<Media[]>(`${this.apiUrl}/gallery/photos?skip=${skip}&limit=${limit}`);
+  }
+
+  getVideos(skip: number = 0, limit: number = 100): Observable<Media[]> {
+    return this.http.get<Media[]>(`${this.apiUrl}/gallery/videos?skip=${skip}&limit=${limit}`);
+  }
+
+  createMedia(media: any): Observable<Media> {
+    return this.http.post<Media>(`${this.apiUrl}/media`, media);
+  }
+
+  updateMedia(id: number, media: any): Observable<Media> {
+    return this.http.put<Media>(`${this.apiUrl}/media/${id}`, media);
+  }
+
+  deleteMedia(id: number): Observable<Media> {
+    return this.http.delete<Media>(`${this.apiUrl}/media/${id}`);
+  }
+
   getImageUrl(path: string | null | undefined): string {
     if (!path) return '/assets/placeholder-product.jpg';
     if (path.startsWith('http')) return path;
