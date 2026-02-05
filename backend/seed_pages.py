@@ -26,6 +26,12 @@ async def seed_pages():
                 "slug": "privacy-policy",
                 "content": "<h1>Privacy Policy</h1><p>Your privacy is important to us...</p>",
                 "is_published": True
+            },
+            {
+                "title": "Contact Us",
+                "slug": "contact-us",
+                "content": "<h1>Contact Us</h1><p>We'd love to hear from you! Reach out to us for any queries, feedback, or support.</p><h2>Get in Touch</h2><p><strong>Email:</strong> support@jeenimilletmix.com</p><p><strong>Phone:</strong> +91 98765 43210</p><p><strong>Address:</strong> 123 Health Street, Wellness City, India 560001</p><h2>Business Hours</h2><p>Monday - Saturday: 9:00 AM - 6:00 PM</p><p>Sunday: Closed</p>",
+                "is_published": True
             }
         ]
 
