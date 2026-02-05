@@ -1,0 +1,6 @@
+<svg width="1200" height="630" viewBox="0 0 1200 630" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1200" height="630" fill="#F3F4F6"/>
+  <rect x="100" y="100" width="1000" height="430" rx="20" fill="#E5E7EB" fill-opacity="0.5"/>
+  <path d="M600 250V350M550 300H650" stroke="#9CA3AF" stroke-width="20" stroke-linecap="round"/>
+  <text x="600" y="420" text-anchor="middle" font-family="Arial, sans-serif" font-size="32" fill="#9CA3AF">Jeeni Healthy Living Blog</text>
+</svg>

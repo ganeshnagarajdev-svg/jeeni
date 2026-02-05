@@ -21,9 +21,9 @@
           />
           <div
             *ngIf="!product.images || product.images.length === 0"
-            class="absolute inset-0 flex items-center justify-center text-secondary-400"
+            class="absolute inset-0 flex items-center justify-center"
           >
-            No Image Available
+            <img src="assets/placeholder.svg" alt="No image available" class="w-1/2 h-1/2 opacity-20">
           </div>
         </div>
 
