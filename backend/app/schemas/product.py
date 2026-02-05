@@ -59,6 +59,7 @@ class ProductUpdate(BaseModel):
     is_active: Optional[bool] = None
     is_featured: Optional[bool] = None
     category_id: Optional[int] = None
+    images: Optional[List[ProductImageCreate]] = None
 
 class Product(ProductBase):
     id: int

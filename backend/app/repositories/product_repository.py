@@ -1,5 +1,6 @@
 from typing import List, Optional, Union, Dict, Any
 from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy import delete
 from sqlalchemy.future import select
 from sqlalchemy.orm import selectinload
 from app.models.product import Product, Category, ProductImage
@@ -109,9 +110,32 @@ class ProductRepository:
             update_data = obj_in.model_dump(exclude_unset=True)
         for field in obj_data:
             if field in update_data:
+                if field == "images":
+                    continue
                 setattr(db_obj, field, update_data[field])
         if "name" in update_data:
              db_obj.slug = update_data["name"].lower().replace(" ", "-")
+        
+        # Handle Image Updates
+        if "images" in update_data and update_data["images"] is not None:
+            # Since cascade="all, delete-orphan" is set on the Product model, 
+            # we can simply replace the list of images. SQLAlchemy will handle deleting the old ones.
+            
+            new_imgs = []
+            for img in update_data["images"]:
+                # img is a dict or object depending on how it was passed. 
+                # Check if img is dict or object
+                img_data = img if isinstance(img, dict) else img.model_dump()
+                
+                new_img = ProductImage(
+                    image_url=img_data["image_url"],
+                    is_main=img_data.get("is_main", False)
+                )
+                new_imgs.append(new_img)
+            
+            # Replace the relationship collection
+            db_obj.images = new_imgs
+
         db.add(db_obj)
         await db.commit()
         await db.refresh(db_obj)

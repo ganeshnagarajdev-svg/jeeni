@@ -17,6 +17,7 @@ export class ProductDetailsComponent implements OnInit {
   product: Product | null = null;
   isLoading = true;
   error: string | null = null;
+  selectedImageIndex = 0;
 
   constructor(
     private route: ActivatedRoute,
@@ -26,6 +27,22 @@ export class ProductDetailsComponent implements OnInit {
     private cartService: CartService,
     private router: Router
   ) {}
+
+  selectImage(index: number) {
+    this.selectedImageIndex = index;
+  }
+
+  nextImage() {
+    if (this.product?.images && this.product.images.length > 0) {
+      this.selectedImageIndex = (this.selectedImageIndex + 1) % this.product.images.length;
+    }
+  }
+
+  prevImage() {
+    if (this.product?.images && this.product.images.length > 0) {
+      this.selectedImageIndex = (this.selectedImageIndex - 1 + this.product.images.length) % this.product.images.length;
+    }
+  }
 
   ngOnInit(): void {
     this.route.paramMap.subscribe(params => {
