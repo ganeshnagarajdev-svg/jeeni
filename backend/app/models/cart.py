@@ -5,7 +5,7 @@ from app.db.base_class import Base
 class CartItem(Base):
     id = Column(Integer, primary_key=True, index=True)
     user_id = Column(Integer, ForeignKey("user.id"), nullable=False)
-    product_id = Column(Integer, ForeignKey("product.id"), nullable=False)
+    product_id = Column(Integer, ForeignKey("product.id", ondelete="CASCADE"), nullable=False)
     quantity = Column(Integer, default=1)
     
     user = relationship("User", backref="cart_items")

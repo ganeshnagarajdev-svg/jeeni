@@ -38,7 +38,7 @@ class Order(Base):
 class OrderItem(Base):
     id = Column(Integer, primary_key=True, index=True)
     order_id = Column(Integer, ForeignKey("order.id"), nullable=False)
-    product_id = Column(Integer, ForeignKey("product.id"), nullable=False)
+    product_id = Column(Integer, ForeignKey("product.id", ondelete="SET NULL"), nullable=True)
     quantity = Column(Integer, nullable=False)
     price_at_purchase = Column(Float, nullable=False) # Capture price at time of order
     
