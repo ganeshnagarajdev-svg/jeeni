@@ -20,7 +20,7 @@
           <div class="space-y-4">
              <div *ngFor="let item of order.items" class="flex gap-4 items-center border-b border-gray-100 pb-4 last:border-0 last:pb-0">
                 <div class="w-16 h-16 bg-gray-100 rounded-lg overflow-hidden flex-shrink-0">
-                  <img *ngIf="item.product.images?.length" [src]="item.product.images[0].image_url" class="w-full h-full object-cover">
+                  <img *ngIf="item.product.images?.length" [src]="getImageUrl(item.product.images[0].image_url)" class="w-full h-full object-cover">
                 </div>
                 <div class="flex-1">
                   <p class="font-medium text-gray-900">{{ item.product.name }}</p>

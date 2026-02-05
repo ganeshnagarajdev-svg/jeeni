@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { CartService, Cart } from '../../../core/services/cart.service';
 import { OrderService } from '../../../core/services/order.service';
+import { ContentService } from '../../../core/services/content.service';
 
 @Component({
   selector: 'app-checkout',
@@ -26,7 +27,8 @@ export class CheckoutComponent implements OnInit {
   constructor(
     private cartService: CartService,
     private orderService: OrderService,
-    private router: Router
+    private router: Router,
+    private contentService: ContentService
   ) {}
 
   ngOnInit(): void {
@@ -56,5 +58,9 @@ export class CheckoutComponent implements OnInit {
         }
       });
     }, 2000);
+  }
+
+  getImageUrl(path: string | null | undefined): string {
+    return this.contentService.getImageUrl(path);
   }
 }

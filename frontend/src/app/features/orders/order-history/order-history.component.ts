@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { OrderService, Order } from '../../../core/services/order.service';
+import { ContentService } from '../../../core/services/content.service';
 
 @Component({
   selector: 'app-order-history',
@@ -13,7 +14,10 @@ export class OrderHistoryComponent implements OnInit {
   orders: Order[] = [];
   isLoading = true;
 
-  constructor(private orderService: OrderService) {}
+  constructor(
+    private orderService: OrderService,
+    private contentService: ContentService
+  ) {}
 
   ngOnInit(): void {
     this.orderService.getOrders().subscribe({
@@ -37,5 +41,9 @@ export class OrderHistoryComponent implements OnInit {
       case 'cancelled': return 'bg-red-100 text-red-700';
       default: return 'bg-secondary-100 text-secondary-700';
     }
+  }
+
+  getImageUrl(path: string | null | undefined): string {
+    return this.contentService.getImageUrl(path);
   }
 }

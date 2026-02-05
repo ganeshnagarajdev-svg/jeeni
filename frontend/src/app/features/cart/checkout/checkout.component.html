@@ -58,7 +58,7 @@
               <div *ngFor="let item of cart.items" class="flex justify-between items-center py-2 border-b border-secondary-50 last:border-0">
                 <div class="flex items-center gap-4">
                    <div class="w-12 h-12 bg-secondary-100 rounded-lg overflow-hidden flex-shrink-0">
-                     <img *ngIf="item.product.images?.length" [src]="item.product.images[0].image_url" class="w-full h-full object-cover">
+                     <img *ngIf="item.product.images?.length" [src]="getImageUrl(item.product.images[0].image_url)" class="w-full h-full object-cover">
                    </div>
                    <div>
                      <p class="text-sm font-bold text-secondary-900 line-clamp-1">{{ item.product.name }}</p>

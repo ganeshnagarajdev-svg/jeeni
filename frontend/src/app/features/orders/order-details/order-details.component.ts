@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { OrderService, Order } from '../../../core/services/order.service';
+import { ContentService } from '../../../core/services/content.service';
 
 @Component({
   selector: 'app-order-details',
@@ -16,7 +17,8 @@ export class OrderDetailsComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private orderService: OrderService,
-    private router: Router
+    private router: Router,
+    private contentService: ContentService
   ) {}
 
   ngOnInit(): void {
@@ -66,5 +68,9 @@ export class OrderDetailsComponent implements OnInit {
       case 'cancelled': return 'bg-red-100 text-red-700';
       default: return 'bg-secondary-100 text-secondary-700';
     }
+  }
+
+  getImageUrl(path: string | null | undefined): string {
+    return this.contentService.getImageUrl(path);
   }
 }

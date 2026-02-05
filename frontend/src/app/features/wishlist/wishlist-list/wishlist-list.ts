@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { WishlistItem, WishlistService } from '../../../core/services/wishlist.service';
+import { ContentService } from '../../../core/services/content.service';
 
 @Component({
   selector: 'app-wishlist-list',
@@ -15,7 +16,10 @@ export class WishlistListComponent implements OnInit {
   loading = true;
   error = '';
 
-  constructor(private wishlistService: WishlistService) {}
+  constructor(
+    private wishlistService: WishlistService,
+    private contentService: ContentService
+  ) {}
 
   ngOnInit(): void {
     this.loadWishlist();
@@ -45,5 +49,9 @@ export class WishlistListComponent implements OnInit {
         error: (err) => console.error('Error removing item', err)
       });
     }
+  }
+
+  getImageUrl(path: string | null | undefined): string {
+    return this.contentService.getImageUrl(path);
   }
 }

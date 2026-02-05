@@ -28,4 +28,8 @@ export class BlogListComponent implements OnInit {
       }
     });
   }
+
+  getImageUrl(path: string | null | undefined): string {
+    return this.contentService.getImageUrl(path);
+  }
 }
