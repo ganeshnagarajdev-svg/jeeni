@@ -7,7 +7,8 @@ import { Product, Category } from '../models/product';
   providedIn: 'root'
 })
 export class ProductService {
-  private apiUrl = 'http://localhost:8000/api/v1/shop';
+  private shopApiUrl = 'http://localhost:8000/api/v1/shop';
+  private adminApiUrl = 'http://localhost:8000/api/v1/shop'; // For now it's the same base but conceptually different
 
   constructor(private http: HttpClient) {}
 
@@ -28,26 +29,26 @@ export class ProductService {
     if (maxPrice) params = params.set('max_price', maxPrice);
     if (sortBy) params = params.set('sort_by', sortBy);
 
-    return this.http.get<Product[]>(`${this.apiUrl}/products`, { params });
+    return this.http.get<Product[]>(`${this.shopApiUrl}/products`, { params });
   }
 
   getProduct(slug: string): Observable<Product> {
-    return this.http.get<Product>(`${this.apiUrl}/products/${slug}`);
+    return this.http.get<Product>(`${this.shopApiUrl}/products/${slug}`);
   }
 
   getCategories(): Observable<Category[]> {
-    return this.http.get<Category[]>(`${this.apiUrl}/categories`);
+    return this.http.get<Category[]>(`${this.shopApiUrl}/categories`);
   }
 
   createProduct(product: any): Observable<Product> {
-    return this.http.post<Product>(`${this.apiUrl}/products`, product);
+    return this.http.post<Product>(`${this.adminApiUrl}/products`, product);
   }
 
   updateProduct(id: number, product: any): Observable<Product> {
-    return this.http.put<Product>(`${this.apiUrl}/products/${id}`, product);
+    return this.http.put<Product>(`${this.adminApiUrl}/products/${id}`, product);
   }
 
   deleteProduct(id: number): Observable<Product> {
-    return this.http.delete<Product>(`${this.apiUrl}/products/${id}`);
+    return this.http.delete<Product>(`${this.adminApiUrl}/products/${id}`);
   }
 }

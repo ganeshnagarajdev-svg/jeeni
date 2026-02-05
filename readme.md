@@ -20,4 +20,4 @@ uv sync
 
 ## Run
 
-uv run uvicorn app.main:app --reload
+uv run --active uvicorn app.main:app --reload
