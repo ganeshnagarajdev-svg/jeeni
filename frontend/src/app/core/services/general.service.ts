@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
+import { HomeSection } from '../models/home-section';
 
 export interface Career {
   id: number;
@@ -52,5 +53,28 @@ export class GeneralService {
 
   deleteCareer(id: number): Observable<Career> {
     return this.http.delete<Career>(`${this.apiUrl}/careers/${id}`);
+  }
+
+  // Home Page Methods
+  getHomeLayout(): Observable<HomeSection[]> {
+    return this.http.get<HomeSection[]>(`${this.apiUrl}/home-layout`);
+  }
+
+  getHomeSections(skip: number = 0, limit: number = 100): Observable<HomeSection[]> {
+    return this.http.get<HomeSection[]>(`${this.apiUrl}/home-sections`, {
+      params: { skip: skip.toString(), limit: limit.toString() }
+    });
+  }
+
+  createHomeSection(section: any): Observable<HomeSection> {
+    return this.http.post<HomeSection>(`${this.apiUrl}/home-sections`, section);
+  }
+
+  updateHomeSection(id: number, section: any): Observable<HomeSection> {
+    return this.http.put<HomeSection>(`${this.apiUrl}/home-sections/${id}`, section);
+  }
+
+  deleteHomeSection(id: number): Observable<HomeSection> {
+    return this.http.delete<HomeSection>(`${this.apiUrl}/home-sections/${id}`);
   }
 }

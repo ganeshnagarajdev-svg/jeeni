@@ -50,3 +50,27 @@ class Page(PageBase):
 
     class Config:
         from_attributes = True
+
+# HomeSection Schemas
+class HomeSectionBase(BaseModel):
+    title: Optional[str] = None
+    section_type: str
+    configuration: Optional[str] = None
+    order: int = 0
+    is_active: bool = True
+
+class HomeSectionCreate(HomeSectionBase):
+    pass
+
+class HomeSectionUpdate(BaseModel):
+    title: Optional[str] = None
+    section_type: Optional[str] = None
+    configuration: Optional[str] = None
+    order: Optional[int] = None
+    is_active: Optional[bool] = None
+
+class HomeSection(HomeSectionBase):
+    id: int
+
+    class Config:
+        from_attributes = True

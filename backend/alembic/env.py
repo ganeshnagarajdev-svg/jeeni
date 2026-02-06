@@ -17,7 +17,7 @@ from app.models.user import User  # Ensure User is imported
 from app.models.product import Product, Category, ProductImage # Ensure Product models are imported
 from app.models.wishlist import Wishlist # Ensure Wishlist model is imported
 from app.models.content import Blog, Media # Ensure Content models are imported
-from app.models.general import Career, Page # Ensure General models are imported
+from app.models.general import Career, Page, HomeSection # Ensure General models are imported
 from app.models.cart import CartItem # Ensure Cart model is imported
 from app.models.order import Order, OrderItem # Ensure Order models are imported
 from app.core.config import settings

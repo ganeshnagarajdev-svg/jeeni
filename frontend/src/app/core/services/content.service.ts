@@ -83,7 +83,7 @@ export class ContentService {
 
   getImageUrl(path: string | null | undefined): string {
     if (!path) return '/assets/placeholder-product.jpg';
-    if (path.startsWith('http')) return path;
+    if (path.startsWith('http') || path.startsWith('/assets/')) return path;
     return `${environment.mediaUrl}${path.startsWith('/') ? '' : '/'}${path}`;
   }
 }

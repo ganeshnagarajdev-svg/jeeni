@@ -1,8 +1,8 @@
 from typing import List, Optional, Union, Dict, Any
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
-from app.models.general import Career, Page
-from app.schemas.general import CareerCreate, CareerUpdate, PageCreate, PageUpdate
+from app.models.general import Career, Page, HomeSection
+from app.schemas.general import CareerCreate, CareerUpdate, PageCreate, PageUpdate, HomeSectionCreate, HomeSectionUpdate
 from fastapi.encoders import jsonable_encoder
 
 class CareerRepository:
@@ -95,5 +95,56 @@ class PageRepository:
             await db.commit()
         return obj
 
+class HomeSectionRepository:
+    async def create(self, db: AsyncSession, *, obj_in: HomeSectionCreate) -> HomeSection:
+        db_obj = HomeSection(
+            title=obj_in.title,
+            section_type=obj_in.section_type,
+            configuration=obj_in.configuration,
+            order=obj_in.order,
+            is_active=obj_in.is_active
+        )
+        db.add(db_obj)
+        await db.commit()
+        await db.refresh(db_obj)
+        return db_obj
+
+    async def get_multi(self, db: AsyncSession, skip: int = 0, limit: int = 100) -> List[HomeSection]:
+        query = select(HomeSection).order_by(HomeSection.order).offset(skip).limit(limit)
+        result = await db.execute(query)
+        return result.scalars().all()
+
+    async def get_active(self, db: AsyncSession) -> List[HomeSection]:
+        query = select(HomeSection).filter(HomeSection.is_active == True).order_by(HomeSection.order)
+        result = await db.execute(query)
+        return result.scalars().all()
+
+    async def get(self, db: AsyncSession, id: int) -> Optional[HomeSection]:
+        query = select(HomeSection).filter(HomeSection.id == id)
+        result = await db.execute(query)
+        return result.scalars().first()
+
+    async def update(self, db: AsyncSession, *, db_obj: HomeSection, obj_in: Union[HomeSectionUpdate, Dict[str, Any]]) -> HomeSection:
+        obj_data = jsonable_encoder(db_obj)
+        if isinstance(obj_in, dict):
+            update_data = obj_in
+        else:
+            update_data = obj_in.model_dump(exclude_unset=True)
+        for field in obj_data:
+            if field in update_data:
+                setattr(db_obj, field, update_data[field])
+        db.add(db_obj)
+        await db.commit()
+        await db.refresh(db_obj)
+        return db_obj
+
+    async def remove(self, db: AsyncSession, *, id: int) -> Optional[HomeSection]:
+        obj = await self.get(db, id=id)
+        if obj:
+            await db.delete(obj)
+            await db.commit()
+        return obj
+
 career_repo = CareerRepository()
 page_repo = PageRepository()
+home_section_repo = HomeSectionRepository()

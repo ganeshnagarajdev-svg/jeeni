@@ -9,6 +9,27 @@ app = FastAPI(
     version="1.0.0",
 )
 
+@app.on_event("startup")
+async def startup_event():
+    from app.db.base_class import Base
+    from app.db.session import engine, AsyncSessionLocal
+    from app.models.general import HomeSection
+    from sqlalchemy import select
+    import json
+    
+    async with engine.begin() as conn:
+        await conn.run_sync(Base.metadata.create_all)
+    
+    # Seed initial home sections if table is empty
+    async with AsyncSessionLocal() as db:
+        result = await db.execute(select(HomeSection).limit(1))
+        if not result.scalars().first():
+            print("Seeding initial home sections...")
+            from seed_home import seed_home_sections
+            await seed_home_sections()
+            
+    print("Startup: Database tables verified/created.")
+
 # CORS Middleware config
 origins = [
     "http://localhost",

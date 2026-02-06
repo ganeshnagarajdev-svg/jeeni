@@ -18,3 +18,11 @@ class Page(Base):
     slug = Column(String, unique=True, index=True, nullable=False)
     content = Column(Text, nullable=False)
     is_published = Column(Boolean, default=True)
+
+class HomeSection(Base):
+    id = Column(Integer, primary_key=True, index=True)
+    title = Column(String, nullable=True)
+    section_type = Column(String, nullable=False) # 'hero', 'features', 'categories', 'product_grid', 'cta'
+    configuration = Column(Text, nullable=True)   # Store JSON configuration
+    order = Column(Integer, default=0)
+    is_active = Column(Boolean, default=True)

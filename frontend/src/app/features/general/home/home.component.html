@@ -1,288 +1,225 @@
 <div class="bg-surface-50 min-h-screen">
-  <!-- Hero Section -->
-  <section class="relative bg-primary-900 text-white overflow-hidden min-h-[90vh] flex items-center">
-    <!-- Background Image with Overlay -->
-    <div class="absolute inset-0 bg-cover bg-center opacity-30 mix-blend-overlay" style="background-image: url('/assets/images/hero-bg.svg');"></div>
-    <!-- Gradient Overlay -->
-    <div class="absolute inset-0 bg-gradient-to-r from-primary-950 via-primary-900/90 to-transparent"></div>
-    
-    <div class="container mx-auto px-4 relative z-10 flex flex-col md:flex-row items-center">
-      <div class="md:w-1/2 flex flex-col items-start text-left">
-        <div class="inline-flex items-center gap-2 bg-white/10 backdrop-blur-md border border-white/20 px-4 py-2 rounded-full mb-8 animate-fade-in-up">
-            <span class="w-2 h-2 rounded-full bg-accent"></span>
-            <span class="text-sm font-bold tracking-widest uppercase text-white">100% Natural & Organic</span>
-        </div>
-        
-        <h1 class="text-5xl md:text-7xl font-bold mb-6 font-display tracking-tight text-white leading-[1.1] animate-fade-in-up delay-100">
-          Nature's Gold<br/>
-          <span class="text-accent">Jeeni Millets</span>
-        </h1>
-        
-        <p class="text-xl text-primary-100 mb-10 max-w-xl leading-relaxed animate-fade-in-up delay-200 border-l-4 border-accent pl-6">
-          Rediscover the ancient secret of health. Premium millet mixes crafted for weight loss, energy, and holistic wellness.
-        </p>
-        
-        <div class="flex gap-4 animate-fade-in-up delay-300">
-          <a routerLink="/shop" class="bg-accent hover:bg-accent-hover text-white px-10 py-4 rounded-full font-bold text-lg transition-all transform hover:scale-105 shadow-xl hover:shadow-2xl shadow-accent/20 flex items-center gap-2">
-            Shop Collection <span class="text-2xl">→</span>
-          </a>
-          <a routerLink="/general/pages/about-us" class="group flex items-center gap-3 px-8 py-4 rounded-full font-bold text-lg text-white transition-all hover:text-accent">
-            <span class="w-12 h-12 rounded-full bg-white/10 flex items-center justify-center border border-white/20 group-hover:border-accent group-hover:bg-accent/10 transition-all">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-            </span>
-            Watch Our Story
-          </a>
-        </div>
-      </div>
+  <div *ngIf="isLoading" class="flex items-center justify-center min-h-[60vh]">
+    <div class="w-16 h-16 border-4 border-primary-200 border-t-primary-600 rounded-full animate-spin"></div>
+  </div>
+
+  <div *ngIf="!isLoading">
+    <ng-container *ngFor="let section of homeSections">
       
-      <!-- Abstract visual or Product Image placeholder for Hero -->
-      <div class="md:w-1/2 mt-12 md:mt-0 relative animate-float">
-         <div class="aspect-square rounded-full bg-gradient-radial from-accent/20 to-transparent absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[120%] h-[120%] blur-3xl"></div>
-         <!-- High quality bowl mockup -->
-         <img src="/assets/images/hero-bowl.svg" alt="Jeeni Millet Mix Bowl" class="relative z-10 drop-shadow-2xl rounded-3xl border-8 border-white/10 mask-image-gradient">
-      </div>
-    </div>
-  </section>
-
-  <!-- Features - Quick Know -->
-  <section class="py-24 bg-surface-50">
-    <div class="container mx-auto px-4">
-      <div class="text-center max-w-3xl mx-auto mb-20">
-        <h2 class="text-accent font-bold tracking-widest uppercase mb-3 text-sm">Pure & Primal</h2>
-        <h3 class="text-4xl md:text-5xl font-bold text-primary-900 mb-6 font-display">The Jeeni Promise</h3>
-        <p class="text-secondary-600 text-lg leading-relaxed">
-          We bring you the purest grains, cultivated using traditional methods preserved for thousands of years. 
-          No additives, just nature's best.
-        </p>
-      </div>
-
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-10">
-        <!-- Feature 1 -->
-        <div class="p-10 rounded-3xl bg-white shadow-soft hover:shadow-card transition-all duration-500 border border-secondary-100 group text-center relative overflow-hidden">
-          <div class="absolute top-0 left-0 w-2 h-full bg-accent opacity-0 group-hover:opacity-100 transition-opacity"></div>
-          <div class="w-24 h-24 bg-primary-50 rounded-full flex items-center justify-center mx-auto mb-8 group-hover:bg-primary-600 transition-colors duration-500 transform group-hover:rotate-12">
-            <span class="text-5xl text-primary-600 group-hover:text-white transition-colors">🌾</span>
-          </div>
-          <h3 class="text-2xl font-bold mb-4 text-primary-900">Gluten-Free</h3>
-          <p class="text-secondary-500 leading-relaxed">Gentle on your gut, perfect for digestion. A wholesome alternative to processed grains.</p>
-        </div>
-
-        <!-- Feature 2 -->
-        <div class="p-10 rounded-3xl bg-white shadow-soft hover:shadow-card transition-all duration-500 border border-secondary-100 group text-center relative overflow-hidden">
-          <div class="absolute top-0 left-0 w-2 h-full bg-accent opacity-0 group-hover:opacity-100 transition-opacity"></div>
-          <div class="w-24 h-24 bg-primary-50 rounded-full flex items-center justify-center mx-auto mb-8 group-hover:bg-primary-600 transition-colors duration-500 transform group-hover:rotate-12">
-            <span class="text-5xl text-primary-600 group-hover:text-white transition-colors">⚖️</span>
-          </div>
-          <h3 class="text-2xl font-bold mb-4 text-primary-900">Weight Balance</h3>
-          <p class="text-secondary-500 leading-relaxed">High fiber content that keeps you satiated, naturally supporting your weight management goals.</p>
-        </div>
-
-        <!-- Feature 3 -->
-        <div class="p-10 rounded-3xl bg-white shadow-soft hover:shadow-card transition-all duration-500 border border-secondary-100 group text-center relative overflow-hidden">
-           <div class="absolute top-0 left-0 w-2 h-full bg-accent opacity-0 group-hover:opacity-100 transition-opacity"></div>
-          <div class="w-24 h-24 bg-primary-50 rounded-full flex items-center justify-center mx-auto mb-8 group-hover:bg-primary-600 transition-colors duration-500 transform group-hover:rotate-12">
-            <span class="text-5xl text-primary-600 group-hover:text-white transition-colors">🛡️</span>
-          </div>
-          <h3 class="text-2xl font-bold mb-4 text-primary-900">Immunity Boost</h3>
-          <p class="text-secondary-500 leading-relaxed">Packed with essential antioxidants to fortify your body's natural defense systems.</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Categories -->
-  <section class="py-24 bg-white relative">
-    <div class="absolute top-0 right-0 w-1/3 h-full bg-surface-50 skew-x-12 opacity-50 z-0"></div>
-    <div class="container mx-auto px-4 relative z-10">
-      <div class="flex flex-col md:flex-row justify-between items-end mb-16 gap-6">
-        <div>
-          <h2 class="text-accent font-bold tracking-widest uppercase mb-3 text-sm">Curated Collections</h2>
-          <h3 class="text-4xl md:text-5xl font-bold text-primary-900 font-display">Shop by Category</h3>
-        </div>
-        <a routerLink="/shop" class="text-primary-600 font-bold hover:text-primary-800 flex items-center gap-2 group text-lg">
-            View All Categories 
-            <span class="group-hover:translate-x-2 transition-transform text-accent">→</span>
-        </a>
-      </div>
-      
-      <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6">
-          <!-- Static categories representing real site categories -->
-          <a routerLink="/shop" [queryParams]="{category: 'combo'}" class="group">
-              <div class="bg-surface-50 rounded-2xl p-6 text-center h-full border border-surface-100 hover:border-accent transition-all hover:bg-white hover:shadow-lg group-hover:-translate-y-2 duration-300">
-                  <div class="w-16 h-16 rounded-full mx-auto mb-4 overflow-hidden shadow-sm">
-                      <img src="/assets/images/hero-bowl.svg" class="w-full h-full object-cover">
-                  </div>
-                  <h4 class="font-bold text-secondary-900 group-hover:text-primary-700">Combo Packs</h4>
+      <!-- [0] Carousel Section -->
+      <section *ngIf="section.section_type === 'carousel'" class="relative h-[60vh] md:h-[80vh] overflow-hidden bg-black">
+        <div class="relative h-full transition-transform duration-700 ease-out flex" [style.transform]="'translateX(-' + (section.currentSlide * 100) + '%)'">
+          <div *ngFor="let item of getConfig(section).items" class="min-w-full h-full relative">
+            <img [src]="getImageUrl(item.image_url)" class="absolute inset-0 w-full h-full object-cover">
+            <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
+            <div class="absolute inset-0 flex items-center justify-center text-center p-4">
+              <div class="max-w-4xl animate-fade-in-up">
+                <h2 class="text-4xl md:text-6xl font-bold text-white mb-4 font-display" [innerHTML]="item.title"></h2>
+                <p class="text-xl md:text-2xl text-secondary-200 mb-8" *ngIf="item.subtitle">{{ item.subtitle }}</p>
+                <a *ngIf="item.link" [routerLink]="item.link" class="inline-block bg-accent hover:bg-accent-hover text-white px-8 py-3 rounded-full font-bold text-lg transition-transform hover:scale-105 shadow-xl">
+                  {{ item.button_text || 'Learn More' }}
+                </a>
               </div>
-          </a>
-          <a routerLink="/shop" [queryParams]="{category: 'cookies'}" class="group">
-              <div class="bg-surface-50 rounded-2xl p-6 text-center h-full border border-surface-100 hover:border-accent transition-all hover:bg-white hover:shadow-lg group-hover:-translate-y-2 duration-300">
-                  <div class="w-16 h-16 rounded-full mx-auto mb-4 overflow-hidden shadow-sm">
-                       <img src="/assets/images/hero-bowl.svg" class="w-full h-full object-cover">
-                  </div>
-                  <h4 class="font-bold text-secondary-900 group-hover:text-primary-700">Cookies</h4>
-              </div>
-          </a>
-          <a routerLink="/shop" [queryParams]="{category: 'adult'}" class="group">
-              <div class="bg-surface-50 rounded-2xl p-6 text-center h-full border border-surface-100 hover:border-accent transition-all hover:bg-white hover:shadow-lg group-hover:-translate-y-2 duration-300">
-                  <div class="w-16 h-16 rounded-full mx-auto mb-4 overflow-hidden shadow-sm">
-                       <img src="/assets/images/hero-bowl.svg" class="w-full h-full object-cover">
-                  </div>
-                  <h4 class="font-bold text-secondary-900 group-hover:text-primary-700">Jeeni Adult</h4>
-              </div>
-          </a>
-          <a routerLink="/shop" [queryParams]="{category: 'kids'}" class="group">
-               <div class="bg-surface-50 rounded-2xl p-6 text-center h-full border border-surface-100 hover:border-accent transition-all hover:bg-white hover:shadow-lg group-hover:-translate-y-2 duration-300">
-                  <div class="w-16 h-16 rounded-full mx-auto mb-4 overflow-hidden shadow-sm">
-                       <img src="/assets/images/hero-bowl.svg" class="w-full h-full object-cover">
-                  </div>
-                  <h4 class="font-bold text-secondary-900 group-hover:text-primary-700">Jeeni Kids</h4>
-              </div>
-          </a>
-          <a routerLink="/shop" [queryParams]="{category: 'slim'}" class="group">
-              <div class="bg-surface-50 rounded-2xl p-6 text-center h-full border border-surface-100 hover:border-accent transition-all hover:bg-white hover:shadow-lg group-hover:-translate-y-2 duration-300">
-                    <div class="w-16 h-16 rounded-full mx-auto mb-4 overflow-hidden shadow-sm">
-                       <img src="/assets/images/hero-bowl.svg" class="w-full h-full object-cover">
-                  </div>
-                  <h4 class="font-bold text-secondary-900 group-hover:text-primary-700">Jeeni Slim</h4>
-              </div>
-          </a>
-          <a routerLink="/shop" [queryParams]="{category: 'ready-to-cook'}" class="group">
-               <div class="bg-surface-50 rounded-2xl p-6 text-center h-full border border-surface-100 hover:border-accent transition-all hover:bg-white hover:shadow-lg group-hover:-translate-y-2 duration-300">
-                  <div class="w-16 h-16 rounded-full mx-auto mb-4 overflow-hidden shadow-sm">
-                       <img src="/assets/images/hero-bowl.svg" class="w-full h-full object-cover">
-                  </div>
-                  <h4 class="font-bold text-secondary-900 group-hover:text-primary-700">Ready To Cook</h4>
-              </div>
-          </a>
-      </div>
-    </div>
-  </section>
-
-  <!-- Big Feature Section: Why Jeeni -->
-  <section class="py-24 bg-secondary-900 text-white overflow-hidden relative">
-      <!-- Background Pattern -->
-      <div class="absolute inset-0 opacity-10" style="background-image: url('/assets/images/pattern-bg.svg'); background-size: cover; mix-blend-mode: overlay;"></div>
-      
-      <div class="container mx-auto px-4 relative z-10">
-          <div class="flex flex-col lg:flex-row gap-16 items-center">
-              <div class="lg:w-1/2">
-                  <h2 class="text-accent font-bold tracking-widest uppercase mb-4 text-sm">Superfood Benefits</h2>
-                  <h3 class="text-3xl md:text-5xl font-bold mb-8 leading-tight">Why Jeeni Products<br/>Are a Superfood?</h3>
-                  
-                  <div class="space-y-6">
-                      <div class="flex gap-4">
-                          <div class="w-12 h-12 rounded-full bg-primary-700 shrink-0 flex items-center justify-center font-bold text-xl">1</div>
-                          <div>
-                              <h4 class="text-xl font-bold mb-2">Rich in Nutrients</h4>
-                              <p class="text-secondary-400">Millets are packed with fiber, protein, iron, calcium, and essential vitamins.</p>
-                          </div>
-                      </div>
-                      <div class="flex gap-4">
-                          <div class="w-12 h-12 rounded-full bg-primary-700 shrink-0 flex items-center justify-center font-bold text-xl">2</div>
-                          <div>
-                              <h4 class="text-xl font-bold mb-2">Regulates Blood Sugar</h4>
-                              <p class="text-secondary-400">Low glycemic index helps in managing diabetes effectively.</p>
-                          </div>
-                      </div>
-                      <div class="flex gap-4">
-                          <div class="w-12 h-12 rounded-full bg-primary-700 shrink-0 flex items-center justify-center font-bold text-xl">3</div>
-                          <div>
-                              <h4 class="text-xl font-bold mb-2">Good for Heart Health</h4>
-                              <p class="text-secondary-400">Millets help lower cholesterol and improve overall heart function.</p>
-                          </div>
-                      </div>
-                      <div class="flex gap-4">
-                          <div class="w-12 h-12 rounded-full bg-primary-700 shrink-0 flex items-center justify-center font-bold text-xl">4</div>
-                          <div>
-                              <h4 class="text-xl font-bold mb-2">Eco-Friendly Crop</h4>
-                              <p class="text-secondary-400">Requires less water and can grow in dry conditions, making it sustainable.</p>
-                          </div>
-                      </div>
-                  </div>
-              </div>
-              <div class="lg:w-1/2 relative">
-                  <div class="aspect-square rounded-full bg-primary-800 absolute -top-10 -right-10 w-96 h-96 opacity-50 blur-3xl"></div>
-                  <div class="relative bg-white/5 backdrop-blur-md rounded-3xl p-8 border border-white/10 shadow-2xl">
-                      <h3 class="text-2xl font-bold mb-6 text-center">Ways to Include Jeeni</h3>
-                      <ul class="space-y-4">
-                          <li class="flex items-center gap-4 bg-white/5 p-4 rounded-xl hover:bg-white/10 transition-colors">
-                              <span class="text-2xl">🍚</span>
-                              <span>Replace rice with millet in meals</span>
-                          </li>
-                          <li class="flex items-center gap-4 bg-white/5 p-4 rounded-xl hover:bg-white/10 transition-colors">
-                              <span class="text-2xl">🥣</span>
-                              <span>Enjoy millet porridge for breakfast</span>
-                          </li>
-                          <li class="flex items-center gap-4 bg-white/5 p-4 rounded-xl hover:bg-white/10 transition-colors">
-                              <span class="text-2xl">🥞</span>
-                              <span>Try millet-based rotis, idlis, or dosas</span>
-                          </li>
-                          <li class="flex items-center gap-4 bg-white/5 p-4 rounded-xl hover:bg-white/10 transition-colors">
-                              <span class="text-2xl">🍫</span>
-                              <span>Snack on millet-based energy bars</span>
-                          </li>
-                      </ul>
-                      <div class="mt-8 text-center">
-                          <a routerLink="/shop" class="inline-block w-full bg-accent hover:bg-accent-hover py-4 rounded-xl font-bold transition-colors">Start Your Journey</a>
-                      </div>
-                  </div>
-              </div>
-          </div>
-      </div>
-  </section>
-
-  <!-- Featured Products -->
-  <section class="py-20 bg-surface-50">
-    <div class="container mx-auto px-4">
-      <div class="flex justify-between items-end mb-12">
-        <div>
-          <h2 class="text-primary-600 font-bold tracking-widest uppercase mb-3 text-sm">Our Collection</h2>
-          <h3 class="text-3xl md:text-4xl font-bold text-secondary-900">Featured Products</h3>
-        </div>
-        <a routerLink="/shop" class="btn-secondary hidden md:flex">View Shop</a>
-      </div>
-      
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-        <div *ngFor="let product of featuredProducts" class="bg-white rounded-2xl border border-secondary-100 overflow-hidden hover:shadow-xl transition-all duration-300 group flex flex-col h-full">
-          <div class="aspect-[4/3] bg-surface-100 relative overflow-hidden">
-            <img [src]="getImageUrl(product.images?.[0]?.image_url)" [alt]="product.name" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
-            <div class="absolute top-3 left-3 bg-white/90 backdrop-blur text-xs font-bold px-2 py-1 rounded-md text-secondary-900 shadow-sm" *ngIf="product.category">{{ product.category.name }}</div>
-          </div>
-          <div class="p-5 flex flex-col flex-grow">
-            <h3 class="font-bold text-lg mb-1 text-secondary-900 line-clamp-1 group-hover:text-primary-700 transition-colors">{{ product.name }}</h3>
-            <p class="text-sm text-secondary-500 mb-4 line-clamp-2 flex-grow">{{ product.description }}</p>
-            <div class="flex items-center justify-between mt-auto">
-              <div class="flex flex-col">
-                <span class="text-xs text-secondary-400 line-through" *ngIf="product.discounted_price && product.discounted_price < product.price">₹{{ product.price }}</span>
-                <span class="font-bold text-xl text-primary-700">₹{{ product.discounted_price || product.price }}</span>
-              </div>
-              <button class="bg-primary-50 text-primary-700 w-10 h-10 rounded-full flex items-center justify-center hover:bg-primary-600 hover:text-white transition-all shadow-sm">
-                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg>
-              </button>
             </div>
           </div>
         </div>
-      </div>
 
-      <div class="mt-8 text-center md:hidden">
-        <a routerLink="/shop" class="btn-secondary w-full">View Shop</a>
-      </div>
-    </div>
-  </section>
+        <!-- Controls -->
+        <button (click)="prevSlide(section)" class="absolute left-4 top-1/2 -translate-y-1/2 p-3 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-white hover:bg-black/50 transition-all z-20">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" /></svg>
+        </button>
+        <button (click)="nextSlide(section)" class="absolute right-4 top-1/2 -translate-y-1/2 p-3 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-white hover:bg-black/50 transition-all z-20">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>
+        </button>
 
-  <!-- Newsletter/CTA -->
-  <section class="py-20 bg-primary-800 text-white relative overflow-hidden">
-    <div class="absolute top-0 right-0 w-64 h-64 bg-primary-700 rounded-full -mr-32 -mt-32 opacity-50 blur-3xl"></div>
-    <div class="absolute bottom-0 left-0 w-96 h-96 bg-accent rounded-full -ml-48 -mb-48 opacity-20 blur-3xl"></div>
-    
-    <div class="container mx-auto px-4 relative z-10 text-center max-w-2xl">
-      <h2 class="text-3xl md:text-4xl font-bold mb-4">Join the Healthy Revolution</h2>
-      <p class="text-primary-100 mb-8 text-lg">Subscribe to our newsletter for exclusive offers, health tips, and new product launches.</p>
-      <div class="flex flex-col sm:flex-row gap-3">
-        <input type="email" placeholder="Enter your email address" class="flex-1 px-6 py-3 rounded-full bg-white/10 border border-white/20 text-white placeholder-white/50 focus:outline-none focus:bg-white/20 backdrop-blur-sm transition-all text-center sm:text-left">
-        <button class="bg-accent hover:bg-accent-hover px-8 py-3 rounded-full font-bold shadow-lg transition-all transform hover:scale-105">Subscribe</button>
-      </div>
-    </div>
-  </section>
+        <!-- Indicators -->
+        <div class="absolute bottom-8 left-1/2 -translate-x-1/2 flex gap-3 z-20">
+          <button *ngFor="let item of getConfig(section).items; let i = index" 
+                  (click)="goToSlide(section, i)"
+                  [class]="'w-3 h-3 rounded-full transition-all ' + (section.currentSlide === i ? 'bg-accent w-8' : 'bg-white/30 hover:bg-white/50')">
+          </button>
+        </div>
+      </section>
+
+      <!-- [1] Hero Section -->
+      <section *ngIf="section.section_type === 'hero'" class="relative bg-primary-900 text-white overflow-hidden min-h-[90vh] flex items-center">
+        <div class="absolute inset-0 bg-cover bg-center opacity-30 mix-blend-overlay" [style.backgroundImage]="'url(' + getImageUrl(getConfig(section).bg_image_url || '/assets/images/hero-bg.svg') + ')'"></div>
+        <div class="absolute inset-0 bg-gradient-to-r from-primary-950 via-primary-900/90 to-transparent"></div>
+        
+        <div class="container mx-auto px-4 relative z-10 flex flex-col md:flex-row items-center">
+          <div class="md:w-1/2 flex flex-col items-start text-left">
+            <div class="inline-flex items-center gap-2 bg-white/10 backdrop-blur-md border border-white/20 px-4 py-2 rounded-full mb-8 animate-fade-in-up">
+                <span class="w-2 h-2 rounded-full bg-accent"></span>
+                <span class="text-sm font-bold tracking-widest uppercase text-white">{{ getConfig(section).subtitle || '100% Natural & Organic' }}</span>
+            </div>
+            
+            <h1 class="text-5xl md:text-7xl font-bold mb-6 font-display tracking-tight text-white leading-[1.1] animate-fade-in-up delay-100" [innerHTML]="getConfig(section).title || 'Nature\'s Gold<br/>Jeeni Millets'"></h1>
+            
+            <p class="text-xl text-primary-100 mb-10 max-w-xl leading-relaxed animate-fade-in-up delay-200 border-l-4 border-accent pl-6">
+              {{ getConfig(section).description }}
+            </p>
+            
+            <div class="flex gap-4 animate-fade-in-up delay-300">
+              <a [routerLink]="getConfig(section).primary_btn_link || '/shop'" class="bg-accent hover:bg-accent-hover text-white px-10 py-4 rounded-full font-bold text-lg transition-all transform hover:scale-105 shadow-xl hover:shadow-2xl shadow-accent/20 flex items-center gap-2">
+                {{ getConfig(section).primary_btn_text || 'Shop Collection' }} <span class="text-2xl">→</span>
+              </a>
+              <a [routerLink]="getConfig(section).secondary_btn_link" class="group flex items-center gap-3 px-8 py-4 rounded-full font-bold text-lg text-white transition-all hover:text-accent">
+                <span class="w-12 h-12 rounded-full bg-white/10 flex items-center justify-center border border-white/20 group-hover:border-accent group-hover:bg-accent/10 transition-all">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                </span>
+                {{ getConfig(section).secondary_btn_text || 'Watch Our Story' }}
+              </a>
+            </div>
+          </div>
+          
+          <div class="md:w-1/2 mt-12 md:mt-0 relative animate-float">
+             <div class="aspect-square rounded-full bg-gradient-radial from-accent/20 to-transparent absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[120%] h-[120%] blur-3xl"></div>
+             <img [src]="getImageUrl(getConfig(section).image_url || '/assets/images/hero-bowl.svg')" [alt]="section.title" class="relative z-10 drop-shadow-2xl rounded-3xl border-8 border-white/10 mask-image-gradient">
+          </div>
+        </div>
+      </section>
+
+      <!-- [2] Features Section -->
+      <section *ngIf="section.section_type === 'features'" class="py-24 bg-surface-50">
+        <div class="container mx-auto px-4">
+          <div class="text-center max-w-3xl mx-auto mb-20">
+            <h2 class="text-accent font-bold tracking-widest uppercase mb-3 text-sm">{{ getConfig(section).header }}</h2>
+            <h3 class="text-4xl md:text-5xl font-bold text-primary-900 mb-6 font-display">{{ getConfig(section).title }}</h3>
+            <p class="text-secondary-600 text-lg leading-relaxed">
+              {{ getConfig(section).subtitle }}
+            </p>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-10">
+            <div *ngFor="let feature of getConfig(section).features" class="p-10 rounded-3xl bg-white shadow-soft hover:shadow-card transition-all duration-500 border border-secondary-100 group text-center relative overflow-hidden">
+              <div class="absolute top-0 left-0 w-2 h-full bg-accent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+              <div class="w-24 h-24 bg-primary-50 rounded-full flex items-center justify-center mx-auto mb-8 group-hover:bg-primary-600 transition-colors duration-500 transform group-hover:rotate-12">
+                <span class="text-5xl text-primary-600 group-hover:text-white transition-colors">{{ feature.icon }}</span>
+              </div>
+              <h3 class="text-2xl font-bold mb-4 text-primary-900">{{ feature.title }}</h3>
+              <p class="text-secondary-500 leading-relaxed">{{ feature.description }}</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- [3] Categories Section -->
+      <section *ngIf="section.section_type === 'categories'" class="py-24 bg-white relative">
+        <div class="absolute top-0 right-0 w-1/3 h-full bg-surface-50 skew-x-12 opacity-50 z-0"></div>
+        <div class="container mx-auto px-4 relative z-10">
+          <div class="flex flex-col md:flex-row justify-between items-end mb-16 gap-6">
+            <div>
+              <h2 class="text-accent font-bold tracking-widest uppercase mb-3 text-sm">{{ getConfig(section).header }}</h2>
+              <h3 class="text-4xl md:text-5xl font-bold text-primary-900 font-display">{{ getConfig(section).title }}</h3>
+            </div>
+            <a routerLink="/shop" class="text-primary-600 font-bold hover:text-primary-800 flex items-center gap-2 group text-lg">
+                View All Categories 
+                <span class="group-hover:translate-x-2 transition-transform text-accent">→</span>
+            </a>
+          </div>
+          
+          <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6">
+              <a *ngFor="let category of getConfig(section).categories" [routerLink]="['/shop']" [queryParams]="{category: category.slug}" class="group">
+                  <div class="bg-white rounded-2xl p-6 text-center h-full border border-surface-100 hover:border-accent transition-all hover:shadow-lg group-hover:-translate-y-2 duration-300">
+                      <div class="w-16 h-16 rounded-full mx-auto mb-4 overflow-hidden shadow-sm">
+                          <img [src]="getImageUrl(category.image_url)" class="w-full h-full object-cover">
+                      </div>
+                      <h4 class="font-bold text-secondary-900 group-hover:text-primary-700">{{ category.name }}</h4>
+                  </div>
+              </a>
+          </div>
+        </div>
+      </section>
+
+      <!-- [4] Benefits Section -->
+      <section *ngIf="section.section_type === 'benefits'" class="py-24 bg-secondary-900 text-white overflow-hidden relative">
+          <div class="absolute inset-0 opacity-10" [style.backgroundImage]="'url(' + getImageUrl(getConfig(section).image_url || '/assets/images/pattern-bg.svg') + ')'" style="background-size: cover; mix-blend-mode: overlay;"></div>
+          
+          <div class="container mx-auto px-4 relative z-10">
+              <div class="flex flex-col lg:flex-row gap-16 items-center">
+                  <div class="lg:w-1/2">
+                      <h2 class="text-accent font-bold tracking-widest uppercase mb-4 text-sm">{{ getConfig(section).header }}</h2>
+                      <h3 class="text-3xl md:text-5xl font-bold mb-8 leading-tight" [innerHTML]="getConfig(section).title"></h3>
+                      
+                      <div class="space-y-6">
+                          <div *ngFor="let point of getConfig(section).points" class="flex gap-4">
+                              <div class="w-12 h-12 rounded-full bg-primary-700 shrink-0 flex items-center justify-center font-bold text-xl">{{ point.id }}</div>
+                              <div>
+                                  <h4 class="text-xl font-bold mb-2">{{ point.title }}</h4>
+                                  <p class="text-secondary-400">{{ point.description }}</p>
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+                  <div class="lg:w-1/2 relative">
+                      <div class="aspect-square rounded-full bg-primary-800 absolute -top-10 -right-10 w-96 h-96 opacity-50 blur-3xl"></div>
+                      <div class="relative bg-white/5 backdrop-blur-md rounded-3xl p-8 border border-white/10 shadow-2xl">
+                          <h3 class="text-2xl font-bold mb-6 text-center">{{ getConfig(section).usage_title }}</h3>
+                          <ul class="space-y-4">
+                              <li *ngFor="let item of getConfig(section).usage_items" class="flex items-center gap-4 bg-white/5 p-4 rounded-xl hover:bg-white/10 transition-colors">
+                                  <span class="text-2xl">{{ item.icon }}</span>
+                                  <span>{{ item.text }}</span>
+                              </li>
+                          </ul>
+                          <div class="mt-8 text-center">
+                              <a [routerLink]="getConfig(section).cta_link || '/shop'" class="inline-block w-full bg-accent hover:bg-accent-hover py-4 rounded-xl font-bold transition-colors">{{ getConfig(section).cta_text || 'Start Your Journey' }}</a>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+          </div>
+      </section>
+
+      <!-- [5] Product Grid Section -->
+      <section *ngIf="section.section_type === 'product_grid'" class="py-20 bg-surface-50">
+        <div class="container mx-auto px-4">
+          <div class="flex justify-between items-end mb-12">
+            <div>
+              <h2 class="text-primary-600 font-bold tracking-widest uppercase mb-3 text-sm">{{ getConfig(section).header }}</h2>
+              <h3 class="text-3xl md:text-4xl font-bold text-secondary-900">{{ getConfig(section).title }}</h3>
+            </div>
+            <a routerLink="/shop" class="text-primary-600 font-bold hover:text-primary-800 flex items-center gap-2 group">View Shop <span class="group-hover:translate-x-1 transition-transform">→</span></a>
+          </div>
+          
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+            <div *ngFor="let product of featuredProducts.slice(0, getConfig(section).limit || 4)" class="bg-white rounded-2xl border border-secondary-100 overflow-hidden hover:shadow-xl transition-all duration-300 group flex flex-col h-full">
+              <div class="aspect-[4/3] bg-surface-100 relative overflow-hidden">
+                <img [src]="getImageUrl(product.images?.[0]?.image_url)" [alt]="product.name" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                <div class="absolute top-3 left-3 bg-white/90 backdrop-blur text-xs font-bold px-2 py-1 rounded-md text-secondary-900 shadow-sm" *ngIf="product.category">{{ product.category.name }}</div>
+              </div>
+              <div class="p-5 flex flex-col flex-grow">
+                <h3 class="font-bold text-lg mb-1 text-secondary-900 line-clamp-1 group-hover:text-primary-700 transition-colors">{{ product.name }}</h3>
+                <p class="text-sm text-secondary-500 mb-4 line-clamp-2 flex-grow">{{ product.description }}</p>
+                <div class="flex items-center justify-between mt-auto">
+                  <div class="flex flex-col">
+                    <span class="text-xs text-secondary-400 line-through" *ngIf="product.discounted_price && product.discounted_price < product.price">₹{{ product.price }}</span>
+                    <span class="font-bold text-xl text-primary-700">₹{{ product.discounted_price || product.price }}</span>
+                  </div>
+                  <button class="bg-primary-50 text-primary-700 w-10 h-10 rounded-full flex items-center justify-center hover:bg-primary-600 hover:text-white transition-all shadow-sm">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- [6] CTA Section -->
+      <section *ngIf="section.section_type === 'cta'" class="py-20 bg-primary-800 text-white relative overflow-hidden">
+        <div class="absolute top-0 right-0 w-64 h-64 bg-primary-700 rounded-full -mr-32 -mt-32 opacity-50 blur-3xl"></div>
+        <div class="absolute bottom-0 left-0 w-96 h-96 bg-accent rounded-full -ml-48 -mb-48 opacity-20 blur-3xl"></div>
+        
+        <div class="container mx-auto px-4 relative z-10 text-center max-w-2xl">
+          <h2 class="text-3xl md:text-4xl font-bold mb-4">{{ getConfig(section).title }}</h2>
+          <p class="text-primary-100 mb-8 text-lg">{{ getConfig(section).description }}</p>
+          <div class="flex flex-col sm:flex-row gap-3">
+            <input type="email" [placeholder]="getConfig(section).placeholder || 'Enter your email'" class="flex-1 px-6 py-3 rounded-full bg-white/10 border border-white/20 text-white placeholder-white/50 focus:outline-none focus:bg-white/20 backdrop-blur-sm transition-all text-center sm:text-left">
+            <button class="bg-accent hover:bg-accent-hover px-8 py-3 rounded-full font-bold shadow-lg transition-all transform hover:scale-105">{{ getConfig(section).btn_text || 'Subscribe' }}</button>
+          </div>
+        </div>
+      </section>
+
+    </ng-container>
+  </div>
 </div>

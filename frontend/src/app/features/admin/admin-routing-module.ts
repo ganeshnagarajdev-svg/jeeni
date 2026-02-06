@@ -10,6 +10,7 @@ import { AdminVideosComponent } from './admin-videos/admin-videos';
 import { AdminOrdersComponent } from './admin-orders/admin-orders';
 import { AdminOrderDetailsComponent } from './admin-orders/admin-order-details';
 import { AdminCategoriesComponent } from './admin-categories/admin-categories';
+import { AdminHomeComponent } from './admin-home/admin-home';
 
 import { AdminLayoutComponent } from './admin-layout';
 
@@ -30,6 +31,7 @@ const routes: Routes = [
       { path: 'videos', component: AdminVideosComponent },
       { path: 'orders', component: AdminOrdersComponent },
       { path: 'orders/:id', component: AdminOrderDetailsComponent },
+      { path: 'home-config', component: AdminHomeComponent },
     ]
   }
 ];
