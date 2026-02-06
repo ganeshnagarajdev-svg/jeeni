@@ -42,6 +42,8 @@ wheels/
 *.launch
 .settings/
 *.sublime-workspace
+backend/alembic/versions/
+backend/uploads/
 
 # OS files
 .DS_Store
