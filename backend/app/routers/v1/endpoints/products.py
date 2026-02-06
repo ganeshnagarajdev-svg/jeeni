@@ -4,7 +4,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.routers import deps
 from app.services.product_service import product_service
 
-from app.schemas.product import Product, ProductCreate, ProductUpdate, Category, CategoryCreate
+from app.schemas.product import Product, ProductCreate, ProductUpdate, Category, CategoryCreate, CategoryUpdate
 from app.models.user import User
 
 router = APIRouter()
@@ -32,6 +32,51 @@ async def read_categories(
     Retrieve categories.
     """
     return await product_service.get_categories(db, skip=skip, limit=limit)
+
+@router.get("/categories/{id}", response_model=Category)
+async def read_category(
+    *,
+    db: AsyncSession = Depends(deps.get_db),
+    id: int,
+) -> Any:
+    """
+    Get category by ID.
+    """
+    category = await product_service.get_category(db, category_id=id)
+    if not category:
+        raise HTTPException(status_code=404, detail="Category not found")
+    return category
+
+@router.put("/categories/{id}", response_model=Category)
+async def update_category(
+    *,
+    db: AsyncSession = Depends(deps.get_db),
+    id: int,
+    category_in: CategoryUpdate,
+    current_user: User = Depends(deps.get_current_active_superuser),
+) -> Any:
+    """
+    Update a category (Admin only).
+    """
+    category = await product_service.update_category(db=db, category_id=id, obj_in=category_in)
+    if not category:
+        raise HTTPException(status_code=404, detail="Category not found")
+    return category
+
+@router.delete("/categories/{id}", response_model=Category)
+async def delete_category(
+    *,
+    db: AsyncSession = Depends(deps.get_db),
+    id: int,
+    current_user: User = Depends(deps.get_current_active_superuser),
+) -> Any:
+    """
+    Delete a category (Admin only).
+    """
+    category = await product_service.delete_category(db, category_id=id)
+    if not category:
+        raise HTTPException(status_code=404, detail="Category not found")
+    return category
 
 # Product Endpoints
 @router.post("/products", response_model=Product)

@@ -36,6 +36,11 @@ import { RouterModule } from '@angular/router';
           <span class="font-medium">Products</span>
         </a>
 
+        <a routerLink="/admin/categories" routerLinkActive="bg-[#2c5d53] text-[#F2994A]" class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-[#2c5d53] transition-colors group no-underline text-white">
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 group-hover:scale-110 transition-transform" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19V5a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2Z"/><path d="M7 3v18"/><path d="M3 10h4"/><path d="M3 15h4"/></svg>
+          <span class="font-medium">Categories</span>
+        </a>
+
         <div class="pt-4 pb-2 px-4">
           <p class="text-[10px] text-gray-400 font-semibold uppercase tracking-widest m-0">Content</p>
         </div>

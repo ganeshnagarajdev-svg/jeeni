@@ -1,0 +1,89 @@
+<div class="admin-categories-container">
+  <div class="header-section">
+    <h1 class="title">Manage Categories</h1>
+    <button class="btn-primary" (click)="openAddModal()">
+      <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+      </svg>
+      Add Category
+    </button>
+  </div>
+
+  <div class="table-container">
+    <div *ngIf="loading" class="p-8 text-center text-gray-500">
+      Loading categories...
+    </div>
+
+    <table *ngIf="!loading">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Slug</th>
+          <th>Description</th>
+          <th>Status</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let category of categories">
+          <td class="font-medium">{{ category.name }}</td>
+          <td><code>{{ category.slug }}</code></td>
+          <td>{{ category.description || '-' }}</td>
+          <td>
+            <span class="badge" [ngClass]="category.is_active !== false ? 'badge-success' : 'badge-danger'">
+              {{ category.is_active !== false ? 'Active' : 'Inactive' }}
+            </span>
+          </td>
+          <td class="actions">
+            <button class="btn-edit" (click)="openEditModal(category)">Edit</button>
+            <button class="btn-delete" (click)="deleteCategory(category.id)">Delete</button>
+          </td>
+        </tr>
+        <tr *ngIf="categories.length === 0">
+          <td colspan="5" class="p-8 text-center text-gray-500">
+            No categories found. Click "Add Category" to create one.
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- Category Modal -->
+<div *ngIf="showModal" class="modal-backdrop">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h2 class="modal-title">{{ isEditing ? 'Edit Category' : 'Add New Category' }}</h2>
+      <button class="btn-close" (click)="closeModal()">&times;</button>
+    </div>
+    
+    <form [formGroup]="categoryForm" (ngSubmit)="onSubmit()">
+      <div class="modal-body">
+        <div class="form-group">
+          <label class="label">Category Name</label>
+          <input type="text" formControlName="name" class="input-field" placeholder="e.g. Electronics">
+          <div *ngIf="categoryForm.get('name')?.touched && categoryForm.get('name')?.invalid" class="text-xs text-red-500 mt-1">
+            Name is required.
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="label">Description</label>
+          <textarea formControlName="description" class="input-field textarea-field" placeholder="Optional description..."></textarea>
+        </div>
+
+        <div class="form-group flex items-center gap-2">
+          <input type="checkbox" formControlName="is_active" id="is_active" class="w-4 h-4 text-pink-600 border-gray-300 rounded focus:ring-pink-500">
+          <label for="is_active" class="label mb-0">Active</label>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn-secondary" (click)="closeModal()">Cancel</button>
+        <button type="submit" class="btn-primary" [disabled]="categoryForm.invalid">
+          {{ isEditing ? 'Update Category' : 'Create Category' }}
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

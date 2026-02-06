@@ -9,6 +9,7 @@ import { AdminPhotosComponent } from './admin-photos/admin-photos';
 import { AdminVideosComponent } from './admin-videos/admin-videos';
 import { AdminOrdersComponent } from './admin-orders/admin-orders';
 import { AdminOrderDetailsComponent } from './admin-orders/admin-order-details';
+import { AdminCategoriesComponent } from './admin-categories/admin-categories';
 
 import { AdminLayoutComponent } from './admin-layout';
 
@@ -21,6 +22,7 @@ const routes: Routes = [
       { path: 'dashboard', component: DashboardComponent },
       { path: 'products', component: AdminProductsComponent },
       { path: 'products/:id', component: AdminProductViewComponent },
+      { path: 'categories', component: AdminCategoriesComponent },
       { path: 'blogs', component: AdminBlogsComponent },
       { path: 'careers', component: AdminCareersComponent },
       { path: 'photos', component: AdminPhotosComponent },

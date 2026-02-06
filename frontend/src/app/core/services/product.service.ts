@@ -40,6 +40,22 @@ export class ProductService {
     return this.http.get<Category[]>(`${this.shopApiUrl}/categories`);
   }
 
+  getCategory(id: number): Observable<Category> {
+    return this.http.get<Category>(`${this.shopApiUrl}/categories/${id}`);
+  }
+
+  createCategory(category: any): Observable<Category> {
+    return this.http.post<Category>(`${this.adminApiUrl}/categories`, category);
+  }
+
+  updateCategory(id: number, category: any): Observable<Category> {
+    return this.http.put<Category>(`${this.adminApiUrl}/categories/${id}`, category);
+  }
+
+  deleteCategory(id: number): Observable<Category> {
+    return this.http.delete<Category>(`${this.adminApiUrl}/categories/${id}`);
+  }
+
   createProduct(product: any): Observable<Product> {
     return this.http.post<Product>(`${this.adminApiUrl}/products`, product);
   }

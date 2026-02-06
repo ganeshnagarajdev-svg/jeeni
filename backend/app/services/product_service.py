@@ -1,7 +1,7 @@
 from typing import List, Optional, Any, Union, Dict
 from sqlalchemy.ext.asyncio import AsyncSession
 from app.repositories.product_repository import product_repo
-from app.schemas.product import ProductCreate, ProductUpdate, CategoryCreate
+from app.schemas.product import ProductCreate, ProductUpdate, CategoryCreate, CategoryUpdate
 from app.models.product import Product, Category
 
 class ProductService:
@@ -14,6 +14,15 @@ class ProductService:
 
     async def get_category(self, db: AsyncSession, category_id: int) -> Optional[Category]:
         return await product_repo.get_category(db, category_id)
+
+    async def update_category(self, db: AsyncSession, category_id: int, obj_in: Union[CategoryUpdate, Dict[str, Any]]) -> Optional[Category]:
+        db_obj = await product_repo.get_category(db, category_id)
+        if db_obj:
+            return await product_repo.update_category(db, db_obj=db_obj, obj_in=obj_in)
+        return None
+
+    async def delete_category(self, db: AsyncSession, category_id: int) -> Optional[Category]:
+        return await product_repo.delete_category(db, category_id)
 
     # Product Operations
     async def create_product(self, db: AsyncSession, obj_in: ProductCreate) -> Product:
