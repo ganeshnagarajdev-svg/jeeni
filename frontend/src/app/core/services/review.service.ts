@@ -18,11 +18,13 @@ export interface UpdateReviewData {
   review_text?: string;
 }
 
+import { environment } from '../../../environments/environment';
+
 @Injectable({
   providedIn: 'root'
 })
 export class ReviewService {
-  private apiUrl = 'http://localhost:8000/api/v1/shop';
+  private apiUrl = `${environment.apiUrl}/shop`;
 
   constructor(private http: HttpClient) {}
 

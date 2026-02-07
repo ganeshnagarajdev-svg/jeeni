@@ -3,12 +3,14 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Product, Category } from '../models/product';
 
+import { environment } from '../../../environments/environment';
+
 @Injectable({
   providedIn: 'root'
 })
 export class ProductService {
-  private shopApiUrl = 'http://localhost:8000/api/v1/shop';
-  private adminApiUrl = 'http://localhost:8000/api/v1/shop'; // For now it's the same base but conceptually different
+  private shopApiUrl = `${environment.apiUrl}/shop`;
+  private adminApiUrl = `${environment.apiUrl}/shop`; // For now it's the same base but conceptually different
 
   constructor(private http: HttpClient) {}
 

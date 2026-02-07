@@ -22,7 +22,7 @@ class Product(Base):
     is_active = Column(Boolean, default=True)
     is_featured = Column(Boolean, default=False)
     
-    category_id = Column(Integer, ForeignKey("category.id"))
+    category_id = Column(Integer, ForeignKey("category.id"), index=True)
     category = relationship("Category", back_populates="products")
     
     images = relationship("ProductImage", back_populates="product", cascade="all, delete-orphan")

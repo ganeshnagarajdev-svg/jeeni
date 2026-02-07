@@ -14,7 +14,7 @@ class OrderStatus(str, enum.Enum):
 
 class Order(Base):
     id = Column(Integer, primary_key=True, index=True)
-    user_id = Column(Integer, ForeignKey("user.id"), nullable=False)
+    user_id = Column(Integer, ForeignKey("user.id"), nullable=False, index=True)
     status = Column(Enum(OrderStatus, native_enum=False, create_constraint=False, values_callable=lambda x: [e.value for e in x]), default=OrderStatus.PENDING.value)
     total_amount = Column(Float, nullable=False)
     
@@ -29,7 +29,7 @@ class Order(Base):
     payment_id = Column(String, nullable=True)
     payment_status = Column(String, default="pending")
     
-    created_at = Column(DateTime(timezone=True), server_default=func.now())
+    created_at = Column(DateTime(timezone=True), server_default=func.now(), index=True)
     updated_at = Column(DateTime(timezone=True), onupdate=func.now())
     
     user = relationship("User", backref="orders")
