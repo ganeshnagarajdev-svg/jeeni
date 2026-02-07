@@ -26,8 +26,11 @@ async def startup_event():
     from sqlalchemy import select
     import json
     
-    async with engine.begin() as conn:
-        await conn.run_sync(Base.metadata.create_all)
+    # Only create tables if in DEBUG mode (dev/test)
+    # In production, we rely on Alembic migrations
+    if settings.DEBUG:
+        async with engine.begin() as conn:
+            await conn.run_sync(Base.metadata.create_all)
     
     # Seed initial home sections if table is empty
     async with AsyncSessionLocal() as db:
@@ -37,6 +40,16 @@ async def startup_event():
             from seed_home import seed_home_sections
             await seed_home_sections()
             
+    # Initialize FastAPILimiter
+    try:
+        if cache.redis:
+           import redis.asyncio as redis
+           from fastapi_limiter import FastAPILimiter
+           await FastAPILimiter.init(cache.redis)
+           print("Startup: Rate Limiter initialized.")
+    except Exception as e:
+        logger.warning(f"Failed to initialize Rate Limiter: {e}")
+
     print("Startup: Database tables verified/created.")
 
 # CORS Middleware config
@@ -52,7 +65,7 @@ app.add_middleware(
 )
 
 app.add_middleware(GZipMiddleware, minimum_size=1000)
-# app.add_middleware(TrustedHostMiddleware, allowed_hosts=["jeeni.com", "*.jeeni.com", "localhost"])
+app.add_middleware(TrustedHostMiddleware, allowed_hosts=settings.ALLOWED_HOSTS)
 
 @app.exception_handler(Exception)
 async def global_exception_handler(request: Request, exc: Exception):

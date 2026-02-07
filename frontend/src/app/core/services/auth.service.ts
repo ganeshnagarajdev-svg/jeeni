@@ -4,6 +4,8 @@ import { BehaviorSubject, Observable, tap, switchMap, map, of } from 'rxjs';
 import { Router } from '@angular/router';
 
 import { environment } from '../../../environments/environment';
+import { StorageKeys } from '../constants/storage-keys';
+
 
 @Injectable({
   providedIn: 'root',
@@ -19,7 +21,7 @@ export class AuthService {
     private http: HttpClient,
     private router: Router,
   ) {
-    const storedUser = localStorage.getItem('currentUser');
+    const storedUser = localStorage.getItem(StorageKeys.CURRENT_USER);
     if (storedUser) {
       this.currentUserSubject.next(JSON.parse(storedUser));
     }
@@ -38,7 +40,7 @@ export class AuthService {
     return this.http.post<any>(`${this.apiUrl}/login/access-token`, formData).pipe(
       tap((response) => {
         if (response.access_token) {
-          localStorage.setItem('token', response.access_token);
+          localStorage.setItem(StorageKeys.TOKEN, response.access_token);
         }
       }),
       switchMap(() => this.fetchCurrentUser())
@@ -50,7 +52,7 @@ export class AuthService {
   }
 
   fetchCurrentUser(): Observable<any> {
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem(StorageKeys.TOKEN);
     if (!token) {
       this.isLoadingSubject.next(false);
       return of(null);
@@ -63,7 +65,7 @@ export class AuthService {
       })
       .pipe(
         tap((user) => {
-          localStorage.setItem('currentUser', JSON.stringify(user));
+          localStorage.setItem(StorageKeys.CURRENT_USER, JSON.stringify(user));
           this.currentUserSubject.next(user);
           this.isLoadingSubject.next(false);
         }),
@@ -75,14 +77,14 @@ export class AuthService {
   }
 
   logout() {
-    localStorage.removeItem('token');
-    localStorage.removeItem('currentUser');
+    localStorage.removeItem(StorageKeys.TOKEN);
+    localStorage.removeItem(StorageKeys.CURRENT_USER);
     this.currentUserSubject.next(null);
     this.router.navigate(['/auth/login']);
   }
 
   getToken(): string | null {
-    return localStorage.getItem('token');
+    return localStorage.getItem(StorageKeys.TOKEN);
   }
 
   isAuthenticated(): boolean {

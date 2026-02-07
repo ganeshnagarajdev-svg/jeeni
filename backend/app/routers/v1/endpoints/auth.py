@@ -3,6 +3,8 @@ from typing import Any
 from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.ext.asyncio import AsyncSession
+from app.core.ratelimit import SafeRateLimiter as RateLimiter
+
 from app.routers import deps
 from app.core import security
 from app.core.config import settings
@@ -11,7 +13,7 @@ from app.schemas.user import User as UserSchema, UserCreate
 
 router = APIRouter()
 
-@router.post("/login/access-token")
+@router.post("/login/access-token", dependencies=[Depends(RateLimiter(times=5, seconds=60))])
 async def login_access_token(
     db: AsyncSession = Depends(deps.get_db),
     form_data: OAuth2PasswordRequestForm = Depends()
@@ -34,7 +36,7 @@ async def login_access_token(
         "token_type": "bearer",
     }
 
-@router.post("/signup", response_model=UserSchema, status_code=201)
+@router.post("/signup", response_model=UserSchema, status_code=201, dependencies=[Depends(RateLimiter(times=5, seconds=60))])
 async def create_user_signup(
     *,
     db: AsyncSession = Depends(deps.get_db),

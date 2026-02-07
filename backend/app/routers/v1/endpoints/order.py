@@ -1,6 +1,8 @@
 from typing import Any, List
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
+from app.core.ratelimit import SafeRateLimiter as RateLimiter
+
 from app.routers import deps
 from app.services.order_service import order_service
 from app.schemas.order import Order, OrderCreate, OrderUpdate
@@ -36,7 +38,7 @@ async def read_order(
         raise HTTPException(status_code=404, detail="Order not found")
     return order
 
-@router.post("/", response_model=Order)
+@router.post("/", response_model=Order, dependencies=[Depends(RateLimiter(times=2, seconds=60))])
 async def create_order(
     *,
     db: AsyncSession = Depends(deps.get_db),

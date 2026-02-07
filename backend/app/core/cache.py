@@ -13,9 +13,7 @@ class CacheService:
 
     async def connect(self):
         try:
-            # We assume redis is running on localhost for now, or use settings
-            # In production, this should come from settings
-            self.redis = redis.Redis(host='localhost', port=6379, db=0, decode_responses=True)
+            self.redis = redis.from_url(settings.REDIS_URL, encoding="utf-8", decode_responses=True)
             await self.redis.ping()
             logger.info("Connected to Redis")
         except Exception as e:

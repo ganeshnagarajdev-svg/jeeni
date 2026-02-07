@@ -14,10 +14,17 @@ class UploadService:
         if not os.path.exists(self.upload_dir):
             os.makedirs(self.upload_dir)
 
+    ALLOWED_EXTENSIONS = {".jpg", ".jpeg", ".png", ".gif", ".webp", ".svg", ".mp4", ".webm", ".mov", ".pdf"}
+
     async def save_file_local(self, file: UploadFile) -> str:
+        # Validate file extension
+        ext = os.path.splitext(file.filename)[1].lower()
+        if ext not in self.ALLOWED_EXTENSIONS:
+            from fastapi import HTTPException
+            raise HTTPException(status_code=400, detail=f"File type not allowed. Allowed types: {', '.join(self.ALLOWED_EXTENSIONS)}")
+
         # Generate unique filename to avoid collisions
-        file_extension = os.path.splitext(file.filename)[1]
-        unique_filename = f"{uuid.uuid4()}{file_extension}"
+        unique_filename = f"{uuid.uuid4()}{ext}"
         file_path = os.path.join(self.upload_dir, unique_filename)
 
         with open(file_path, "wb") as buffer:

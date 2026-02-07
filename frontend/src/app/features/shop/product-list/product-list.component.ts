@@ -7,6 +7,7 @@ import { ProductService } from '../../../core/services/product.service';
 import { ContentService } from '../../../core/services/content.service';
 import { Product, Category } from '../../../core/models/product';
 import { CartService } from '../../../core/services/cart.service';
+import { ApiConstants } from '../../../core/constants/api.constants';
 
 @Component({
   selector: 'app-product-list',
@@ -66,7 +67,7 @@ export class ProductListComponent implements OnInit {
     const max = this.maxPrice ? this.maxPrice : undefined;
 
     // Use take(1) to avoid potential double-triggering or leaks
-    this.productService.getProducts(0, 100, categoryId, min, max, this.sortBy).pipe(take(1)).subscribe({
+    this.productService.getProducts(ApiConstants.DEFAULT_PAGE_SKIP, ApiConstants.DEFAULT_PAGE_SIZE, categoryId, min, max, this.sortBy).pipe(take(1)).subscribe({
       next: (products: Product[]) => {
         this.products = products;
         this.isLoading = false;

@@ -15,12 +15,22 @@ class Settings(BaseSettings):
     POSTGRES_POOL_SIZE: int = 20
     POSTGRES_MAX_OVERFLOW: int = 10
     
+    # Redis
+    REDIS_URL: str = "redis://localhost:6379"
+
     @property
     def SQLALCHEMY_DATABASE_URI(self) -> str:
         return f"postgresql+asyncpg://{self.POSTGRES_USER}:{self.POSTGRES_PASSWORD}@{self.POSTGRES_SERVER}:{self.POSTGRES_PORT}/{self.POSTGRES_DB}"
 
     # Authentication
-    SECRET_KEY: str = "CHANGE_THIS_TO_A_SECRET_KEY" 
+    SECRET_KEY: str
+    @validator("SECRET_KEY")
+    def validate_secret_key(cls, v: str) -> str:
+        if v == "CHANGE_THIS_TO_A_SECRET_KEY":
+            raise ValueError("SECRET_KEY must be changed from default")
+        if len(v) < 32:
+            raise ValueError("SECRET_KEY must be at least 32 characters long")
+        return v 
     ALGORITHM: str = "HS256"
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 30
     
@@ -37,6 +47,9 @@ class Settings(BaseSettings):
         elif isinstance(v, (list, str)):
             return v
         raise ValueError(v)
+
+    # Security
+    ALLOWED_HOSTS: List[str] = ["localhost", "127.0.0.1", "jeeni.com", "*.jeeni.com"]
 
     # Debug
     DEBUG: bool = False
