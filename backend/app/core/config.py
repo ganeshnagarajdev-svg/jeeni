@@ -49,7 +49,15 @@ class Settings(BaseSettings):
         raise ValueError(v)
 
     # Security
-    ALLOWED_HOSTS: List[str] = ["localhost", "127.0.0.1", "jeeni.com", "*.jeeni.com"]
+    ALLOWED_HOSTS: List[str] = ["localhost", "127.0.0.1"]
+
+    @validator("ALLOWED_HOSTS", pre=True)
+    def assemble_allowed_hosts(cls, v: Union[str, List[str]]) -> Union[List[str], str]:
+        if isinstance(v, str) and not v.startswith("["):
+            return [i.strip() for i in v.split(",")]
+        elif isinstance(v, (list, str)):
+            return v
+        raise ValueError(v)
 
     # Debug
     DEBUG: bool = False

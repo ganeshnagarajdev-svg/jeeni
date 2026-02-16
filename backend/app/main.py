@@ -33,12 +33,17 @@ async def startup_event():
             await conn.run_sync(Base.metadata.create_all)
     
     # Seed initial home sections if table is empty
-    async with AsyncSessionLocal() as db:
-        result = await db.execute(select(HomeSection).limit(1))
-        if not result.scalars().first():
-            print("Seeding initial home sections...")
-            from seed_home import seed_home_sections
-            await seed_home_sections()
+    try:
+        async with AsyncSessionLocal() as db:
+            result = await db.execute(select(HomeSection).limit(1))
+            if not result.scalars().first():
+                logger.info("Seeding initial home sections...")
+                from seed_home import seed_home_sections
+                await seed_home_sections()
+            else:
+                logger.info("Home sections already seeded.")
+    except Exception as e:
+        logger.error(f"Failed to seed home sections: {e}")
             
     # Initialize FastAPILimiter
     try:
