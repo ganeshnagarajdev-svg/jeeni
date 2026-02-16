@@ -22,11 +22,20 @@
         <a routerLink="/general/pages/contact-us" routerLinkActive="text-primary-700 bg-primary-50" class="px-4 py-2 rounded-full text-secondary-600 font-medium hover:text-primary-700 hover:bg-surface-100 transition-all">Contact Us</a>
       </nav>
 
+      <!-- Search Bar -->
+      <!-- Search Bar -->
+      <div class="hidden md:flex items-center bg-white border border-secondary-200 rounded-full px-5 py-2.5 mx-6 w-80 shadow-sm hover:shadow-md focus-within:shadow-lg focus-within:border-primary-400 focus-within:ring-4 focus-within:ring-primary-50 transition-all duration-300 group">
+        <input type="text" [(ngModel)]="searchQuery" (keyup.enter)="onSearch()" placeholder="Search for healthy millets..." class="bg-transparent border-none focus:ring-0 text-sm font-medium text-secondary-700 w-full placeholder-secondary-400 outline-none">
+        <button (click)="onSearch()" class="text-secondary-400 group-focus-within:text-primary-600 hover:text-primary-700 transition-colors transform group-focus-within:scale-110 duration-300">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            </svg>
+        </button>
+      </div>
+
       <!-- Actions -->
       <div class="hidden md:flex items-center gap-3">
-        <button class="w-10 h-10 rounded-full hover:bg-surface-100 flex items-center justify-center text-secondary-600 transition-colors">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
-        </button>
+
         
         <ng-container *ngIf="authService.currentUser$ | async as user; else loginBtn">
            <div class="relative group">
@@ -77,6 +86,18 @@
   <!-- Mobile Nav -->
   <div *ngIf="isMenuOpen" class="md:hidden bg-white border-t border-secondary-200 shadow-xl absolute w-full z-40 animate-slide-down">
     <div class="container mx-auto px-4 py-6 flex flex-col gap-2">
+      <!-- Mobile Search -->
+      <div class="mb-4">
+        <div class="flex items-center bg-secondary-50 border border-secondary-200 rounded-xl px-4 py-3 w-full focus-within:ring-2 ring-primary-100 focus-within:border-primary-400 transition-all">
+          <input type="text" [(ngModel)]="searchQuery" (keyup.enter)="onSearch(); toggleMenu()" placeholder="Search products..." class="bg-transparent border-none focus:ring-0 text-base text-secondary-900 w-full placeholder-secondary-400 outline-none">
+          <button (click)="onSearch(); toggleMenu()" class="text-secondary-400 hover:text-primary-600 transition-colors">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+              </svg>
+          </button>
+        </div>
+      </div>
+
       <a routerLink="/" class="px-4 py-3 rounded-xl text-secondary-700 hover:bg-surface-50 hover:text-primary-700 font-medium transition-colors">Home</a>
       <a routerLink="/shop" class="px-4 py-3 rounded-xl text-secondary-700 hover:bg-surface-50 hover:text-primary-700 font-medium transition-colors">Shop</a>
       <a routerLink="/content/blogs" class="px-4 py-3 rounded-xl text-secondary-700 hover:bg-surface-50 hover:text-primary-700 font-medium transition-colors">Blog</a>

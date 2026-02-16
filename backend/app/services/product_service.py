@@ -44,10 +44,11 @@ class ProductService:
         category_id: Optional[int] = None,
         min_price: Optional[float] = None,
         max_price: Optional[float] = None,
-        sort_by: Optional[str] = None
+        sort_by: Optional[str] = None,
+        search: Optional[str] = None
     ) -> List[Product]:
         # Try cache first
-        cache_key = f"products:{skip}:{limit}:{category_id}:{min_price}:{max_price}:{sort_by}"
+        cache_key = f"products:{skip}:{limit}:{category_id}:{min_price}:{max_price}:{sort_by}:{search}"
         cached_data = await cache.get(cache_key)
         if cached_data:
             # We need to deserialize back to objects if needed, but for now assuming the repo returns objects
@@ -56,7 +57,7 @@ class ProductService:
             # For this simple implementation, we might skip caching ORM objects directly without serialization layer
             # However, since we cannot easily change the return type signature here without breaking things:
             pass 
-
+        
         # Ideally we Should return Pydantic schemas from service to allow caching
         # Since refactoring everything to Pydantic is a larger task, I will apply caching only to get_product_by_slug 
         # which acts on a single item and is easier to manage, OR just implement it for high traffic read
@@ -68,7 +69,8 @@ class ProductService:
             category_id=category_id,
             min_price=min_price,
             max_price=max_price,
-            sort_by=sort_by
+            sort_by=sort_by,
+            search=search
         )
 
     async def get_product(self, db: AsyncSession, product_id: int) -> Optional[Product]:

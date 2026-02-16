@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule, Router } from '@angular/router';
+import { RouterModule, Router, ActivatedRoute } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { take } from 'rxjs';
 import { ProductService } from '../../../core/services/product.service';
@@ -25,6 +25,7 @@ export class ProductListComponent implements OnInit {
   minPrice: number | null = null;
   maxPrice: number | null = null;
   sortBy: string = 'newest';
+  searchQuery: string = '';
   
   isLoading = true;
 
@@ -32,7 +33,8 @@ export class ProductListComponent implements OnInit {
     private productService: ProductService,
     private contentService: ContentService,
     private cartService: CartService,
-    private router: Router
+    private router: Router,
+    private route: ActivatedRoute
   ) {}
 
   buyNow(event: Event, product: Product) {
@@ -49,7 +51,10 @@ export class ProductListComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadCategories();
-    this.loadProducts();
+    this.route.queryParams.subscribe(params => {
+      this.searchQuery = params['search'] || '';
+      this.loadProducts();
+    });
   }
 
   loadCategories() {
@@ -66,9 +71,10 @@ export class ProductListComponent implements OnInit {
     const categoryId = this.selectedCategoryId ? this.selectedCategoryId : undefined;
     const min = this.minPrice ? this.minPrice : undefined;
     const max = this.maxPrice ? this.maxPrice : undefined;
+    const search = this.searchQuery ? this.searchQuery : undefined;
 
     // Use take(1) to avoid potential double-triggering or leaks
-    this.productService.getProducts(ApiConstants.DEFAULT_PAGE_SKIP, ApiConstants.DEFAULT_PAGE_SIZE, categoryId, min, max, this.sortBy).pipe(take(1)).subscribe({
+    this.productService.getProducts(ApiConstants.DEFAULT_PAGE_SKIP, ApiConstants.DEFAULT_PAGE_SIZE, categoryId, min, max, this.sortBy, search).pipe(take(1)).subscribe({
       next: (products: Product[]) => {
         this.products = products;
         this.isLoading = false;
@@ -95,6 +101,7 @@ export class ProductListComponent implements OnInit {
     this.minPrice = null;
     this.maxPrice = null;
     this.sortBy = 'newest';
+    this.searchQuery = '';
     this.loadProducts();
   }
 

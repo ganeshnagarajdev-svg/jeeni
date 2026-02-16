@@ -93,7 +93,7 @@
             
             <div class="p-4 flex-grow flex flex-col">
               <div class="mb-2">
-                <span class="text-xs font-semibold tracking-wider text-primary-600 uppercase bg-primary-50 px-2 py-1 rounded-md">{{ product.category_id }}</span>
+                <span class="text-xs font-semibold tracking-wider text-primary-600 uppercase bg-primary-50 px-2 py-1 rounded-md">{{ product.category?.name || product.category_id }}</span>
               </div>
               <h3 class="text-lg font-bold text-secondary-900 mb-1 group-hover:text-primary-600 transition-colors">{{ product.name }}</h3>
               <p class="text-secondary-500 text-sm line-clamp-2 mb-4 flex-grow">{{ product.description }}</p>

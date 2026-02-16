@@ -91,7 +91,8 @@ class ProductRepository:
         category_id: Optional[int] = None,
         min_price: Optional[float] = None,
         max_price: Optional[float] = None,
-        sort_by: Optional[str] = None
+        sort_by: Optional[str] = None,
+        search: Optional[str] = None
     ) -> List[Product]:
         query = select(Product).options(selectinload(Product.images), selectinload(Product.category))
         
@@ -103,6 +104,13 @@ class ProductRepository:
         
         if max_price is not None:
             query = query.filter(Product.price <= max_price)
+        
+        if search:
+            search_term = f"%{search}%"
+            query = query.filter(
+                (Product.name.ilike(search_term)) | 
+                (Product.description.ilike(search_term))
+            )
             
         if sort_by == 'newest':
             query = query.order_by(Product.id.desc())

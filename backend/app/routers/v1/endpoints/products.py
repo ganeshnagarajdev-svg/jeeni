@@ -116,6 +116,7 @@ async def read_products(
     min_price: Optional[float] = None,
     max_price: Optional[float] = None,
     sort_by: Optional[str] = None,
+    search: Optional[str] = None
 ) -> Any:
     """
     Retrieve products with filters.
@@ -127,7 +128,8 @@ async def read_products(
         category_id=category_id,
         min_price=min_price,
         max_price=max_price,
-        sort_by=sort_by
+        sort_by=sort_by,
+        search=search
     )
 
 @router.get("/products/{slug}", response_model=Product)

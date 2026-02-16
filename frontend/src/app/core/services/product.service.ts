@@ -20,7 +20,8 @@ export class ProductService {
     categoryId?: number,
     minPrice?: number,
     maxPrice?: number,
-    sortBy?: string
+    sortBy?: string,
+    search?: string
   ): Observable<Product[]> {
     let params = new HttpParams()
       .set('skip', skip)
@@ -30,6 +31,7 @@ export class ProductService {
     if (minPrice) params = params.set('min_price', minPrice);
     if (maxPrice) params = params.set('max_price', maxPrice);
     if (sortBy) params = params.set('sort_by', sortBy);
+    if (search) params = params.set('search', search);
 
     return this.http.get<Product[]>(`${this.shopApiUrl}/products`, { params });
   }
