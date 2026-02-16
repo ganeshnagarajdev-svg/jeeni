@@ -45,6 +45,11 @@
                <!-- Dropdown placeholder could go here -->
                 <div class="absolute right-0 pt-2 w-48 hidden group-hover:block animate-fade-in z-20">
                     <div class="bg-white rounded-xl shadow-xl py-2 border border-secondary-100">
+                        <!-- User Info Header -->
+                        <div class="px-4 py-3 border-b border-secondary-100 mb-1">
+                            <p class="text-sm font-bold text-secondary-900 truncate">{{user.full_name || 'User'}}</p>
+                            <p class="text-xs text-secondary-500 truncate">{{user.email}}</p>
+                        </div>
                         <a routerLink="/admin/dashboard" *ngIf="user.role === 'admin'" class="block px-4 py-2 text-sm text-secondary-700 hover:bg-surface-50">Admin Dashboard</a>
                         <a routerLink="/orders" class="block px-4 py-2 text-sm text-secondary-700 hover:bg-surface-50">My Orders</a>
                         <button (click)="logout()" class="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50">Logout</button>
