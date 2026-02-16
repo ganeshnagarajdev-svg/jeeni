@@ -285,7 +285,7 @@
     <div class="p-6 space-y-6">
       <!-- Star Rating Input -->
       <div>
-        <label class="block text-sm font-semibold text-gray-700 mb-3">Your Rating</label>
+        <label class="block text-sm font-semibold text-gray-700 mb-3">Your Rating <span class="text-red-500">*</span></label>
         <div class="flex items-center gap-1">
           <button *ngFor="let i of [1, 2, 3, 4, 5]" type="button" (click)="setRating(i)" class="p-1 transition-transform hover:scale-110">
             <svg 

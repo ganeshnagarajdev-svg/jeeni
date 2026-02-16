@@ -91,8 +91,11 @@
     <form [formGroup]="productForm" (ngSubmit)="onSubmit()" class="flex-grow overflow-y-auto p-8 space-y-6">
       <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div class="md:col-span-2 space-y-2">
-          <label class="text-xs font-bold text-gray-500 uppercase tracking-wider">Product Name</label>
+          <label class="text-xs font-bold text-gray-500 uppercase tracking-wider">Product Name <span class="text-red-500">*</span></label>
           <input type="text" formControlName="name" class="w-full px-4 py-3 bg-gray-50 border-none rounded-xl focus:ring-2 focus:ring-[#F2994A] transition-all" placeholder="e.g. Organic Millet Mix">
+          <div *ngIf="productForm.get('name')?.touched && productForm.get('name')?.invalid" class="text-red-500 text-xs mt-1">
+            Product Name is required.
+          </div>
         </div>
 
         <div class="md:col-span-2 space-y-2">
@@ -101,21 +104,30 @@
         </div>
 
         <div class="space-y-2">
-          <label class="text-xs font-bold text-gray-500 uppercase tracking-wider">Price (₹)</label>
+          <label class="text-xs font-bold text-gray-500 uppercase tracking-wider">Price (₹) <span class="text-red-500">*</span></label>
           <input type="number" formControlName="price" class="w-full px-4 py-3 bg-gray-50 border-none rounded-xl focus:ring-2 focus:ring-[#F2994A] transition-all">
+          <div *ngIf="productForm.get('price')?.touched && productForm.get('price')?.invalid" class="text-red-500 text-xs mt-1">
+            Price is required and must be non-negative.
+          </div>
         </div>
 
         <div class="space-y-2">
-          <label class="text-xs font-bold text-gray-500 uppercase tracking-wider">Stock Quantity</label>
+          <label class="text-xs font-bold text-gray-500 uppercase tracking-wider">Stock Quantity <span class="text-red-500">*</span></label>
           <input type="number" formControlName="stock" class="w-full px-4 py-3 bg-gray-50 border-none rounded-xl focus:ring-2 focus:ring-[#F2994A] transition-all">
+          <div *ngIf="productForm.get('stock')?.touched && productForm.get('stock')?.invalid" class="text-red-500 text-xs mt-1">
+            Stock is required and must be non-negative.
+          </div>
         </div>
 
         <div class="space-y-2">
-          <label class="text-xs font-bold text-gray-500 uppercase tracking-wider">Category</label>
+          <label class="text-xs font-bold text-gray-500 uppercase tracking-wider">Category <span class="text-red-500">*</span></label>
             <select formControlName="category_id" class="w-full px-4 py-3 bg-gray-50 border-none rounded-xl focus:ring-2 focus:ring-[#F2994A] transition-all">
               <option [ngValue]="null">Select Category</option>
               <option *ngFor="let cat of categories" [ngValue]="cat.id">{{ cat.name }}</option>
             </select>
+            <div *ngIf="productForm.get('category_id')?.touched && productForm.get('category_id')?.invalid" class="text-red-500 text-xs mt-1">
+              Category is required.
+            </div>
         </div>
 
         <div class="flex items-center gap-6 pt-4">
@@ -143,6 +155,9 @@
             <div class="flex-grow space-y-3">
               <div class="flex gap-2">
                 <input type="text" formControlName="image_url" class="flex-grow px-4 py-2 bg-white border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-[#F2994A] transition-all" placeholder="Enter URL or upload file">
+                <div *ngIf="images.at(i).get('image_url')?.touched && images.at(i).get('image_url')?.invalid" class="text-red-500 text-xs mt-1 absolute -bottom-5 left-0">
+                  Image URL is required.
+                </div>
                 <input type="file" #fileInput (change)="onFileSelected($event, i)" class="hidden" accept="image/*">
                 <button type="button" (click)="fileInput.click()" class="px-3 py-2 bg-gray-100 text-gray-700 rounded-lg text-xs font-bold hover:bg-gray-200 transition-all flex items-center gap-1">
                   <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" x2="12" y1="3" y2="15"/></svg>

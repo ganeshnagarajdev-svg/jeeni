@@ -24,7 +24,7 @@ export class AdminVideosComponent implements OnInit {
   ) {
     this.videoForm = this.fb.group({
       title: ['', Validators.required],
-      url: ['', Validators.required],
+      url: ['', [Validators.required, Validators.pattern(/^(http(s)?:\/\/)?((w){3}.)?youtu(be|.be)?(\.com)?\/.+/)]],
       description: ['']
     });
   }

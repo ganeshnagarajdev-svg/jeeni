@@ -82,23 +82,35 @@
     <form [formGroup]="careerForm" (ngSubmit)="onSubmit()" class="flex-grow overflow-y-auto p-8 space-y-6">
       <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div class="md:col-span-2 space-y-2">
-          <label class="text-xs font-bold text-gray-500 uppercase tracking-wider">Job Title</label>
+          <label class="text-xs font-bold text-gray-500 uppercase tracking-wider">Job Title <span class="text-red-500">*</span></label>
           <input type="text" formControlName="title" class="w-full px-4 py-3 bg-gray-50 border-none rounded-xl focus:ring-2 focus:ring-[#F2994A] transition-all" placeholder="e.g. Sales Executive">
+          <div *ngIf="careerForm.get('title')?.touched && careerForm.get('title')?.invalid" class="text-red-500 text-xs mt-1">
+            Job Title is required.
+          </div>
         </div>
 
         <div class="space-y-2">
-          <label class="text-xs font-bold text-gray-500 uppercase tracking-wider">Department</label>
+          <label class="text-xs font-bold text-gray-500 uppercase tracking-wider">Department <span class="text-red-500">*</span></label>
           <input type="text" formControlName="department" class="w-full px-4 py-3 bg-gray-50 border-none rounded-xl focus:ring-2 focus:ring-[#F2994A] transition-all" placeholder="e.g. Sales, Marketing">
+          <div *ngIf="careerForm.get('department')?.touched && careerForm.get('department')?.invalid" class="text-red-500 text-xs mt-1">
+            Department is required.
+          </div>
         </div>
 
         <div class="space-y-2">
-          <label class="text-xs font-bold text-gray-500 uppercase tracking-wider">Location</label>
+          <label class="text-xs font-bold text-gray-500 uppercase tracking-wider">Location <span class="text-red-500">*</span></label>
           <input type="text" formControlName="location" class="w-full px-4 py-3 bg-gray-50 border-none rounded-xl focus:ring-2 focus:ring-[#F2994A] transition-all" placeholder="e.g. Bangalore, Remote">
+          <div *ngIf="careerForm.get('location')?.touched && careerForm.get('location')?.invalid" class="text-red-500 text-xs mt-1">
+            Location is required.
+          </div>
         </div>
 
         <div class="md:col-span-2 space-y-2">
-          <label class="text-xs font-bold text-gray-500 uppercase tracking-wider">Job Description</label>
+          <label class="text-xs font-bold text-gray-500 uppercase tracking-wider">Job Description <span class="text-red-500">*</span></label>
           <textarea formControlName="description" rows="4" class="w-full px-4 py-3 bg-gray-50 border-none rounded-xl focus:ring-2 focus:ring-[#F2994A] transition-all" placeholder="Briefly describe the role..."></textarea>
+          <div *ngIf="careerForm.get('description')?.touched && careerForm.get('description')?.invalid" class="text-red-500 text-xs mt-1">
+            Description is required.
+          </div>
         </div>
 
         <div class="md:col-span-2 space-y-2">

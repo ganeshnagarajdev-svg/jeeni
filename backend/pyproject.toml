@@ -17,5 +17,9 @@ dependencies = [
     "sqlalchemy>=2.0.25",
     "uvicorn[standard]>=0.27.0",
     "psycopg2>=2.9.11",
-    "redis>=7.1.0",
+    "redis>=5.0.1",
+    "fastapi-limiter<0.2.0",
+    "pytest>=7.4.0",
+    "pytest-asyncio>=0.23.0",
+    "pytest-mock>=3.12.0",
 ]

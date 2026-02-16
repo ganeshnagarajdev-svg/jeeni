@@ -48,8 +48,8 @@
         <h4 class="text-accent font-bold mb-6 text-lg tracking-wide uppercase text-sm">Stay Updated</h4>
         <p class="text-sm text-primary-200 mb-4">Subscribe to our newsletter for healthy recipes and exclusive offers.</p>
         <div class="flex flex-col gap-3">
-            <input type="email" placeholder="Your email address" class="px-4 py-3 rounded-lg bg-primary-800 border border-primary-700 text-white placeholder-primary-400 focus:outline-none focus:border-accent transition-colors">
-            <button class="px-4 py-3 bg-accent hover:bg-accent-hover text-white font-bold rounded-lg transition-colors shadow-lg">Subscribe</button>
+            <input type="email" [(ngModel)]="email" placeholder="Your email address" class="px-4 py-3 rounded-lg bg-primary-800 border border-primary-700 text-white placeholder-primary-400 focus:outline-none focus:border-accent transition-colors">
+            <button (click)="subscribe()" class="px-4 py-3 bg-accent hover:bg-accent-hover text-white font-bold rounded-lg transition-colors shadow-lg">Subscribe</button>
         </div>
       </div>
     </div>

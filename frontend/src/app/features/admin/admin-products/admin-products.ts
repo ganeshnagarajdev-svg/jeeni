@@ -32,7 +32,7 @@ export class AdminProductsComponent implements OnInit {
       description: [''],
       price: [0, [Validators.required, Validators.min(0)]],
       discounted_price: [null],
-      stock: [0, [Validators.required, Validators.min(0)]],
+      stock: [0, [Validators.required, Validators.min(0), Validators.pattern(/^[0-9]+$/)]],
       category_id: [null, Validators.required],
       is_active: [true],
       is_featured: [false],

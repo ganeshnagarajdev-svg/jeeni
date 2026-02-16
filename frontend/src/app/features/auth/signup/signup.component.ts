@@ -22,8 +22,8 @@ export class SignupComponent {
     private router: Router
   ) {
     this.signupForm = this.fb.group({
-      firstName: ['', Validators.required],
-      lastName: ['', Validators.required],
+      firstName: ['', [Validators.required, Validators.pattern(/^[a-zA-Z ]*$/)]],
+      lastName: ['', [Validators.required, Validators.pattern(/^[a-zA-Z ]*$/)]],
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(8)]],
       terms: [false, Validators.requiredTrue]

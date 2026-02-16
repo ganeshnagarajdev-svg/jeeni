@@ -74,8 +74,11 @@
 
     <form [formGroup]="blogForm" (ngSubmit)="onSubmit()" class="flex-grow overflow-y-auto p-8 space-y-6">
       <div class="space-y-2">
-        <label class="text-xs font-bold text-gray-500 uppercase tracking-wider">Article Title</label>
+        <label class="text-xs font-bold text-gray-500 uppercase tracking-wider">Article Title <span class="text-red-500">*</span></label>
         <input type="text" formControlName="title" class="w-full px-4 py-3 bg-gray-50 border-none rounded-xl focus:ring-2 focus:ring-[#F2994A] transition-all" placeholder="e.g. Benefits of Millet for Health">
+        <div *ngIf="blogForm.get('title')?.touched && blogForm.get('title')?.invalid" class="text-red-500 text-xs mt-1">
+          Title is required.
+        </div>
       </div>
 
       <div class="space-y-2">
@@ -91,8 +94,11 @@
       </div>
 
       <div class="space-y-2">
-        <label class="text-xs font-bold text-gray-500 uppercase tracking-wider">Content</label>
+        <label class="text-xs font-bold text-gray-500 uppercase tracking-wider">Content <span class="text-red-500">*</span></label>
         <textarea formControlName="content" rows="10" class="w-full px-4 py-3 bg-gray-50 border-none rounded-xl focus:ring-2 focus:ring-[#F2994A] transition-all font-mono text-sm" placeholder="Write your content here (supports Markdown)..."></textarea>
+         <div *ngIf="blogForm.get('content')?.touched && blogForm.get('content')?.invalid" class="text-red-500 text-xs mt-1">
+          Content is required.
+        </div>
       </div>
 
       <div class="flex items-center gap-6 pt-2">

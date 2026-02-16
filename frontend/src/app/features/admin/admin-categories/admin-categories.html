@@ -60,7 +60,7 @@
     <form [formGroup]="categoryForm" (ngSubmit)="onSubmit()">
       <div class="modal-body">
         <div class="form-group">
-          <label class="label">Category Name</label>
+          <label class="label">Category Name <span class="text-red-500">*</span></label>
           <input type="text" formControlName="name" class="input-field" placeholder="e.g. Electronics">
           <div *ngIf="categoryForm.get('name')?.touched && categoryForm.get('name')?.invalid" class="text-xs text-red-500 mt-1">
             Name is required.
