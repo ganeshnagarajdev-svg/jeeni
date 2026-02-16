@@ -3,6 +3,8 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { CartService, Cart } from '../../../core/services/cart.service';
 import { ContentService } from '../../../core/services/content.service';
+import { ConfirmationService } from '../../../core/services/confirmation.service';
+import { ToastService } from '../../../core/services/toast.service';
 
 @Component({
   selector: 'app-cart-list',
@@ -16,7 +18,9 @@ export class CartListComponent implements OnInit {
 
   constructor(
     private cartService: CartService,
-    private contentService: ContentService
+    private contentService: ContentService,
+    private confirmationService: ConfirmationService,
+    private toastService: ToastService
   ) {}
 
   ngOnInit(): void {
@@ -35,9 +39,19 @@ export class CartListComponent implements OnInit {
     this.cartService.removeFromCart(itemId).subscribe();
   }
 
-  clearCart() {
-    if (confirm('Are you sure you want to clear your cart?')) {
-      this.cartService.clearCart().subscribe();
+  async clearCart() {
+    const confirmed = await this.confirmationService.confirm({
+      message: 'Are you sure you want to clear your cart?',
+      type: 'danger',
+      confirmText: 'Yes, clear cart',
+      cancelText: 'Cancel'
+    });
+
+    if (confirmed) {
+      this.cartService.clearCart().subscribe({
+        next: () => this.toastService.success('Cart cleared'),
+        error: () => this.toastService.error('Failed to clear cart')
+      });
     }
   }
 

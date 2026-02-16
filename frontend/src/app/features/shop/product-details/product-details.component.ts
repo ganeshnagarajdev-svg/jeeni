@@ -9,6 +9,8 @@ import { CartService } from '../../../core/services/cart.service';
 import { ReviewService, CreateReviewData, ReviewStats } from '../../../core/services/review.service';
 import { AuthService } from '../../../core/services/auth.service';
 import { Product, ProductReview } from '../../../core/models/product';
+import { ToastService } from '../../../core/services/toast.service';
+import { ConfirmationService } from '../../../core/services/confirmation.service';
 
 @Component({
   selector: 'app-product-details',
@@ -47,7 +49,9 @@ export class ProductDetailsComponent implements OnInit {
     private cartService: CartService,
     private reviewService: ReviewService,
     private authService: AuthService,
-    private router: Router
+    private router: Router,
+    private toastService: ToastService,
+    private confirmationService: ConfirmationService
   ) {}
 
   get isLoggedIn(): boolean {
@@ -176,7 +180,7 @@ export class ProductDetailsComponent implements OnInit {
 
   openReviewForm(edit = false) {
     if (!this.isLoggedIn) {
-      alert('Please log in to write a review');
+      this.toastService.info('Please log in to write a review');
       this.router.navigate(['/auth/login']);
       return;
     }
@@ -199,7 +203,7 @@ export class ProductDetailsComponent implements OnInit {
 
   submitReview() {
     if (!this.product || this.reviewRating === 0) {
-      alert('Please select a rating');
+      this.toastService.error('Please select a rating');
       return;
     }
 
@@ -217,11 +221,12 @@ export class ProductDetailsComponent implements OnInit {
           this.loadReviewStats();
           this.closeReviewForm();
           this.isSubmittingReview = false;
-          alert('Review updated successfully!');
+          this.isSubmittingReview = false;
+          this.toastService.success('Review updated successfully!');
         },
         error: (err) => {
           this.isSubmittingReview = false;
-          alert('Failed to update review: ' + (err.error?.detail || err.message));
+          this.toastService.error('Failed to update review: ' + (err.error?.detail || err.message));
         }
       });
     } else {
@@ -232,29 +237,38 @@ export class ProductDetailsComponent implements OnInit {
           this.loadReviewStats();
           this.closeReviewForm();
           this.isSubmittingReview = false;
-          alert('Review submitted successfully!');
+          this.isSubmittingReview = false;
+          this.toastService.success('Review submitted successfully!');
         },
         error: (err) => {
           this.isSubmittingReview = false;
-          alert('Failed to submit review: ' + (err.error?.detail || err.message));
+          this.toastService.error('Failed to submit review: ' + (err.error?.detail || err.message));
         }
       });
     }
   }
 
-  deleteMyReview() {
+  async deleteMyReview() {
     if (!this.userReview) return;
-    if (!confirm('Are you sure you want to delete your review?')) return;
+    
+    const confirmed = await this.confirmationService.confirm({
+      message: 'Are you sure you want to delete your review?',
+      type: 'danger',
+      confirmText: 'Yes, delete',
+      cancelText: 'Cancel'
+    });
+
+    if (!confirmed) return;
 
     this.reviewService.deleteReview(this.userReview.id).subscribe({
       next: () => {
         this.userReview = null;
         this.loadReviews();
         this.loadReviewStats();
-        alert('Review deleted successfully!');
+        this.toastService.success('Review deleted successfully!');
       },
       error: (err) => {
-        alert('Failed to delete review: ' + (err.error?.detail || err.message));
+        this.toastService.error('Failed to delete review: ' + (err.error?.detail || err.message));
       }
     });
   }
@@ -269,7 +283,7 @@ export class ProductDetailsComponent implements OnInit {
 
   toggleWishlist() {
     if (!this.isLoggedIn) {
-      alert('Please log in to add to wishlist');
+      this.toastService.info('Please log in to add to wishlist');
       this.router.navigate(['/auth/login']);
       return;
     }
@@ -279,18 +293,22 @@ export class ProductDetailsComponent implements OnInit {
         next: () => {
           this.isInWishlist = false;
           this.wishlistItem = null;
-          alert('Product removed from wishlist');
+          this.isInWishlist = false;
+          this.wishlistItem = null;
+          this.toastService.success('Product removed from wishlist');
         },
-        error: (err) => alert('Failed to remove from wishlist: ' + (err.error?.detail || err.message))
+        error: (err) => this.toastService.error('Failed to remove from wishlist: ' + (err.error?.detail || err.message))
       });
     } else if (this.product) {
       this.wishlistService.addToWishlist(this.product.id).subscribe({
         next: (item) => {
           this.isInWishlist = true;
           this.wishlistItem = item;
-          alert('Product added to wishlist!');
+          this.isInWishlist = true;
+          this.wishlistItem = item;
+          this.toastService.success('Product added to wishlist!');
         },
-        error: (err) => alert('Failed to add to wishlist: ' + (err.error?.detail || err.message))
+        error: (err) => this.toastService.error('Failed to add to wishlist: ' + (err.error?.detail || err.message))
       });
     }
   }
@@ -301,7 +319,7 @@ export class ProductDetailsComponent implements OnInit {
         next: () => {
           this.router.navigate(['/cart/checkout']);
         },
-        error: (err) => alert('Failed to proceed to buy: ' + (err.error?.detail || err.message))
+        error: (err) => this.toastService.error('Failed to proceed to buy: ' + (err.error?.detail || err.message))
       });
     }
   }
@@ -309,8 +327,8 @@ export class ProductDetailsComponent implements OnInit {
   addToCart() {
     if (this.product) {
       this.cartService.addToCart(this.product.id).subscribe({
-        next: () => alert('Product added to cart!'),
-        error: (err) => alert('Failed to add to cart: ' + (err.error?.detail || err.message))
+        next: () => this.toastService.success('Product added to cart!'),
+        error: (err) => this.toastService.error('Failed to add to cart: ' + (err.error?.detail || err.message))
       });
     }
   }

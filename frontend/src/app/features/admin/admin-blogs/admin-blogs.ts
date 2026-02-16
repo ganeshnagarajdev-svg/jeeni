@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ContentService, Blog } from '../../../core/services/content.service';
+import { ConfirmationService } from '../../../core/services/confirmation.service';
+import { ToastService } from '../../../core/services/toast.service';
 
 @Component({
   selector: 'app-admin-blogs',
@@ -20,7 +22,9 @@ export class AdminBlogsComponent implements OnInit {
 
   constructor(
     private contentService: ContentService,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private confirmationService: ConfirmationService,
+    private toastService: ToastService
   ) {
     this.blogForm = this.fb.group({
       title: ['', Validators.required],
@@ -76,7 +80,7 @@ export class AdminBlogsComponent implements OnInit {
              image_url: res.url
           });
         },
-        error: (err) => alert('Upload failed: ' + err.message)
+        error: (err) => this.toastService.error('Upload failed: ' + err.message)
       });
     }
   }
@@ -86,34 +90,47 @@ export class AdminBlogsComponent implements OnInit {
   }
 
   onSubmit() {
-    if (this.blogForm.invalid) return;
+    if (this.blogForm.invalid) {
+         this.toastService.error('Please fill all required fields');
+         return;
+    }
 
     if (this.isEditing && this.currentBlogId) {
       this.contentService.updateBlog(this.currentBlogId, this.blogForm.value).subscribe({
         next: () => {
           this.loadBlogs();
+          this.toastService.success('Blog updated successfully');
           this.closeModal();
         },
-        error: (e) => alert('Failed to update blog')
+        error: (e) => this.toastService.error('Failed to update blog')
       });
     } else {
       this.contentService.createBlog(this.blogForm.value).subscribe({
         next: () => {
           this.loadBlogs();
+          this.toastService.success('Blog created successfully');
           this.closeModal();
         },
-        error: (e) => alert('Failed to create blog')
+        error: (e) => this.toastService.error('Failed to create blog')
       });
     }
   }
 
-  deleteBlog(id: number): void {
-      if(confirm('Are you sure you want to delete this blog?')) {
+  async deleteBlog(id: number) {
+      const confirmed = await this.confirmationService.confirm({
+          message: 'Are you sure you want to delete this blog?',
+          type: 'danger',
+          confirmText: 'Yes, delete',
+          cancelText: 'Cancel'
+      });
+
+      if(confirmed) {
           this.contentService.deleteBlog(id).subscribe({
               next: () => {
                   this.blogs = this.blogs.filter(b => b.id !== id);
+                  this.toastService.success('Blog deleted successfully');
               },
-              error: (e) => alert('Failed to delete blog')
+              error: (e) => this.toastService.error('Failed to delete blog')
           });
       }
   }

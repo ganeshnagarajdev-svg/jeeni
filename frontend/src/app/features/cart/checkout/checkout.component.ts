@@ -5,6 +5,7 @@ import { Router, RouterModule } from '@angular/router';
 import { CartService, Cart } from '../../../core/services/cart.service';
 import { OrderService } from '../../../core/services/order.service';
 import { ContentService } from '../../../core/services/content.service';
+import { ToastService } from '../../../core/services/toast.service';
 
 @Component({
   selector: 'app-checkout',
@@ -28,7 +29,9 @@ export class CheckoutComponent implements OnInit {
     private cartService: CartService,
     private orderService: OrderService,
     private router: Router,
-    private contentService: ContentService
+
+    private contentService: ContentService,
+    private toastService: ToastService
   ) {}
 
   ngOnInit(): void {
@@ -46,13 +49,14 @@ export class CheckoutComponent implements OnInit {
 
     // Simulate Payment
     setTimeout(() => {
-      this.paymentStatus = 'success';
       this.orderService.createOrder(this.shippingInfo).subscribe({
         next: (order) => {
+          this.paymentStatus = 'success';
+          this.toastService.success('Order placed successfully!');
           this.router.navigate(['/orders']); // Redirect to order history
         },
         error: (err) => {
-          alert('Failed to place order: ' + (err.error?.detail || err.message));
+          this.toastService.error('Failed to place order: ' + (err.error?.detail || err.message));
           this.isSubmitting = false;
           this.paymentStatus = 'failed';
         }

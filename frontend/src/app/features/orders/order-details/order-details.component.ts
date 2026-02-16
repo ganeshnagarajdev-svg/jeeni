@@ -3,6 +3,8 @@ import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { OrderService, Order } from '../../../core/services/order.service';
 import { ContentService } from '../../../core/services/content.service';
+import { ToastService } from '../../../core/services/toast.service';
+import { ConfirmationService } from '../../../core/services/confirmation.service';
 
 @Component({
   selector: 'app-order-details',
@@ -18,7 +20,10 @@ export class OrderDetailsComponent implements OnInit {
     private route: ActivatedRoute,
     private orderService: OrderService,
     private router: Router,
-    private contentService: ContentService
+
+    private contentService: ContentService,
+    private toastService: ToastService,
+    private confirmationService: ConfirmationService
   ) {}
 
   ngOnInit(): void {
@@ -42,18 +47,26 @@ export class OrderDetailsComponent implements OnInit {
     });
   }
 
-  cancelOrder(): void {
+  async cancelOrder() {
     if (!this.order) return;
-    if (!confirm('Are you sure you want to cancel this order?')) return;
+    
+    const confirmed = await this.confirmationService.confirm({
+      message: 'Are you sure you want to cancel this order?',
+      type: 'warning',
+      confirmText: 'Yes, cancel order',
+      cancelText: 'No, keep it'
+    });
+
+    if (!confirmed) return;
 
     this.orderService.cancelOrder(this.order.id).subscribe({
       next: (updatedOrder) => {
         this.order = updatedOrder;
-        // Optionally show success message
+        this.toastService.success('Order cancelled successfully');
       },
       error: (err) => {
         console.error('Failed to cancel order', err);
-        alert('Failed to cancel order');
+        this.toastService.error('Failed to cancel order');
       }
     });
   }

@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ContentService, Media } from '../../../core/services/content.service';
+import { ConfirmationService } from '../../../core/services/confirmation.service';
+import { ToastService } from '../../../core/services/toast.service';
 
 @Component({
   selector: 'app-admin-videos',
@@ -20,7 +22,9 @@ export class AdminVideosComponent implements OnInit {
 
   constructor(
     private contentService: ContentService,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private confirmationService: ConfirmationService,
+    private toastService: ToastService
   ) {
     this.videoForm = this.fb.group({
       title: ['', Validators.required],
@@ -76,7 +80,7 @@ export class AdminVideosComponent implements OnInit {
         next: (res) => {
           this.videoForm.patchValue({ url: res.url });
         },
-        error: (err) => alert('Upload failed: ' + err.message)
+        error: (err) => this.toastService.error('Upload failed: ' + err.message)
       });
     }
   }
@@ -103,7 +107,10 @@ export class AdminVideosComponent implements OnInit {
   }
 
   onSubmit() {
-    if (this.videoForm.invalid) return;
+    if (this.videoForm.invalid) {
+        this.toastService.error('Please fill all required fields');
+        return;
+    }
 
     const videoData = {
       ...this.videoForm.value,
@@ -114,28 +121,38 @@ export class AdminVideosComponent implements OnInit {
       this.contentService.updateMedia(this.currentVideoId, videoData).subscribe({
         next: () => {
           this.loadVideos();
+          this.toastService.success('Video updated successfully');
           this.closeModal();
         },
-        error: (e) => alert('Failed to update video')
+        error: (e) => this.toastService.error('Failed to update video')
       });
     } else {
       this.contentService.createMedia(videoData).subscribe({
         next: () => {
           this.loadVideos();
+          this.toastService.success('Video added successfully');
           this.closeModal();
         },
-        error: (e) => alert('Failed to add video')
+        error: (e) => this.toastService.error('Failed to add video')
       });
     }
   }
 
-  deleteVideo(id: number): void {
-    if(confirm('Are you sure you want to delete this video?')) {
+  async deleteVideo(id: number) {
+    const confirmed = await this.confirmationService.confirm({
+      message: 'Are you sure you want to delete this video?',
+      type: 'danger',
+      confirmText: 'Yes, delete',
+      cancelText: 'Cancel'
+    });
+
+    if(confirmed) {
       this.contentService.deleteMedia(id).subscribe({
         next: () => {
           this.videos = this.videos.filter(v => v.id !== id);
+          this.toastService.success('Video deleted successfully');
         },
-        error: (e) => alert('Failed to delete video')
+        error: (e) => this.toastService.error('Failed to delete video')
       });
     }
   }

@@ -4,11 +4,13 @@ import { Router, NavigationEnd, RouterOutlet } from '@angular/router';
 import { filter } from 'rxjs/operators';
 import { HeaderComponent } from './core/layout/header/header.component';
 import { FooterComponent } from './core/layout/footer/footer.component';
+import { ToastComponent } from './core/components/toast/toast.component';
+import { ConfirmationModalComponent } from './core/components/confirmation-modal/confirmation-modal.component';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [CommonModule, RouterOutlet, HeaderComponent, FooterComponent],
+  imports: [CommonModule, RouterOutlet, HeaderComponent, FooterComponent, ToastComponent, ConfirmationModalComponent],
   templateUrl: './app.html',
   styleUrl: './app.css',
 })

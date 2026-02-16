@@ -5,6 +5,8 @@ import { ProductService } from '../../../core/services/product.service';
 import { ContentService } from '../../../core/services/content.service';
 import { ReviewService, ReviewStats } from '../../../core/services/review.service';
 import { Product, ProductReview } from '../../../core/models/product';
+import { ConfirmationService } from '../../../core/services/confirmation.service';
+import { ToastService } from '../../../core/services/toast.service';
 
 @Component({
   selector: 'app-admin-product-view',
@@ -26,7 +28,9 @@ export class AdminProductViewComponent implements OnInit {
     private router: Router,
     private productService: ProductService,
     private contentService: ContentService,
-    private reviewService: ReviewService
+    private reviewService: ReviewService,
+    private confirmationService: ConfirmationService,
+    private toastService: ToastService
   ) {}
 
   ngOnInit(): void {
@@ -105,17 +109,24 @@ export class AdminProductViewComponent implements OnInit {
     });
   }
 
-  deleteReview(reviewId: number): void {
-    if (!confirm('Are you sure you want to delete this review?')) return;
+  async deleteReview(reviewId: number) {
+    const confirmed = await this.confirmationService.confirm({
+      message: 'Are you sure you want to delete this review?',
+      type: 'danger',
+      confirmText: 'Yes, delete',
+      cancelText: 'Cancel'
+    });
+
+    if (!confirmed) return;
     
     this.reviewService.deleteReview(reviewId).subscribe({
       next: () => {
         this.reviews = this.reviews.filter(r => r.id !== reviewId);
         this.loadReviewStats();
-        alert('Review deleted successfully');
+        this.toastService.success('Review deleted successfully');
       },
       error: (err) => {
-        alert('Failed to delete review: ' + (err.error?.detail || err.message));
+        this.toastService.error('Failed to delete review: ' + (err.error?.detail || err.message));
       }
     });
   }

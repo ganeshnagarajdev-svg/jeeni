@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ContentService, Media } from '../../../core/services/content.service';
+import { ConfirmationService } from '../../../core/services/confirmation.service';
+import { ToastService } from '../../../core/services/toast.service';
 
 @Component({
   selector: 'app-admin-photos',
@@ -20,7 +22,9 @@ export class AdminPhotosComponent implements OnInit {
 
   constructor(
     private contentService: ContentService,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private confirmationService: ConfirmationService,
+    private toastService: ToastService
   ) {
     this.photoForm = this.fb.group({
       title: ['', Validators.required],
@@ -76,7 +80,7 @@ export class AdminPhotosComponent implements OnInit {
         next: (res) => {
           this.photoForm.patchValue({ url: res.url });
         },
-        error: (err) => alert('Upload failed: ' + err.message)
+        error: (err) => this.toastService.error('Upload failed: ' + err.message)
       });
     }
   }
@@ -86,7 +90,10 @@ export class AdminPhotosComponent implements OnInit {
   }
 
   onSubmit() {
-    if (this.photoForm.invalid) return;
+    if (this.photoForm.invalid) {
+         this.toastService.error('Please fill all required fields');
+         return;
+    }
 
     const photoData = {
       ...this.photoForm.value,
@@ -97,28 +104,38 @@ export class AdminPhotosComponent implements OnInit {
       this.contentService.updateMedia(this.currentPhotoId, photoData).subscribe({
         next: () => {
           this.loadPhotos();
+          this.toastService.success('Photo updated successfully');
           this.closeModal();
         },
-        error: (e) => alert('Failed to update photo')
+        error: (e) => this.toastService.error('Failed to update photo')
       });
     } else {
       this.contentService.createMedia(photoData).subscribe({
         next: () => {
           this.loadPhotos();
+          this.toastService.success('Photo added successfully');
           this.closeModal();
         },
-        error: (e) => alert('Failed to add photo')
+        error: (e) => this.toastService.error('Failed to add photo')
       });
     }
   }
 
-  deletePhoto(id: number): void {
-    if(confirm('Are you sure you want to delete this photo?')) {
+  async deletePhoto(id: number) {
+    const confirmed = await this.confirmationService.confirm({
+        message: 'Are you sure you want to delete this photo?',
+        type: 'danger',
+        confirmText: 'Yes, delete',
+        cancelText: 'Cancel'
+    });
+
+    if(confirmed) {
       this.contentService.deleteMedia(id).subscribe({
         next: () => {
           this.photos = this.photos.filter(p => p.id !== id);
+          this.toastService.success('Photo deleted successfully');
         },
-        error: (e) => alert('Failed to delete photo')
+        error: (e) => this.toastService.error('Failed to delete photo')
       });
     }
   }

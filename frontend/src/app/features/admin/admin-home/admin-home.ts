@@ -5,6 +5,8 @@ import { FormsModule } from '@angular/forms';
 import { GeneralService } from '../../../core/services/general.service';
 import { ContentService } from '../../../core/services/content.service';
 import { HomeSection } from '../../../core/models/home-section';
+import { ConfirmationService } from '../../../core/services/confirmation.service';
+import { ToastService } from '../../../core/services/toast.service';
 
 @Component({
   selector: 'app-admin-home',
@@ -367,7 +369,9 @@ export class AdminHomeComponent implements OnInit {
 
   constructor(
     private generalService: GeneralService,
-    private contentService: ContentService
+    private contentService: ContentService,
+    private confirmationService: ConfirmationService,
+    private toastService: ToastService
   ) {}
 
   // Drag and Drop
@@ -603,8 +607,15 @@ export class AdminHomeComponent implements OnInit {
       });
   }
 
-  deleteSection(section: HomeSection): void {
-    if (confirm('Are you sure you want to delete this section?')) {
+  async deleteSection(section: HomeSection) {
+    const confirmed = await this.confirmationService.confirm({
+      message: 'Are you sure you want to delete this section?',
+      type: 'danger',
+      confirmText: 'Yes, delete',
+      cancelText: 'Cancel'
+    });
+
+    if (confirmed) {
       this.generalService.deleteHomeSection(section.id).subscribe({
         next: () => {
           this.loadSections();

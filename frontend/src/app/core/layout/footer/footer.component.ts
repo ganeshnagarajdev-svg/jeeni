@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
+import { ToastService } from '../../services/toast.service';
 
 @Component({
   selector: 'app-footer',
@@ -13,21 +14,23 @@ import { FormsModule } from '@angular/forms';
 export class FooterComponent {
   email: string = '';
 
+  constructor(private toastService: ToastService) {}
+
   subscribe() {
     if (!this.email) {
-      alert('Please enter your email address.');
+      this.toastService.info('Please enter your email address.');
       return;
     }
     // Simple email regex for validation
     const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
     if (!emailPattern.test(this.email)) {
-      alert('Please enter a valid email address.');
+      this.toastService.error('Please enter a valid email address.');
       return;
     }
     
     // Simulate API call
     console.log('Subscribing email:', this.email);
-    alert('Thank you for subscribing!');
+    this.toastService.success('Thank you for subscribing!');
     this.email = '';
   }
 }

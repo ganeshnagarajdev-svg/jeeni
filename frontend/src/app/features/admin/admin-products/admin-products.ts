@@ -5,6 +5,8 @@ import { RouterModule } from '@angular/router';
 import { ProductService } from '../../../core/services/product.service';
 import { ContentService } from '../../../core/services/content.service';
 import { Product, Category } from '../../../core/models/product';
+import { ConfirmationService } from '../../../core/services/confirmation.service';
+import { ToastService } from '../../../core/services/toast.service';
 
 @Component({
   selector: 'app-admin-products',
@@ -25,7 +27,9 @@ export class AdminProductsComponent implements OnInit {
   constructor(
     private productService: ProductService,
     private contentService: ContentService,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private confirmationService: ConfirmationService,
+    private toastService: ToastService
   ) {
     this.productForm = this.fb.group({
       name: ['', Validators.required],
@@ -125,7 +129,7 @@ export class AdminProductsComponent implements OnInit {
              image_url: res.url
           });
         },
-        error: (err) => alert('Upload failed: ' + err.message)
+        error: (err) => this.toastService.error('Upload failed: ' + err.message)
       });
     }
   }
@@ -139,7 +143,10 @@ export class AdminProductsComponent implements OnInit {
   }
 
   onSubmit() {
-    if (this.productForm.invalid) return;
+    if (this.productForm.invalid) {
+        this.toastService.error('Please fill all required fields');
+        return;
+    }
 
     const productData = this.productForm.value;
     
@@ -147,28 +154,38 @@ export class AdminProductsComponent implements OnInit {
       this.productService.updateProduct(this.currentProductId, productData).subscribe({
         next: () => {
           this.loadProducts();
+          this.toastService.success('Product updated successfully');
           this.closeModal();
         },
-        error: (e) => alert('Failed to update product')
+        error: (e) => this.toastService.error('Failed to update product')
       });
     } else {
       this.productService.createProduct(productData).subscribe({
         next: () => {
           this.loadProducts();
+          this.toastService.success('Product created successfully');
           this.closeModal();
         },
-        error: (e) => alert('Failed to create product')
+        error: (e) => this.toastService.error('Failed to create product')
       });
     }
   }
 
-  deleteProduct(id: number): void {
-    if(confirm('Are you sure you want to delete this product?')) {
+  async deleteProduct(id: number) {
+    const confirmed = await this.confirmationService.confirm({
+      message: 'Are you sure you want to delete this product?',
+      type: 'danger',
+      confirmText: 'Yes, delete',
+      cancelText: 'Cancel'
+    });
+
+    if(confirmed) {
       this.productService.deleteProduct(id).subscribe({
         next: () => {
           this.products = this.products.filter(p => p.id !== id);
+          this.toastService.success('Product deleted successfully');
         },
-        error: (e) => alert('Failed to delete product')
+        error: (e) => this.toastService.error('Failed to delete product')
       });
     }
   }

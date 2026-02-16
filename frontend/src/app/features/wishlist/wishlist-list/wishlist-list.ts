@@ -3,6 +3,8 @@ import { CommonModule } from '@angular/common';
 import { RouterModule, Router } from '@angular/router';
 import { WishlistItem, WishlistService } from '../../../core/services/wishlist.service';
 import { ContentService } from '../../../core/services/content.service';
+import { ConfirmationService } from '../../../core/services/confirmation.service';
+import { ToastService } from '../../../core/services/toast.service';
 
 @Component({
   selector: 'app-wishlist-list',
@@ -19,7 +21,9 @@ export class WishlistListComponent implements OnInit {
   constructor(
     private wishlistService: WishlistService,
     private contentService: ContentService,
-    private router: Router
+    private router: Router,
+    private confirmationService: ConfirmationService,
+    private toastService: ToastService
   ) {}
 
   ngOnInit(): void {
@@ -41,14 +45,26 @@ export class WishlistListComponent implements OnInit {
     });
   }
 
-  removeItem(event: Event, id: number): void {
+  async removeItem(event: Event, id: number) {
     event.stopPropagation();
-    if(confirm('Are you sure you want to remove this item?')) {
+    
+    const confirmed = await this.confirmationService.confirm({
+      message: 'Are you sure you want to remove this item?',
+      type: 'warning',
+      confirmText: 'Yes, remove',
+      cancelText: 'Cancel'
+    });
+
+    if(confirmed) {
       this.wishlistService.removeFromWishlist(id).subscribe({
         next: () => {
           this.wishlistItems = this.wishlistItems.filter(item => item.id !== id);
+          this.toastService.success('Item removed from wishlist');
         },
-        error: (err) => console.error('Error removing item', err)
+        error: (err) => {
+          console.error('Error removing item', err);
+          this.toastService.error('Failed to remove item');
+        }
       });
     }
   }

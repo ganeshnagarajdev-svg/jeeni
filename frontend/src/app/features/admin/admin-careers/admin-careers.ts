@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Career, GeneralService } from '../../../core/services/general.service';
+import { ConfirmationService } from '../../../core/services/confirmation.service';
+import { ToastService } from '../../../core/services/toast.service';
 
 @Component({
   selector: 'app-admin-careers',
@@ -20,7 +22,9 @@ export class AdminCareersComponent implements OnInit {
 
   constructor(
     private generalService: GeneralService,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private confirmationService: ConfirmationService,
+    private toastService: ToastService
   ) {
     this.careerForm = this.fb.group({
       title: ['', Validators.required],
@@ -76,34 +80,47 @@ export class AdminCareersComponent implements OnInit {
   }
 
   onSubmit() {
-    if (this.careerForm.invalid) return;
+    if (this.careerForm.invalid) {
+         this.toastService.error('Please fill all required fields');
+         return;
+    }
 
     if (this.isEditing && this.currentCareerId) {
       this.generalService.updateCareer(this.currentCareerId, this.careerForm.value).subscribe({
         next: () => {
           this.loadCareers();
+          this.toastService.success('Job posting updated successfully');
           this.closeModal();
         },
-        error: (e) => alert('Failed to update job posting')
+        error: (e) => this.toastService.error('Failed to update job posting')
       });
     } else {
       this.generalService.createCareer(this.careerForm.value).subscribe({
         next: () => {
           this.loadCareers();
+          this.toastService.success('Job posting created successfully');
           this.closeModal();
         },
-        error: (e) => alert('Failed to create job posting')
+        error: (e) => this.toastService.error('Failed to create job posting')
       });
     }
   }
 
-  deleteCareer(id: number): void {
-      if(confirm('Are you sure you want to delete this job posting?')) {
+  async deleteCareer(id: number) {
+      const confirmed = await this.confirmationService.confirm({
+          message: 'Are you sure you want to delete this job posting?',
+          type: 'danger',
+          confirmText: 'Yes, delete',
+          cancelText: 'Cancel'
+      });
+
+      if(confirmed) {
           this.generalService.deleteCareer(id).subscribe({
               next: () => {
                   this.careers = this.careers.filter(c => c.id !== id);
+                  this.toastService.success('Job posting deleted successfully');
               },
-              error: (e) => alert('Failed to delete job posting')
+              error: (e) => this.toastService.error('Failed to delete job posting')
           });
       }
   }

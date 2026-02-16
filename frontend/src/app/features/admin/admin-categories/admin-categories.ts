@@ -4,6 +4,8 @@ import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ProductService } from '../../../core/services/product.service';
 import { Category } from '../../../core/models/product';
+import { ConfirmationService } from '../../../core/services/confirmation.service';
+import { ToastService } from '../../../core/services/toast.service';
 
 @Component({
   selector: 'app-admin-categories',
@@ -22,7 +24,9 @@ export class AdminCategoriesComponent implements OnInit {
 
   constructor(
     private productService: ProductService,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private confirmationService: ConfirmationService,
+    private toastService: ToastService
   ) {
     this.categoryForm = this.fb.group({
       name: ['', Validators.required],
@@ -72,7 +76,10 @@ export class AdminCategoriesComponent implements OnInit {
   }
 
   onSubmit() {
-    if (this.categoryForm.invalid) return;
+    if (this.categoryForm.invalid) {
+         this.toastService.error('Please fill all required fields');
+         return;
+    }
 
     const categoryData = this.categoryForm.value;
     
@@ -80,28 +87,38 @@ export class AdminCategoriesComponent implements OnInit {
       this.productService.updateCategory(this.currentCategoryId, categoryData).subscribe({
         next: () => {
           this.loadCategories();
+          this.toastService.success('Category updated successfully');
           this.closeModal();
         },
-        error: (e) => alert('Failed to update category')
+        error: (e) => this.toastService.error('Failed to update category')
       });
     } else {
       this.productService.createCategory(categoryData).subscribe({
         next: () => {
           this.loadCategories();
+          this.toastService.success('Category created successfully');
           this.closeModal();
         },
-        error: (e) => alert('Failed to create category')
+        error: (e) => this.toastService.error('Failed to create category')
       });
     }
   }
 
-  deleteCategory(id: number): void {
-    if(confirm('Are you sure you want to delete this category? This might affect products in this category.')) {
+  async deleteCategory(id: number) {
+    const confirmed = await this.confirmationService.confirm({
+      message: 'Are you sure you want to delete this category? This might affect products in this category.',
+      type: 'danger',
+      confirmText: 'Yes, delete',
+      cancelText: 'Cancel'
+    });
+
+    if(confirmed) {
       this.productService.deleteCategory(id).subscribe({
         next: () => {
           this.categories = this.categories.filter(c => c.id !== id);
+          this.toastService.success('Category deleted successfully');
         },
-        error: (e) => alert('Failed to delete category. it may have products associated with it.')
+        error: (e) => this.toastService.error('Failed to delete category. it may have products associated with it.')
       });
     }
   }
