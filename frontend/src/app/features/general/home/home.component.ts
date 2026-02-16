@@ -7,6 +7,9 @@ import { GeneralService } from '../../../core/services/general.service';
 import { Product, Category } from '../../../core/models/product';
 import { HomeSection } from '../../../core/models/home-section';
 
+import { CartService } from '../../../core/services/cart.service';
+import { Router } from '@angular/router';
+
 @Component({
   selector: 'app-home',
   standalone: true,
@@ -23,7 +26,9 @@ export class HomeComponent implements OnInit {
   constructor(
     private productService: ProductService,
     private contentService: ContentService,
-    private generalService: GeneralService
+    private generalService: GeneralService,
+    private cartService: CartService,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -109,5 +114,21 @@ export class HomeComponent implements OnInit {
     setInterval(() => {
       this.nextSlide(section);
     }, interval);
+  }
+
+  viewDetails(slug: string) {
+    this.router.navigate(['/shop/products', slug]);
+  }
+
+  addToCart(event: Event, product: Product) {
+    event.stopPropagation();
+    this.cartService.addToCart(product.id).subscribe({
+      next: () => {
+        this.router.navigate(['/cart/checkout']);
+      },
+      error: (err) => {
+        console.error('Failed to add to cart:', err);
+      }
+    });
   }
 }

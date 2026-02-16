@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
+import { RouterModule, Router } from '@angular/router';
 import { Blog, ContentService } from '../../../core/services/content.service';
 
 @Component({
@@ -14,7 +14,10 @@ export class BlogListComponent implements OnInit {
   blogs: Blog[] = [];
   loading = true;
 
-  constructor(private contentService: ContentService) {}
+  constructor(
+    private contentService: ContentService,
+    private router: Router
+  ) {}
 
   ngOnInit(): void {
     this.contentService.getBlogs().subscribe({
@@ -31,5 +34,9 @@ export class BlogListComponent implements OnInit {
 
   getImageUrl(path: string | null | undefined): string {
     return this.contentService.getImageUrl(path);
+  }
+
+  viewBlog(slug: string) {
+    this.router.navigate(['/content/blogs', slug]);
   }
 }

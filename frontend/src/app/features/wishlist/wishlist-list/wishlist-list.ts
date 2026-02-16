@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
+import { RouterModule, Router } from '@angular/router';
 import { WishlistItem, WishlistService } from '../../../core/services/wishlist.service';
 import { ContentService } from '../../../core/services/content.service';
 
@@ -18,7 +18,8 @@ export class WishlistListComponent implements OnInit {
 
   constructor(
     private wishlistService: WishlistService,
-    private contentService: ContentService
+    private contentService: ContentService,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -40,7 +41,8 @@ export class WishlistListComponent implements OnInit {
     });
   }
 
-  removeItem(id: number): void {
+  removeItem(event: Event, id: number): void {
+    event.stopPropagation();
     if(confirm('Are you sure you want to remove this item?')) {
       this.wishlistService.removeFromWishlist(id).subscribe({
         next: () => {
@@ -53,5 +55,9 @@ export class WishlistListComponent implements OnInit {
 
   getImageUrl(path: string | null | undefined): string {
     return this.contentService.getImageUrl(path);
+  }
+
+  viewDetails(slug: string) {
+    this.router.navigate(['/shop/products', slug]);
   }
 }

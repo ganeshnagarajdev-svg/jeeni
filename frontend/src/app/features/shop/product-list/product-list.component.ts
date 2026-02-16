@@ -35,7 +35,8 @@ export class ProductListComponent implements OnInit {
     private router: Router
   ) {}
 
-  buyNow(product: Product) {
+  buyNow(event: Event, product: Product) {
+    event.stopPropagation();
     this.cartService.addToCart(product.id).subscribe({
       next: () => {
         this.router.navigate(['/cart/checkout']);
