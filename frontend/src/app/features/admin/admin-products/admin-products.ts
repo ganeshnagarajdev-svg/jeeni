@@ -7,11 +7,12 @@ import { ContentService } from '../../../core/services/content.service';
 import { Product, Category } from '../../../core/models/product';
 import { ConfirmationService } from '../../../core/services/confirmation.service';
 import { ToastService } from '../../../core/services/toast.service';
+import { MediaUploadComponent } from '../../../shared/components/media-upload/media-upload.component';
 
 @Component({
   selector: 'app-admin-products',
   standalone: true,
-  imports: [CommonModule, FormsModule, ReactiveFormsModule, RouterModule],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule, RouterModule, MediaUploadComponent],
   templateUrl: './admin-products.html',
   styleUrl: './admin-products.css'
 })
@@ -120,19 +121,6 @@ export class AdminProductsComponent implements OnInit {
     this.images.removeAt(index);
   }
 
-  onFileSelected(event: any, index: number) {
-    const file = event.target.files[0];
-    if (file) {
-      this.contentService.uploadMedia(file).subscribe({
-        next: (res) => {
-          this.images.at(index).patchValue({
-             image_url: res.url
-          });
-        },
-        error: (err) => this.toastService.error('Upload failed: ' + err.message)
-      });
-    }
-  }
 
   getImageUrl(path: string | null | undefined): string {
     return this.contentService.getImageUrl(path);

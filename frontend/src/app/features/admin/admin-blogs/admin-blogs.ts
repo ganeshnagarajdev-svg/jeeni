@@ -4,11 +4,12 @@ import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators } 
 import { ContentService, Blog } from '../../../core/services/content.service';
 import { ConfirmationService } from '../../../core/services/confirmation.service';
 import { ToastService } from '../../../core/services/toast.service';
+import { MediaUploadComponent } from '../../../shared/components/media-upload/media-upload.component';
 
 @Component({
   selector: 'app-admin-blogs',
   standalone: true,
-  imports: [CommonModule, FormsModule, ReactiveFormsModule],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule, MediaUploadComponent],
   templateUrl: './admin-blogs.html',
   styleUrl: './admin-blogs.css'
 })
@@ -71,19 +72,6 @@ export class AdminBlogsComponent implements OnInit {
     this.showModal = true;
   }
 
-  onFileSelected(event: any) {
-    const file = event.target.files[0];
-    if (file) {
-      this.contentService.uploadMedia(file).subscribe({
-        next: (res) => {
-          this.blogForm.patchValue({
-             image_url: res.url
-          });
-        },
-        error: (err) => this.toastService.error('Upload failed: ' + err.message)
-      });
-    }
-  }
 
   closeModal() {
     this.showModal = false;

@@ -4,11 +4,12 @@ import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators } 
 import { ContentService, Media } from '../../../core/services/content.service';
 import { ConfirmationService } from '../../../core/services/confirmation.service';
 import { ToastService } from '../../../core/services/toast.service';
+import { MediaUploadComponent } from '../../../shared/components/media-upload/media-upload.component';
 
 @Component({
   selector: 'app-admin-videos',
   standalone: true,
-  imports: [CommonModule, FormsModule, ReactiveFormsModule],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule, MediaUploadComponent],
   templateUrl: './admin-videos.html',
   styleUrl: './admin-videos.css'
 })
@@ -18,6 +19,7 @@ export class AdminVideosComponent implements OnInit {
   showModal = false;
   isEditing = false;
   currentVideoId: number | null = null;
+  videoSourceType: 'youtube' | 'upload' = 'youtube';
   videoForm: FormGroup;
 
   constructor(
@@ -28,7 +30,7 @@ export class AdminVideosComponent implements OnInit {
   ) {
     this.videoForm = this.fb.group({
       title: ['', Validators.required],
-      url: ['', [Validators.required, Validators.pattern(/^(http(s)?:\/\/)?((w){3}.)?youtu(be|.be)?(\.com)?\/.+/)]],
+      url: ['', Validators.required],
       description: ['']
     });
   }
@@ -54,6 +56,7 @@ export class AdminVideosComponent implements OnInit {
   openAddModal() {
     this.isEditing = false;
     this.currentVideoId = null;
+    this.videoSourceType = 'youtube'; 
     this.videoForm.reset();
     this.showModal = true;
   }
@@ -61,6 +64,7 @@ export class AdminVideosComponent implements OnInit {
   openEditModal(video: Media) {
     this.isEditing = true;
     this.currentVideoId = video.id;
+    this.videoSourceType = this.isYoutubeUrl(video.url) ? 'youtube' : 'upload';
     this.videoForm.patchValue({
       title: video.title,
       url: video.url,
@@ -73,17 +77,6 @@ export class AdminVideosComponent implements OnInit {
     this.showModal = false;
   }
 
-  onFileSelected(event: any) {
-    const file = event.target.files[0];
-    if (file) {
-      this.contentService.uploadMedia(file).subscribe({
-        next: (res) => {
-          this.videoForm.patchValue({ url: res.url });
-        },
-        error: (err) => this.toastService.error('Upload failed: ' + err.message)
-      });
-    }
-  }
 
   getVideoThumbnail(url: string): string {
     // Extract YouTube thumbnail if it's a YouTube URL

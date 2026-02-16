@@ -4,11 +4,12 @@ import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators } 
 import { ContentService, Media } from '../../../core/services/content.service';
 import { ConfirmationService } from '../../../core/services/confirmation.service';
 import { ToastService } from '../../../core/services/toast.service';
+import { MediaUploadComponent } from '../../../shared/components/media-upload/media-upload.component';
 
 @Component({
   selector: 'app-admin-photos',
   standalone: true,
-  imports: [CommonModule, FormsModule, ReactiveFormsModule],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule, MediaUploadComponent],
   templateUrl: './admin-photos.html',
   styleUrl: './admin-photos.css'
 })
@@ -73,17 +74,6 @@ export class AdminPhotosComponent implements OnInit {
     this.showModal = false;
   }
 
-  onFileSelected(event: any) {
-    const file = event.target.files[0];
-    if (file) {
-      this.contentService.uploadMedia(file).subscribe({
-        next: (res) => {
-          this.photoForm.patchValue({ url: res.url });
-        },
-        error: (err) => this.toastService.error('Upload failed: ' + err.message)
-      });
-    }
-  }
 
   getImageUrl(path: string | null | undefined): string {
     return this.contentService.getImageUrl(path);
