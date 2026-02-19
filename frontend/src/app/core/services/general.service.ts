@@ -4,6 +4,16 @@ import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { HomeSection } from '../models/home-section';
 
+export interface ContactMessage {
+  id?: number;
+  name: string;
+  email: string;
+  subject: string;
+  message: string;
+  status?: string;
+  created_at?: string;
+}
+
 export interface Career {
   id: number;
   title: string;
@@ -51,8 +61,20 @@ export class GeneralService {
     return this.http.put<Career>(`${this.apiUrl}/careers/${id}`, career);
   }
 
+
   deleteCareer(id: number): Observable<Career> {
     return this.http.delete<Career>(`${this.apiUrl}/careers/${id}`);
+  }
+
+  // Contact Message
+  sendContactMessage(message: ContactMessage): Observable<ContactMessage> {
+    return this.http.post<ContactMessage>(`${this.apiUrl}/contact`, message);
+  }
+
+  getContactMessages(skip: number = 0, limit: number = 100): Observable<ContactMessage[]> {
+    return this.http.get<ContactMessage[]>(`${environment.apiUrl}/admin/contacts`, {
+      params: { skip: skip.toString(), limit: limit.toString() }
+    });
   }
 
   // Home Page Methods

@@ -2,15 +2,29 @@ from typing import Any, List
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
 from app.routers import deps
-from app.services.general_service import career_service, page_service, home_section_service
+from app.services.general_service import career_service, page_service, home_section_service, contact_message_service
 from app.schemas.general import (
     Career, CareerCreate, CareerUpdate, 
     Page, PageCreate, PageUpdate,
-    HomeSection, HomeSectionCreate, HomeSectionUpdate
+    HomeSection, HomeSectionCreate, HomeSectionUpdate,
+    ContactMessage, ContactMessageCreate
 )
 from app.models.user import User
 
 router = APIRouter()
+
+
+# Contact Endpoints
+@router.post("/contact", response_model=ContactMessage)
+async def create_contact_message(
+    *,
+    db: AsyncSession = Depends(deps.get_db),
+    contact_in: ContactMessageCreate,
+) -> Any:
+    """
+    Submit a contact message.
+    """
+    return await contact_message_service.create(db, obj_in=contact_in)
 
 # Career Endpoints
 @router.get("/careers", response_model=List[Career])

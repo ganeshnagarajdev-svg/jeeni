@@ -1,10 +1,11 @@
-from typing import Any
+from typing import Any, List
 from fastapi import APIRouter, Depends
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 from sqlalchemy import func
 from app.routers import deps
 from app.schemas.admin import DashboardStats
+from app.schemas.general import ContactMessage # Import Pydantic schema
 from app.models.user import User
 from app.models.product import Product
 from app.models.order import Order
@@ -59,3 +60,17 @@ async def get_dashboard_stats(
         "active_jobs": active_jobs or 0,
         "active_blogs": active_blogs or 0
     }
+
+@router.get("/contacts", response_model=List[ContactMessage])
+async def read_contact_messages(
+    db: AsyncSession = Depends(deps.get_db),
+    skip: int = 0,
+    limit: int = 100,
+    current_user: User = Depends(deps.get_current_active_superuser),
+) -> Any:
+    """
+    Retrieve contact messages (Admin only).
+    """
+    from app.services.general_service import contact_message_service
+    messages = await contact_message_service.get_multi(db, skip=skip, limit=limit)
+    return [ContactMessage.model_validate(msg) for msg in messages]

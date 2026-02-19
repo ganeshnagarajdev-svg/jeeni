@@ -21,9 +21,19 @@ const routes: Routes = [
     children: [
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
       { path: 'dashboard', component: DashboardComponent },
+      {
+        path: 'messages',
+        loadComponent: () => import('./admin-messages/admin-messages.component').then(m => m.AdminMessagesComponent)
+      },
       { path: 'products', component: AdminProductsComponent },
-      { path: 'products/:id', component: AdminProductViewComponent },
-      { path: 'categories', component: AdminCategoriesComponent },
+      { path: 'products/:id', component: AdminProductViewComponent      },
+      {
+        path: 'messages',
+        loadComponent: () => import('./admin-messages/admin-messages.component').then(m => m.AdminMessagesComponent)
+      },
+      {
+        path: 'categories',
+ component: AdminCategoriesComponent },
       { path: 'blogs', component: AdminBlogsComponent },
       { path: 'careers', component: AdminCareersComponent },
       { path: 'photos', component: AdminPhotosComponent },

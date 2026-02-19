@@ -1,8 +1,8 @@
 from typing import List, Optional, Union, Dict, Any
 from sqlalchemy.ext.asyncio import AsyncSession
-from app.repositories.general_repository import career_repo, page_repo, home_section_repo
-from app.schemas.general import CareerCreate, CareerUpdate, PageCreate, PageUpdate, HomeSectionCreate, HomeSectionUpdate
-from app.models.general import Career, Page, HomeSection
+from app.repositories.general_repository import career_repo, page_repo, home_section_repo, contact_message_repo
+from app.schemas.general import CareerCreate, CareerUpdate, PageCreate, PageUpdate, HomeSectionCreate, HomeSectionUpdate, ContactMessageCreate
+from app.models.general import Career, Page, HomeSection, ContactMessage
 
 class CareerService:
     async def create(self, db: AsyncSession, obj_in: CareerCreate) -> Career:
@@ -64,3 +64,12 @@ class HomeSectionService:
 career_service = CareerService()
 page_service = PageService()
 home_section_service = HomeSectionService()
+
+class ContactMessageService:
+    async def create(self, db: AsyncSession, obj_in: ContactMessageCreate) -> ContactMessage:
+        return await contact_message_repo.create(db, obj_in=obj_in)
+
+    async def get_multi(self, db: AsyncSession, skip: int = 0, limit: int = 100) -> List[ContactMessage]:
+        return await contact_message_repo.get_multi(db, skip=skip, limit=limit)
+
+contact_message_service = ContactMessageService()

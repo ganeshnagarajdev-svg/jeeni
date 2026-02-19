@@ -1,8 +1,8 @@
 from typing import List, Optional, Union, Dict, Any
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
-from app.models.general import Career, Page, HomeSection
-from app.schemas.general import CareerCreate, CareerUpdate, PageCreate, PageUpdate, HomeSectionCreate, HomeSectionUpdate
+from app.models.general import Career, Page, HomeSection, ContactMessage
+from app.schemas.general import CareerCreate, CareerUpdate, PageCreate, PageUpdate, HomeSectionCreate, HomeSectionUpdate, ContactMessageCreate
 from fastapi.encoders import jsonable_encoder
 
 class CareerRepository:
@@ -148,3 +148,24 @@ class HomeSectionRepository:
 career_repo = CareerRepository()
 page_repo = PageRepository()
 home_section_repo = HomeSectionRepository()
+
+class ContactMessageRepository:
+    async def create(self, db: AsyncSession, *, obj_in: ContactMessageCreate) -> ContactMessage:
+        db_obj = ContactMessage(
+            name=obj_in.name,
+            email=obj_in.email,
+            subject=obj_in.subject,
+            message=obj_in.message,
+            status="new"
+        )
+        db.add(db_obj)
+        await db.commit()
+        await db.refresh(db_obj)
+        return db_obj
+
+    async def get_multi(self, db: AsyncSession, skip: int = 0, limit: int = 100) -> List[ContactMessage]:
+        query = select(ContactMessage).order_by(ContactMessage.created_at.desc()).offset(skip).limit(limit)
+        result = await db.execute(query)
+        return result.scalars().all()
+
+contact_message_repo = ContactMessageRepository()

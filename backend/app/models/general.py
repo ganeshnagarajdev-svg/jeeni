@@ -26,3 +26,12 @@ class HomeSection(Base):
     configuration = Column(Text, nullable=True)   # Store JSON configuration
     order = Column(Integer, default=0)
     is_active = Column(Boolean, default=True)
+
+class ContactMessage(Base):
+    id = Column(Integer, primary_key=True, index=True)
+    name = Column(String, nullable=False)
+    email = Column(String, index=True, nullable=False)
+    subject = Column(String, nullable=False)
+    message = Column(Text, nullable=False)
+    status = Column(String, default="new") # new, read, replied
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
