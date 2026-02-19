@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { BehaviorSubject, Observable, tap, switchMap, map, of } from 'rxjs';
+import { BehaviorSubject, Observable, tap, switchMap, map, of, catchError } from 'rxjs';
 import { Router } from '@angular/router';
 
 import { environment } from '../../../environments/environment';
@@ -72,6 +72,12 @@ export class AuthService {
         map(user => {
           this.isLoadingSubject.next(false);
           return user;
+        }),
+        catchError((error) => {
+          this.isLoadingSubject.next(false);
+          // If 401, likely handled by interceptor, but we still need to stop loading
+          // and return null so subscribers don't error out
+          return of(null); 
         })
       );
   }
