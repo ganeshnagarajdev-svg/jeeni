@@ -9,14 +9,10 @@ import logging
 from app.core.logging import logger
 from app.core.config import settings
 
-app = FastAPI(
-    title="Jeeni E-commerce API",
-    description="API for Jeeni Millet Mix E-commerce platform",
-    version="1.0.0",
-)
+from contextlib import asynccontextmanager
 
-@app.on_event("startup")
-async def startup_event():
+@asynccontextmanager
+async def lifespan(app: FastAPI):
     from app.db.base_class import Base
     from app.db.session import engine, AsyncSessionLocal
     from app.models.general import HomeSection
@@ -24,7 +20,6 @@ async def startup_event():
     
     await cache.connect()
     from sqlalchemy import select
-    import json
     
     # Only create tables if in DEBUG mode (dev/test)
     # In production, we rely on Alembic migrations
@@ -38,8 +33,11 @@ async def startup_event():
             result = await db.execute(select(HomeSection).limit(1))
             if not result.scalars().first():
                 logger.info("Seeding initial home sections...")
-                from seed_home import seed_home_sections
-                await seed_home_sections()
+                try:
+                    from scripts.seed_home import seed_home_sections
+                    await seed_home_sections()
+                except ImportError:
+                    logger.warning("Could not import seed_home_sections. ensure scripts module is accessible.")
             else:
                 logger.info("Home sections already seeded.")
     except Exception as e:
@@ -56,6 +54,18 @@ async def startup_event():
         logger.warning(f"Failed to initialize Rate Limiter: {e}")
 
     print("Startup: Database tables verified/created.")
+    
+    yield
+    
+    # Shutdown logic (close connections if needed)
+    await cache.close()
+
+app = FastAPI(
+    title="Jeeni E-commerce API",
+    description="API for Jeeni Millet Mix E-commerce platform",
+    version="1.0.0",
+    lifespan=lifespan,
+)
 
 # CORS Middleware config
 # CORS Middleware config
