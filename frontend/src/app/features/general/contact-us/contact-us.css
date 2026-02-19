@@ -1,3 +1,5 @@
+/* Add any additional custom styles here if needed.
+   Most styling is handled via Tailwind utility classes. */
 .pattern-dots {
   background-image: radial-gradient(currentColor 1px, transparent 1px);
   background-size: 20px 20px;

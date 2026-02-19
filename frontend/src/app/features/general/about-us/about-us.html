@@ -1,0 +1,108 @@
+<div class="bg-surface-50 min-h-screen pb-20">
+    <!-- Hero Section with Background Identity -->
+    <div class="relative bg-primary-900 text-white py-32 overflow-hidden">
+        <div class="absolute inset-0 opacity-20">
+             <!-- Placeholder for a hero background image if available, otherwise pattern -->
+             <div class="absolute inset-0 pattern-grid"></div>
+        </div>
+        <div class="container mx-auto px-4 relative z-10 text-center">
+            <h1 class="text-5xl md:text-6xl font-display font-bold mb-6 animate-fade-in-up">Our Story</h1>
+            <p class="text-xl md:text-2xl text-primary-200 max-w-3xl mx-auto leading-relaxed animate-fade-in-up delay-100">
+                Bringing the ancient goodness of millets back to your modern table.
+            </p>
+        </div>
+    </div>
+
+    <!-- Mission & Vision Section -->
+    <div class="container mx-auto px-4 -mt-16 relative z-20">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <!-- Mission Card -->
+            <div class="bg-white rounded-2xl shadow-xl p-10 transform hover:-translate-y-2 transition-transform duration-300 border-t-4 border-primary-500">
+                <div class="w-16 h-16 bg-primary-100 rounded-2xl flex items-center justify-center text-primary-600 mb-6 rotate-3 hover:rotate-6 transition-transform">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                    </svg>
+                </div>
+                <h2 class="text-3xl font-display font-bold text-secondary-900 mb-4">Our Mission</h2>
+                <p class="text-secondary-600 leading-relaxed text-lg">
+                    To revolutionize healthy eating by making nutritious, millet-based foods accessible, delicious, and convenient for everyone, while supporting sustainable farming practices.
+                </p>
+            </div>
+
+            <!-- Vision Card -->
+            <div class="bg-white rounded-2xl shadow-xl p-10 transform hover:-translate-y-2 transition-transform duration-300 border-t-4 border-accent">
+                <div class="w-16 h-16 bg-orange-100 rounded-2xl flex items-center justify-center text-accent mb-6 -rotate-3 hover:-rotate-6 transition-transform">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                    </svg>
+                </div>
+                <h2 class="text-3xl font-display font-bold text-secondary-900 mb-4">Our Vision</h2>
+                <p class="text-secondary-600 leading-relaxed text-lg">
+                    A world where traditional superfoods are reintegrated into daily diets, creating a healthier society and a more sustainable planet for future generations.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Dynamic Content from Backend -->
+    <div *ngIf="page && page.content" class="container mx-auto px-4 py-16 animate-fade-in-up">
+        <div class="bg-white rounded-2xl shadow-lg p-8 md:p-12 max-w-5xl mx-auto">
+            <h2 class="text-3xl font-display font-bold text-secondary-900 mb-8 text-center border-b border-primary-100 pb-4">
+                {{ page.title }}
+            </h2>
+            <div class="prose prose-lg max-w-none text-secondary-600 leading-relaxed" [innerHTML]="page.content"></div>
+        </div>
+    </div>
+
+    <!-- Why Choose Us -->
+    <div class="container mx-auto px-4 py-24">
+        <div class="text-center mb-16">
+            <span class="text-accent font-bold tracking-widest uppercase text-sm">Why Jeeni</span>
+            <h2 class="text-4xl font-display font-bold text-secondary-900 mt-2">The Jeeni Difference</h2>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-10">
+            <div class="text-center group">
+                <div class="w-20 h-20 mx-auto bg-white rounded-full shadow-md flex items-center justify-center text-primary-600 mb-6 group-hover:scale-110 transition-transform duration-300">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                </div>
+                <h3 class="text-xl font-bold text-secondary-900 mb-3">100% Natural</h3>
+                <p class="text-secondary-600">No preservatives, no artificial colors, and no added chemicals. Just pure, natural goodness.</p>
+            </div>
+            
+            <div class="text-center group">
+                <div class="w-20 h-20 mx-auto bg-white rounded-full shadow-md flex items-center justify-center text-primary-600 mb-6 group-hover:scale-110 transition-transform duration-300">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                    </svg>
+                </div>
+                <h3 class="text-xl font-bold text-secondary-900 mb-3">Made with Love</h3>
+                <p class="text-secondary-600">Crafted with care using traditional recipes passed down through generations.</p>
+            </div>
+
+            <div class="text-center group">
+                <div class="w-20 h-20 mx-auto bg-white rounded-full shadow-md flex items-center justify-center text-primary-600 mb-6 group-hover:scale-110 transition-transform duration-300">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.384-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" />
+                    </svg>
+                </div>
+                <h3 class="text-xl font-bold text-secondary-900 mb-3">Scientifically Balanced</h3>
+                <p class="text-secondary-600">Formulated to provide the perfect balance of nutrients for a healthy lifestyle.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Call to Action -->
+    <div class="container mx-auto px-4">
+        <div class="bg-primary-50 rounded-3xl p-12 text-center border border-primary-100">
+            <h2 class="text-3xl font-display font-bold text-secondary-900 mb-4">Ready to start your health journey?</h2>
+            <p class="text-secondary-600 mb-8 max-w-2xl mx-auto">Join thousands of happy customers who have switched to a healthier lifestyle with Jeeni Millet Mix.</p>
+            <a routerLink="/shop" class="inline-flex items-center justify-center px-8 py-3 border border-transparent text-base font-bold rounded-xl text-white bg-primary-600 hover:bg-primary-700 md:py-4 md:text-lg md:px-10 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
+                Shop Now
+            </a>
+        </div>
+    </div>
+</div>
