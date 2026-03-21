@@ -41,7 +41,7 @@ export class LoginComponent {
         },
         error: (err) => {
           this.isLoading = false;
-          this.error = 'Invalid email or password';
+          this.error = err.error?.detail || 'Invalid email or password';
           console.error(err);
         }
       });

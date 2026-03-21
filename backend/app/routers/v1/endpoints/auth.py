@@ -27,7 +27,10 @@ async def login_access_token(
     if not user:
         raise HTTPException(status_code=400, detail="Incorrect email or password")
     elif not user.is_active:
-        raise HTTPException(status_code=400, detail="Inactive user")
+        raise HTTPException(
+            status_code=400, 
+            detail="Your account is deactivated or blocked. Please contact the administrator."
+        )
     access_token_expires = timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
     return {
         "access_token": security.create_access_token(
