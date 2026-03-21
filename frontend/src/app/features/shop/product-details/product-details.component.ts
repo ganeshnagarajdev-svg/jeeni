@@ -314,6 +314,11 @@ export class ProductDetailsComponent implements OnInit {
   }
 
   buyNow() {
+    if (!this.isLoggedIn) {
+      this.toastService.info('Please log in to purchase');
+      this.router.navigate(['/auth/login'], { queryParams: { returnUrl: this.router.url } });
+      return;
+    }
     if (this.product) {
       this.cartService.addToCart(this.product.id).subscribe({
         next: () => {
@@ -325,6 +330,11 @@ export class ProductDetailsComponent implements OnInit {
   }
 
   addToCart() {
+    if (!this.isLoggedIn) {
+      this.toastService.info('Please log in to add items to cart');
+      this.router.navigate(['/auth/login'], { queryParams: { returnUrl: this.router.url } });
+      return;
+    }
     if (this.product) {
       this.cartService.addToCart(this.product.id).subscribe({
         next: () => this.toastService.success('Product added to cart!'),

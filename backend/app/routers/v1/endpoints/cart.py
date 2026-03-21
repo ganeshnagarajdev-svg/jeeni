@@ -20,10 +20,14 @@ async def read_cart(
     total_items = sum(item.quantity for item in items)
     total_price = sum(item.quantity * item.product.price for item in items)
     
+    total_gst = sum((item.quantity * item.product.price * (getattr(item.product, 'gst_rate', 0.0) / 100.0)) for item in items)
+    
     return {
         "items": items,
         "total_items": total_items,
-        "total_price": total_price
+        "total_price": total_price,
+        "total_gst": total_gst,
+        "grand_total": total_price + total_gst
     }
 
 @router.post("/", response_model=CartItem)

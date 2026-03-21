@@ -51,6 +51,18 @@ export class AuthService {
     return this.http.post<any>(`${this.apiUrl}/signup`, userData);
   }
 
+  verifyOtp(email: string, otp: string, type: 'email' | 'mobile'): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}/verify-otp`, null, {
+      params: { email, otp, type }
+    });
+  }
+
+  resendOtp(email: string, type: 'email' | 'mobile'): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}/resend-otp`, null, {
+      params: { email, type }
+    });
+  }
+
   fetchCurrentUser(): Observable<any> {
     const token = localStorage.getItem(StorageKeys.TOKEN);
     if (!token) {

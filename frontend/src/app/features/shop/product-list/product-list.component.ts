@@ -8,6 +8,8 @@ import { ContentService } from '../../../core/services/content.service';
 import { Product, Category } from '../../../core/models/product';
 import { CartService } from '../../../core/services/cart.service';
 import { ApiConstants } from '../../../core/constants/api.constants';
+import { AuthService } from '../../../core/services/auth.service';
+import { ToastService } from '../../../core/services/toast.service';
 
 @Component({
   selector: 'app-product-list',
@@ -33,18 +35,26 @@ export class ProductListComponent implements OnInit {
     private productService: ProductService,
     private contentService: ContentService,
     private cartService: CartService,
+    private authService: AuthService,
+    private toastService: ToastService,
     private router: Router,
     private route: ActivatedRoute
   ) {}
 
   buyNow(event: Event, product: Product) {
     event.stopPropagation();
+    if (!this.authService.isAuthenticated()) {
+      this.toastService.info('Please log in to purchase');
+      this.router.navigate(['/auth/login'], { queryParams: { returnUrl: this.router.url } });
+      return;
+    }
     this.cartService.addToCart(product.id).subscribe({
       next: () => {
         this.router.navigate(['/cart/checkout']);
       },
       error: (err) => {
         console.error('Failed to buy:', err);
+        this.toastService.error('Failed to add to cart');
       }
     });
   }

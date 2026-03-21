@@ -11,6 +11,9 @@ class UserService:
     async def get_by_email(self, db: AsyncSession, email: str) -> Optional[User]:
         return await user_repo.get_by_email(db, email=email)
 
+    async def get_by_mobile(self, db: AsyncSession, mobile: str) -> Optional[User]:
+        return await user_repo.get_by_mobile(db, mobile=mobile)
+
     async def create(self, db: AsyncSession, *, obj_in: UserCreate) -> User:
         return await user_repo.create(db, obj_in=obj_in)
 

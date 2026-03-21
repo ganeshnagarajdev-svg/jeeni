@@ -14,7 +14,11 @@ export interface Cart {
   items: CartItem[];
   total_items: number;
   total_price: number;
+  total_gst?: number;
+  grand_total?: number;
 }
+
+import { AuthService } from './auth.service';
 
 @Injectable({
   providedIn: 'root',
@@ -24,8 +28,17 @@ export class CartService {
   private cartSubject = new BehaviorSubject<Cart | null>(null);
   cart$ = this.cartSubject.asObservable();
 
-  constructor(private http: HttpClient) {
-    this.loadCart();
+  constructor(
+    private http: HttpClient,
+    private authService: AuthService
+  ) {
+    this.authService.currentUser$.subscribe(user => {
+      if (user) {
+        this.loadCart();
+      } else {
+        this.cartSubject.next(null);
+      }
+    });
   }
 
   loadCart(): void {

@@ -14,13 +14,20 @@ class UserRepository:
         result = await db.execute(select(User).filter(User.email == email))
         return result.scalars().first()
 
+    async def get_by_mobile(self, db: AsyncSession, mobile: str) -> Optional[User]:
+        result = await db.execute(select(User).filter(User.mobile == mobile))
+        return result.scalars().first()
+
     async def create(self, db: AsyncSession, *, obj_in: UserCreate) -> User:
         db_obj = User(
             email=obj_in.email,
+            mobile=obj_in.mobile,
             hashed_password=get_password_hash(obj_in.password),
             full_name=obj_in.full_name,
             role=obj_in.role,
             is_active=obj_in.is_active,
+            is_mobile_verified=obj_in.is_mobile_verified,
+            is_email_verified=obj_in.is_email_verified,
         )
         db.add(db_obj)
         await db.commit()

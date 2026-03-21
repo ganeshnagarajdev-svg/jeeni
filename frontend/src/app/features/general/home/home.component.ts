@@ -8,6 +8,8 @@ import { Product, Category } from '../../../core/models/product';
 import { HomeSection } from '../../../core/models/home-section';
 
 import { CartService } from '../../../core/services/cart.service';
+import { AuthService } from '../../../core/services/auth.service';
+import { ToastService } from '../../../core/services/toast.service';
 import { Router } from '@angular/router';
 
 @Component({
@@ -28,6 +30,8 @@ export class HomeComponent implements OnInit {
     private contentService: ContentService,
     private generalService: GeneralService,
     private cartService: CartService,
+    private authService: AuthService,
+    private toastService: ToastService,
     private router: Router
   ) {}
 
@@ -74,7 +78,7 @@ export class HomeComponent implements OnInit {
         console.log('Parsed home sections:', this.homeSections);
         this.isLoading = false;
       },
-      error: (err) => {
+      error: (err: any) => {
         console.error('Error loading home layout', err);
         this.isLoading = false;
       }
@@ -122,12 +126,18 @@ export class HomeComponent implements OnInit {
 
   addToCart(event: Event, product: Product) {
     event.stopPropagation();
+    if (!this.authService.isAuthenticated()) {
+      this.toastService.info('Please log in to add items to cart');
+      this.router.navigate(['/auth/login'], { queryParams: { returnUrl: this.router.url } });
+      return;
+    }
     this.cartService.addToCart(product.id).subscribe({
       next: () => {
         this.router.navigate(['/cart/checkout']);
       },
-      error: (err) => {
+      error: (err: any) => {
         console.error('Failed to add to cart:', err);
+        this.toastService.error('Failed to add to cart');
       }
     });
   }

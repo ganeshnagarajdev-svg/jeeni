@@ -24,6 +24,8 @@ class Cart(BaseModel):
     items: List[CartItem]
     total_items: int
     total_price: float
+    total_gst: float = 0.0
+    grand_total: float = 0.0
     
     class Config:
         from_attributes = True

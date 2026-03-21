@@ -3,6 +3,8 @@ import { RouterModule, Routes } from '@angular/router';
 import { CartListComponent } from './cart-list/cart-list.component';
 import { CheckoutComponent } from './checkout/checkout.component';
 
+import { authGuard } from '../../core/guards/auth.guard';
+
 const routes: Routes = [
   {
     path: '',
@@ -10,7 +12,8 @@ const routes: Routes = [
   },
   {
     path: 'checkout',
-    component: CheckoutComponent
+    component: CheckoutComponent,
+    canActivate: [authGuard]
   }
 ];
 

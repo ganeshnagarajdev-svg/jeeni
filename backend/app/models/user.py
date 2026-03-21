@@ -12,7 +12,12 @@ class User(Base):
     email = Column(String, unique=True, index=True, nullable=False)
     full_name = Column(String, index=True)
     hashed_password = Column(String, nullable=True) # Nullable for SSO users
+    mobile = Column(String, unique=True, index=True, nullable=True)
     is_active = Column(Boolean(), default=True)
+    is_mobile_verified = Column(Boolean(), default=False)
+    is_email_verified = Column(Boolean(), default=False)
+    mobile_otp = Column(String, nullable=True)
+    email_otp = Column(String, nullable=True)
     is_superuser = Column(Boolean(), default=False)
     role = Column(Enum(UserRole), default=UserRole.USER)
     
