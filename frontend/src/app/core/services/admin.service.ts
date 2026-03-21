@@ -48,10 +48,22 @@ export class AdminService {
     return this.http.get<any[]>(`${this.apiUrl}/reports/orders`, { params });
   }
 
-  getSalesReport(startDate?: string, endDate?: string): Observable<any[]> {
-    let params = {};
-    if (startDate) params = { ...params, start_date: startDate };
-    if (endDate) params = { ...params, end_date: endDate };
+  getSalesReport(
+    startDate?: string, 
+    endDate?: string,
+    status?: string,
+    minAmount?: number,
+    maxAmount?: number,
+    customer?: string
+  ): Observable<any[]> {
+    let params: any = {};
+    if (startDate) params.start_date = startDate;
+    if (endDate) params.end_date = endDate;
+    if (status) params.status = status;
+    if (minAmount) params.min_amount = minAmount;
+    if (maxAmount) params.max_amount = maxAmount;
+    if (customer) params.customer = customer;
+    
     return this.http.get<any[]>(`${this.apiUrl}/reports/sales`, { params });
   }
 }

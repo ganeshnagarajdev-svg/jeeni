@@ -9,18 +9,56 @@ import { FormsModule } from '@angular/forms';
   imports: [CommonModule, FormsModule],
   template: `
     <div class="space-y-6">
-      <div class="flex items-center justify-between">
+      <div class="flex flex-wrap items-center justify-between gap-4">
         <div>
           <h1 class="text-2xl font-bold text-gray-900 m-0">Reports</h1>
           <p class="text-sm text-gray-500 mt-1">Generate and view sales & order analytics.</p>
         </div>
-        <div class="flex items-center gap-3">
-          <input type="date" [(ngModel)]="startDate" class="px-3 py-2 bg-white border border-gray-200 rounded-xl text-sm">
-          <span class="text-gray-400">to</span>
-          <input type="date" [(ngModel)]="endDate" class="px-3 py-2 bg-white border border-gray-200 rounded-xl text-sm">
-          <button (click)="loadReports()" class="px-4 py-2 bg-[#1B3C35] text-white rounded-xl text-sm font-semibold hover:bg-[#2c5d53] transition-all">
+        <div class="flex flex-wrap items-center gap-3">
+          <div class="flex items-center gap-2 bg-white px-3 py-2 border border-gray-200 rounded-xl">
+            <span class="text-xs font-bold text-gray-400 uppercase">Period:</span>
+            <input type="date" [(ngModel)]="startDate" class="bg-transparent border-none text-sm focus:ring-0">
+            <span class="text-gray-300">to</span>
+            <input type="date" [(ngModel)]="endDate" class="bg-transparent border-none text-sm focus:ring-0">
+          </div>
+          <button (click)="loadReports()" class="px-6 py-2 bg-[#1B3C35] text-white rounded-xl text-sm font-semibold hover:bg-[#2c5d53] shadow-md transition-all">
             Generate
           </button>
+        </div>
+      </div>
+
+      <!-- Advanced Filters -->
+      <div class="bg-white p-4 rounded-2xl shadow-sm border border-gray-100 flex flex-wrap items-center gap-4">
+        <div class="flex-1 min-w-[200px]">
+          <label class="text-[10px] font-bold text-gray-400 uppercase tracking-widest block mb-1">Customer Search</label>
+          <input type="text" [(ngModel)]="customerSearch" (keyup.enter)="loadReports()" 
+            placeholder="Search Name or Email..." 
+            class="w-full px-3 py-2 bg-gray-50 border border-gray-100 rounded-xl text-sm focus:bg-white focus:border-[#1B3C35] transition-all outline-none">
+        </div>
+        <div class="w-40">
+          <label class="text-[10px] font-bold text-gray-400 uppercase tracking-widest block mb-1">Status</label>
+          <select [(ngModel)]="statusFilter" (change)="loadReports()" 
+            class="w-full px-3 py-2 bg-gray-50 border border-gray-100 rounded-xl text-sm focus:bg-white focus:border-[#1B3C35] transition-all outline-none cursor-pointer">
+            <option value="">All Successful</option>
+            <option value="delivered">Delivered</option>
+            <option value="shipping">Shipping</option>
+            <option value="processing">Processing</option>
+            <option value="pending">Pending</option>
+            <option value="cancelled">Cancelled</option>
+          </select>
+        </div>
+        <div class="w-28">
+          <label class="text-[10px] font-bold text-gray-400 uppercase tracking-widest block mb-1">Min ₹</label>
+          <input type="number" [(ngModel)]="minAmount" (keyup.enter)="loadReports()" 
+            class="w-full px-3 py-2 bg-gray-50 border border-gray-100 rounded-xl text-sm focus:bg-white focus:border-[#1B3C35] transition-all outline-none">
+        </div>
+        <div class="w-28">
+          <label class="text-[10px] font-bold text-gray-400 uppercase tracking-widest block mb-1">Max ₹</label>
+          <input type="number" [(ngModel)]="maxAmount" (keyup.enter)="loadReports()" 
+            class="w-full px-3 py-2 bg-gray-50 border border-gray-100 rounded-xl text-sm focus:bg-white focus:border-[#1B3C35] transition-all outline-none">
+        </div>
+        <div class="flex items-end self-stretch pt-5">
+           <button (click)="resetFilters()" class="text-xs text-gray-400 hover:text-[#F2994A] font-bold transition-colors">RESET</button>
         </div>
       </div>
 
@@ -115,6 +153,12 @@ export class AdminReportsComponent implements OnInit {
   totalGst: number = 0;
   loading: boolean = false;
 
+  // Filters
+  customerSearch: string = '';
+  statusFilter: string = '';
+  minAmount: number | null = null;
+  maxAmount: number | null = null;
+
   constructor(private adminService: AdminService) {
     // Default to last 30 days
     const end = new Date();
@@ -135,7 +179,14 @@ export class AdminReportsComponent implements OnInit {
       error: (e) => console.error('Order report error', e)
     });
 
-    this.adminService.getSalesReport(this.startDate, this.endDate).subscribe({
+    this.adminService.getSalesReport(
+      this.startDate, 
+      this.endDate, 
+      this.statusFilter, 
+      this.minAmount || undefined, 
+      this.maxAmount || undefined, 
+      this.customerSearch
+    ).subscribe({
       next: (data) => {
         this.salesData = data;
         this.totalSales = data.reduce((sum, item) => sum + item.total_amount, 0);
@@ -147,6 +198,14 @@ export class AdminReportsComponent implements OnInit {
         this.loading = false;
       }
     });
+  }
+
+  resetFilters(): void {
+    this.customerSearch = '';
+    this.statusFilter = '';
+    this.minAmount = null;
+    this.maxAmount = null;
+    this.loadReports();
   }
 
   getStatusColor(status: string): string {

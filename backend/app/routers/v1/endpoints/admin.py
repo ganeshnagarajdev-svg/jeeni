@@ -3,7 +3,7 @@ from datetime import datetime
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
-from sqlalchemy import func
+from sqlalchemy import func, or_
 from app.routers import deps
 from app.schemas.admin import DashboardStats
 from app.schemas.general import ContactMessage # Import Pydantic schema
@@ -162,23 +162,42 @@ async def get_sales_report(
     db: AsyncSession = Depends(deps.get_db),
     start_date: Optional[datetime] = None,
     end_date: Optional[datetime] = None,
+    status: Optional[str] = None,
+    min_amount: Optional[float] = None,
+    max_amount: Optional[float] = None,
+    customer: Optional[str] = None,
     current_user: User = Depends(deps.get_current_active_superuser),
 ) -> Any:
     """
-    Get detailed sales report with GST (Successful orders only).
+    Get detailed sales report with GST (Filtered successful orders).
     """
+    # Base filter for "successful" orders, but allow user to refine it
+    default_statuses = ["delivered", "shipping"]
+    filter_statuses = status.split(",") if status else default_statuses
+    
     query = select(
         Order.id, 
         Order.total_amount, 
         Order.total_gst, 
         Order.created_at,
         User.full_name.label("customer_name")
-    ).join(User, Order.user_id == User.id).where(Order.status.in_(["delivered", "shipping"])) # Successful orders
+    ).join(User, Order.user_id == User.id).where(Order.status.in_(filter_statuses))
     
     if start_date:
         query = query.where(Order.created_at >= start_date)
     if end_date:
         query = query.where(Order.created_at <= end_date)
+    if min_amount is not None:
+        query = query.where(Order.total_amount >= min_amount)
+    if max_amount is not None:
+        query = query.where(Order.total_amount <= max_amount)
+    if customer:
+        query = query.where(
+            or_(
+                User.full_name.ilike(f"%{customer}%"),
+                User.email.ilike(f"%{customer}%")
+            )
+        )
         
     result = await db.execute(query)
     rows = result.all()
