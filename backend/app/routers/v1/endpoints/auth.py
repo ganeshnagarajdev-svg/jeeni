@@ -51,6 +51,8 @@ async def create_user_signup(
             status_code=400,
             detail="The user with this username already exists in the system",
         )
+    from app.models.user import UserRole
+    user_in.role = UserRole.USER
     try:
         user = await user_service.create(db, obj_in=user_in)
     except Exception as e:

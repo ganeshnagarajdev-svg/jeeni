@@ -6,16 +6,23 @@ class UserBase(BaseModel):
     email: EmailStr
     full_name: Optional[str] = None
     is_active: Optional[bool] = True
-    role: UserRole = UserRole.USER
 
 class UserCreate(UserBase):
     password: str
+    role: UserRole = UserRole.USER
 
-class UserUpdate(UserBase):
+class UserUpdate(BaseModel):
+    email: Optional[EmailStr] = None
+    full_name: Optional[str] = None
+    is_active: Optional[bool] = None
     password: Optional[str] = None
+
+class UserAdminUpdate(UserUpdate):
+    role: Optional[UserRole] = None
 
 class UserInDBBase(UserBase):
     id: int
+    role: UserRole = UserRole.USER
     
     class Config:
         from_attributes = True

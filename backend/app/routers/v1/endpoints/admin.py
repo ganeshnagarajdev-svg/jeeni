@@ -12,7 +12,7 @@ from app.models.product import Product
 from app.models.order import Order, OrderStatus
 from app.models.general import Career
 from app.models.content import Blog
-from app.schemas.user import User as UserSchema, UserUpdate
+from app.schemas.user import User as UserSchema, UserUpdate, UserCreate, UserAdminUpdate
 from app.services.user_service import user_service
 
 router = APIRouter()
@@ -90,12 +90,30 @@ async def read_users(
     """
     return await user_service.get_multi(db, skip=skip, limit=limit)
 
+@router.post("/users", response_model=UserSchema)
+async def create_user(
+    *,
+    db: AsyncSession = Depends(deps.get_db),
+    user_in: UserCreate,
+    current_user: User = Depends(deps.get_current_active_superuser),
+) -> Any:
+    """
+    Create a new user (Admins only).
+    """
+    user = await user_service.get_by_email(db, email=user_in.email)
+    if user:
+        raise HTTPException(
+            status_code=400,
+            detail="The user with this username already exists in the system.",
+        )
+    return await user_service.create(db, obj_in=user_in)
+
 @router.put("/users/{id}", response_model=UserSchema)
 async def update_user(
     *,
     db: AsyncSession = Depends(deps.get_db),
     id: int,
-    user_in: UserUpdate,
+    user_in: UserAdminUpdate,
     current_user: User = Depends(deps.get_current_active_superuser),
 ) -> Any:
     """

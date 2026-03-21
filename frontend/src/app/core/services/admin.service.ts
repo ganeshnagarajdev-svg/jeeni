@@ -41,6 +41,10 @@ export class AdminService {
     return this.http.put<User>(`${this.apiUrl}/users/${id}`, userData);
   }
 
+  createUser(userData: any): Observable<User> {
+    return this.http.post<User>(`${this.apiUrl}/users`, userData);
+  }
+
   getOrderReport(startDate?: string, endDate?: string): Observable<any[]> {
     let params = {};
     if (startDate) params = { ...params, start_date: startDate };
