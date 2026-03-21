@@ -21,6 +21,7 @@ class Product(Base):
     stock = Column(Integer, default=0)
     is_active = Column(Boolean, default=True)
     is_featured = Column(Boolean, default=False)
+    gst_rate = Column(Float, default=0.0) # 0, 5, 18, 40 etc.
     
     category_id = Column(Integer, ForeignKey("category.id"), index=True)
     category = relationship("Category", back_populates="products")

@@ -29,7 +29,7 @@ export class AdminPhotosComponent implements OnInit {
   ) {
     this.photoForm = this.fb.group({
       title: ['', Validators.required],
-      url: ['', [Validators.required, Validators.pattern(/https?:\/\/.+\.(jpg|jpeg|png|webp|gif|svg)$/i)]],
+      url: ['', [Validators.required, Validators.pattern(/^(\/uploads\/|https?:\/\/).+\.(jpg|jpeg|png|webp|gif|svg)$/i)]],
       description: ['']
     });
   }

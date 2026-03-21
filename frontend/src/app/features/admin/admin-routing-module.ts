@@ -42,6 +42,14 @@ const routes: Routes = [
       { path: 'orders', component: AdminOrdersComponent },
       { path: 'orders/:id', component: AdminOrderDetailsComponent },
       { path: 'home-config', component: AdminHomeComponent },
+      { 
+        path: 'users', 
+        loadComponent: () => import('./admin-users/admin-users').then(m => m.AdminUsersComponent) 
+      },
+      { 
+        path: 'reports', 
+        loadComponent: () => import('./admin-reports/admin-reports').then(m => m.AdminReportsComponent) 
+      },
     ]
   }
 ];

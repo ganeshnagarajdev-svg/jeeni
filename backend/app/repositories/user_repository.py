@@ -1,4 +1,4 @@
-from typing import Optional, Dict, Any
+from typing import Optional, Dict, Any, List, Union
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 from app.core.security import get_password_hash, verify_password
@@ -34,5 +34,27 @@ class UserRepository:
         if not verify_password(password, user.hashed_password):
             return None
         return user
+
+    async def get_multi(self, db: AsyncSession, *, skip: int = 0, limit: int = 100) -> List[User]:
+        result = await db.execute(select(User).offset(skip).limit(limit))
+        return result.scalars().all()
+
+    async def update(self, db: AsyncSession, *, db_obj: User, obj_in: Union[UserUpdate, Dict[str, Any]]) -> User:
+        if isinstance(obj_in, dict):
+            update_data = obj_in
+        else:
+            update_data = obj_in.model_dump(exclude_unset=True)
+        
+        for field in update_data:
+            if field == "password":
+                hashed_password = get_password_hash(update_data[field])
+                db_obj.hashed_password = hashed_password
+            else:
+                setattr(db_obj, field, update_data[field])
+        
+        db.add(db_obj)
+        await db.commit()
+        await db.refresh(db_obj)
+        return db_obj
 
 user_repo = UserRepository()

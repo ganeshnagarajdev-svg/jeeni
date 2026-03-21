@@ -31,9 +31,19 @@
                 </div>
              </div>
           </div>
-          <div class="mt-6 pt-4 border-t border-gray-100 flex justify-between items-center">
-             <span class="font-medium text-gray-900">Total Amount</span>
-             <span class="text-xl font-bold text-primary-600">₹{{ order.total_amount }}</span>
+          <div class="mt-6 pt-4 border-t border-gray-100 space-y-2">
+             <div class="flex justify-between items-center text-sm text-gray-600">
+               <span>Subtotal (Excl. GST)</span>
+               <span>₹{{ (order.total_amount - (order.total_gst || 0)) | number:'1.2-2' }}</span>
+             </div>
+             <div class="flex justify-between items-center text-sm text-gray-600">
+               <span>GST Total</span>
+               <span>₹{{ (order.total_gst || 0) | number:'1.2-2' }}</span>
+             </div>
+             <div class="flex justify-between items-center pt-2 border-t border-gray-50">
+               <span class="font-bold text-gray-900">Total Amount (Incl. GST)</span>
+               <span class="text-xl font-bold text-primary-600">₹{{ order.total_amount | number:'1.2-2' }}</span>
+             </div>
           </div>
         </div>
       </div>

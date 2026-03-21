@@ -16,10 +16,15 @@ import { RouterModule } from '@angular/router';
         </div>
       </div>
 
-      <nav class="flex-grow py-6 px-4 space-y-1">
+      <nav class="flex-grow py-6 px-4 space-y-1 overflow-y-auto custom-scrollbar">
         <a routerLink="/admin/dashboard" routerLinkActive="bg-[#2c5d53] text-[#F2994A]" class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-[#2c5d53] transition-colors group no-underline text-white">
           <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 group-hover:scale-110 transition-transform" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="7" height="9" x="3" y="3" rx="1"/><rect width="7" height="5" x="14" y="3" rx="1"/><rect width="7" height="9" x="14" y="12" rx="1"/><rect width="7" height="5" x="3" y="16" rx="1"/></svg>
           <span class="font-medium">Dashboard</span>
+        </a>
+
+        <a routerLink="/admin/reports" routerLinkActive="bg-[#2c5d53] text-[#F2994A]" class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-[#2c5d53] transition-colors group no-underline text-white">
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 group-hover:scale-110 transition-transform" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.21 15.89A10 10 0 1 1 8 2.83"></path><path d="M22 12A10 10 0 0 0 12 2v10z"></path></svg>
+          <span class="font-medium">Reports</span>
         </a>
         
         <div class="pt-4 pb-2 px-4">
@@ -83,6 +88,15 @@ import { RouterModule } from '@angular/router';
           <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 group-hover:scale-110 transition-transform" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m22 8-6 4 6 4V8Z"/><rect x="2" y="6" width="14" height="12" rx="2"/></svg>
           <span class="font-medium">Video Gallery</span>
         </a>
+
+        <div class="pt-4 pb-2 px-4">
+          <p class="text-[10px] text-gray-400 font-semibold uppercase tracking-widest m-0">System</p>
+        </div>
+
+        <a routerLink="/admin/users" routerLinkActive="bg-[#2c5d53] text-[#F2994A]" class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-[#2c5d53] transition-colors group no-underline text-white">
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 group-hover:scale-110 transition-transform" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          <span class="font-medium">Users & RBAC</span>
+        </a>
       </nav>
 
       <div class="p-4 border-t border-[#2c5d53]">
@@ -98,6 +112,19 @@ import { RouterModule } from '@angular/router';
       display: block;
     }
     .no-underline { text-decoration: none; }
+    .custom-scrollbar::-webkit-scrollbar {
+      width: 4px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 10px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+      background: rgba(255, 255, 255, 0.2);
+    }
   `]
 })
 export class AdminSidebarComponent {}

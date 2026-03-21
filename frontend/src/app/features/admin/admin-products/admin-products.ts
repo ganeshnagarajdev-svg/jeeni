@@ -41,6 +41,7 @@ export class AdminProductsComponent implements OnInit {
       category_id: [null, Validators.required],
       is_active: [true],
       is_featured: [false],
+      gst_rate: [0, [Validators.required, Validators.min(0)]],
       images: this.fb.array([])
     });
   }
@@ -95,7 +96,8 @@ export class AdminProductsComponent implements OnInit {
       stock: product.stock,
       category_id: product.category_id,
       is_active: product.is_active,
-      is_featured: product.is_featured
+      is_featured: product.is_featured,
+      gst_rate: product.gst_rate || 0
     });
     
     this.images.clear();

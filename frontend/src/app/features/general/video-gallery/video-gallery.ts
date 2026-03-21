@@ -40,26 +40,36 @@ export class VideoGalleryComponent implements OnInit {
   }
 
   getVideoThumbnail(url: string): string {
-    // Extract YouTube thumbnail if it's a YouTube URL
-    const youtubeMatch = url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([^&]+)/);
-    if (youtubeMatch) {
-      return `https://img.youtube.com/vi/${youtubeMatch[1]}/maxresdefault.jpg`;
+    const videoId = this.extractYoutubeId(url);
+    if (videoId) {
+      return `https://img.youtube.com/vi/${videoId}/mqdefault.jpg`;
     }
     return '/assets/video-placeholder.jpg';
   }
 
   isYoutubeUrl(url: string): boolean {
-    return /(?:youtube\.com|youtu\.be)/.test(url);
+    return !!this.extractYoutubeId(url);
+  }
+
+  extractYoutubeId(url: string): string | null {
+    if (!url) return null;
+    const regex = /(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?|shorts)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/;
+    const match = url.match(regex);
+    return match ? match[1] : null;
   }
 
   getEmbedUrl(url: string): SafeResourceUrl {
-    const youtubeMatch = url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([^&]+)/);
-    if (youtubeMatch) {
+    const videoId = this.extractYoutubeId(url);
+    if (videoId) {
       return this.sanitizer.bypassSecurityTrustResourceUrl(
-        `https://www.youtube.com/embed/${youtubeMatch[1]}?autoplay=1`
+        `https://www.youtube.com/embed/${videoId}?autoplay=1`
       );
     }
     return this.sanitizer.bypassSecurityTrustResourceUrl(url);
+  }
+
+  getVideoUrl(path: string | null | undefined): string {
+    return this.contentService.getImageUrl(path);
   }
 
   openPlayer(video: Media): void {

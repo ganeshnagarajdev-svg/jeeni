@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ContentService, Media } from '../../../core/services/content.service';
@@ -21,12 +22,19 @@ export class AdminVideosComponent implements OnInit {
   currentVideoId: number | null = null;
   videoSourceType: 'youtube' | 'upload' = 'youtube';
   videoForm: FormGroup;
+  
+  // Preview properties
+  showPreviewModal = false;
+  previewUrl: string | SafeResourceUrl = '';
+  isPreviewYoutube = false;
+  previewTitle = '';
 
   constructor(
     private contentService: ContentService,
     private fb: FormBuilder,
     private confirmationService: ConfirmationService,
-    private toastService: ToastService
+    private toastService: ToastService,
+    private sanitizer: DomSanitizer
   ) {
     this.videoForm = this.fb.group({
       title: ['', Validators.required],
@@ -77,26 +85,55 @@ export class AdminVideosComponent implements OnInit {
     this.showModal = false;
   }
 
+  openPreview(video: Media) {
+    this.previewTitle = video.title;
+    if (this.isYoutubeUrl(video.url)) {
+      const embedUrl = this.getEmbedUrl(video.url);
+      this.previewUrl = this.sanitizer.bypassSecurityTrustResourceUrl(embedUrl);
+      this.isPreviewYoutube = true;
+    } else {
+      this.previewUrl = this.getVideoUrl(video.url);
+      this.isPreviewYoutube = false;
+    }
+    this.showPreviewModal = true;
+  }
+
+  closePreview() {
+    this.showPreviewModal = false;
+    this.previewUrl = '';
+  }
+
 
   getVideoThumbnail(url: string): string {
-    // Extract YouTube thumbnail if it's a YouTube URL
-    const youtubeMatch = url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([^&]+)/);
-    if (youtubeMatch) {
-      return `https://img.youtube.com/vi/${youtubeMatch[1]}/mqdefault.jpg`;
+    // Extract YouTube ID from various formats
+    const videoId = this.extractYoutubeId(url);
+    if (videoId) {
+      return `https://img.youtube.com/vi/${videoId}/mqdefault.jpg`;
     }
     return '/assets/video-placeholder.jpg';
   }
 
   isYoutubeUrl(url: string): boolean {
-    return /(?:youtube\.com|youtu\.be)/.test(url);
+    return !!this.extractYoutubeId(url);
+  }
+
+  extractYoutubeId(url: string): string | null {
+    if (!url) return null;
+    const regex = /(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?|shorts)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/;
+    const match = url.match(regex);
+    return match ? match[1] : null;
   }
 
   getEmbedUrl(url: string): string {
-    const youtubeMatch = url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([^&]+)/);
-    if (youtubeMatch) {
-      return `https://www.youtube.com/embed/${youtubeMatch[1]}`;
+    const videoId = this.extractYoutubeId(url);
+    if (videoId) {
+      return `https://www.youtube.com/embed/${videoId}`;
     }
     return url;
+  }
+
+  getVideoUrl(path: string | null | undefined): string {
+    return this.contentService.getImageUrl(path);
   }
 
   onSubmit() {

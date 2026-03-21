@@ -8,6 +8,8 @@ export interface OrderItem {
   product_id: number;
   quantity: number;
   price_at_purchase: number;
+  gst_rate_at_purchase?: number;
+  gst_amount_at_purchase?: number;
   product: any;
 }
 
@@ -15,6 +17,7 @@ export interface Order {
   id: number;
   status: string;
   total_amount: number;
+  total_gst?: number;
   shipping_address: string;
   city: string;
   state: string;

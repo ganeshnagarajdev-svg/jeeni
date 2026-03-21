@@ -62,6 +62,7 @@ class ProductRepository:
             stock=obj_in.stock,
             is_active=obj_in.is_active,
             is_featured=obj_in.is_featured,
+            gst_rate=obj_in.gst_rate,
             category_id=obj_in.category_id
         )
         db.add(db_obj)

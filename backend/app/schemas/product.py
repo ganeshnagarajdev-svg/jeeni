@@ -45,6 +45,7 @@ class ProductBase(BaseModel):
     stock: int = 0
     is_active: bool = True
     is_featured: bool = False
+    gst_rate: float = 0.0
     category_id: int
 
 class ProductCreate(ProductBase):
@@ -58,6 +59,7 @@ class ProductUpdate(BaseModel):
     stock: Optional[int] = None
     is_active: Optional[bool] = None
     is_featured: Optional[bool] = None
+    gst_rate: Optional[float] = None
     category_id: Optional[int] = None
     images: Optional[List[ProductImageCreate]] = None
 

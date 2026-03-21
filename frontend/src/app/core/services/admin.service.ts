@@ -12,6 +12,15 @@ export interface DashboardStats {
   active_blogs: number;
 }
 
+export interface User {
+  id: number;
+  email: string;
+  full_name: string;
+  role: 'admin' | 'user';
+  is_active: boolean;
+  is_superuser: boolean;
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -22,5 +31,27 @@ export class AdminService {
 
   getDashboardStats(): Observable<DashboardStats> {
     return this.http.get<DashboardStats>(`${this.apiUrl}/dashboard`);
+  }
+
+  getUsers(): Observable<User[]> {
+    return this.http.get<User[]>(`${this.apiUrl}/users`);
+  }
+
+  updateUser(id: number, userData: any): Observable<User> {
+    return this.http.put<User>(`${this.apiUrl}/users/${id}`, userData);
+  }
+
+  getOrderReport(startDate?: string, endDate?: string): Observable<any[]> {
+    let params = {};
+    if (startDate) params = { ...params, start_date: startDate };
+    if (endDate) params = { ...params, end_date: endDate };
+    return this.http.get<any[]>(`${this.apiUrl}/reports/orders`, { params });
+  }
+
+  getSalesReport(startDate?: string, endDate?: string): Observable<any[]> {
+    let params = {};
+    if (startDate) params = { ...params, start_date: startDate };
+    if (endDate) params = { ...params, end_date: endDate };
+    return this.http.get<any[]>(`${this.apiUrl}/reports/sales`, { params });
   }
 }

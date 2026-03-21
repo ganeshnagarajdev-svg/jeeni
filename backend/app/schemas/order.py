@@ -15,6 +15,8 @@ class OrderItem(OrderItemBase):
     id: int
     order_id: int
     price_at_purchase: float
+    gst_rate_at_purchase: float
+    gst_amount_at_purchase: float
     product_id: Optional[int] = None
     product: Optional[Product] = None
     
@@ -40,6 +42,7 @@ class Order(OrderBase):
     user_id: int
     status: OrderStatus
     total_amount: float
+    total_gst: float
     payment_status: str
     created_at: datetime
     updated_at: Optional[datetime] = None

@@ -17,6 +17,7 @@ class Order(Base):
     user_id = Column(Integer, ForeignKey("user.id"), nullable=False, index=True)
     status = Column(Enum(OrderStatus, native_enum=False, create_constraint=False, values_callable=lambda x: [e.value for e in x]), default=OrderStatus.PENDING.value)
     total_amount = Column(Float, nullable=False)
+    total_gst = Column(Float, default=0.0)
     
     # Shipping Info
     shipping_address = Column(Text, nullable=False)
@@ -41,6 +42,8 @@ class OrderItem(Base):
     product_id = Column(Integer, ForeignKey("product.id", ondelete="SET NULL"), nullable=True)
     quantity = Column(Integer, nullable=False)
     price_at_purchase = Column(Float, nullable=False) # Capture price at time of order
+    gst_rate_at_purchase = Column(Float, default=0.0)
+    gst_amount_at_purchase = Column(Float, default=0.0)
     
     order = relationship("Order", back_populates="items")
     product = relationship("Product")

@@ -48,14 +48,33 @@ class OrderService:
         if not valid_items:
             return None
             
-        # 2. Calculate Total
-        total_amount = sum(item.quantity * item.product.price for item in valid_items)
+        # 2. Calculate Total and GST
+        total_amount = 0.0
+        total_gst = 0.0
         
+        order_items_data = []
+        for item in valid_items:
+            item_price = item.product.price
+            item_gst_rate = getattr(item.product, 'gst_rate', 0.0)
+            item_gst_amount = (item_price * item_gst_rate / 100.0) * item.quantity
+            
+            total_amount += (item_price * item.quantity)
+            total_gst += item_gst_amount
+            
+            order_items_data.append({
+                "product_id": item.product_id,
+                "quantity": item.quantity,
+                "price": item_price,
+                "gst_rate": item_gst_rate,
+                "gst_amount": item_gst_amount / item.quantity # unit gst
+            })
+
         # 3. Create Order
         db_order = Order(
             user_id=user_id,
             status=OrderStatus.PENDING,
-            total_amount=total_amount,
+            total_amount=total_amount + total_gst, # Total including GST
+            total_gst=total_gst,
             shipping_address=order_in.shipping_address,
             city=order_in.city,
             state=order_in.state,
@@ -67,12 +86,14 @@ class OrderService:
         await db.flush() # Get order ID
         
         # 4. Create Order Items
-        for cart_item in valid_items:
+        for item_data in order_items_data:
             order_item = OrderItem(
                 order_id=db_order.id,
-                product_id=cart_item.product_id,
-                quantity=cart_item.quantity,
-                price_at_purchase=cart_item.product.price
+                product_id=item_data["product_id"],
+                quantity=item_data["quantity"],
+                price_at_purchase=item_data["price"],
+                gst_rate_at_purchase=item_data["gst_rate"],
+                gst_amount_at_purchase=item_data["gst_amount"] * item_data["quantity"]
             )
             db.add(order_item)
         

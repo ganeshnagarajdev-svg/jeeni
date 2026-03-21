@@ -33,6 +33,7 @@ export interface Product {
   stock: number;
   is_featured: boolean;
   is_active: boolean;
+  gst_rate: number;
   category_id: number;
   category?: Category;
   images?: ProductImage[];

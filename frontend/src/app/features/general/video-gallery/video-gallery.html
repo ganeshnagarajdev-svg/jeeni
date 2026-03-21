@@ -32,7 +32,7 @@
         <div class="relative aspect-video overflow-hidden bg-gray-900">
           <img *ngIf="isYoutubeUrl(video.url)" [src]="getVideoThumbnail(video.url)" [alt]="video.title" 
             class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
-          <video *ngIf="!isYoutubeUrl(video.url)" [src]="video.url" class="w-full h-full object-cover" muted></video>
+          <video *ngIf="!isYoutubeUrl(video.url)" [src]="getVideoUrl(video.url)" class="w-full h-full object-cover" muted></video>
           
           <!-- Play Button Overlay -->
           <div class="absolute inset-0 flex items-center justify-center bg-black/30 group-hover:bg-black/40 transition-colors">
@@ -87,7 +87,7 @@
           allowfullscreen>
         </iframe>
         <video *ngIf="!isYoutubeUrl(selectedVideo.url)"
-          [src]="selectedVideo.url"
+          [src]="getVideoUrl(selectedVideo.url)"
           class="w-full h-full"
           controls
           autoplay>
